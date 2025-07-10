@@ -204,10 +204,10 @@ export default function ProfileClientComponent() {
         isLoading={isLoading}
         onFriendAction={contextUser?.user?.id !== userId ? handleFriendAction : undefined}
       >
-      <div className="pt-[90px] lg:pr-0 w-full max-w-[1200px] ">
+      <div className="pt-[90px] lg:pr-0 w-full max-w-[1200px] px-0">
         <ClientOnly>
           {!hidePostUser && (
-            <div className="justify center">
+            <div className="justify center px-0">
               {visiblePosts.map((post, index) => (
                 <div 
                   key={post.id} 

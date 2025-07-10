@@ -30,7 +30,7 @@ import { usePlayerContext } from '@/app/context/playerContext';
 import { useEditContext } from "@/app/context/editContext";
 
 const PostUserSkeleton = () => (
-  <div className="relative bg-[#24183D] rounded-xl w-full max-w-[95%] sm:max-w-[450px] mx-auto mb-4 overflow-hidden">
+  <div className="relative bg-[#24183D] rounded-xl w-full sm:max-w-[450px] mx-auto mb-4 overflow-hidden">
     <div className="p-4 border-b border-white/10">
       <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -606,7 +606,7 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="relative bg-[#24183D] rounded-xl w-full max-w-[95%] sm:max-w-[450px] mx-auto mb-4">
+        <div className="relative bg-[#24183D] rounded-xl w-full sm:max-w-[450px] mx-auto mb-4 post-user-card">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

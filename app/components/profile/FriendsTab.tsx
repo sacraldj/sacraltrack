@@ -329,7 +329,7 @@ const EmptyState: React.FC<{
 
 // Enhanced loading state component
 const LoadingState = () => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:p-6 friends-grid-mobile">
     {[1, 2, 3, 4, 5, 6].map((i) => (
       <motion.div
         key={i}
@@ -541,7 +541,7 @@ export default function FriendsTab({ profileId }: { profileId: string }) {
                   }
                 />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-2 lg:ml-[30px] lg:mr-[30px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:p-2 lg:ml-[30px] lg:mr-[30px] friends-grid-mobile">
                   {friends.map((friend) => (
                     <FriendCard
                       key={friend.id}
@@ -573,7 +573,7 @@ export default function FriendsTab({ profileId }: { profileId: string }) {
                   icon={<FaUserClock />}
                 />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:p-2 friends-grid-mobile">
                   {pendingRequests.map((request) => (
                     <FriendCard
                       key={request.id}
@@ -618,7 +618,7 @@ export default function FriendsTab({ profileId }: { profileId: string }) {
                   }
                 />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:p-2 friends-grid-mobile">
                   {sentRequests.map((request) => (
                     <FriendCard
                       key={request.id}

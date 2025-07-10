@@ -1028,7 +1028,7 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
   };
 
   return (
-    <div className="mb-8 mx-auto w-full md:w-[450px]">
+    <div className="mb-8 mx-auto w-full md:w-[450px] vibe-card-container">
       <div 
         id={`vibe-card-${vibe.id}`}
         ref={vibeCardRef}

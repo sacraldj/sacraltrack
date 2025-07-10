@@ -347,7 +347,7 @@ export default function PurchasedTracks() {
 
   return (
     <div className="w-full max-w-[1500px] mx-auto py-3 overflow-auto pb-20">
-      <div className="grid gap-4 mx-auto max-w-[90%] md:max-w-[400px]">
+      <div className="grid gap-4 mx-auto px-0 md:max-w-[400px] purchases-grid-mobile">
         {purchases.map((purchase) => (
           purchase.track ? (
             <div key={purchase.$id} className="bg-[#1E2136] rounded-xl overflow-hidden w-full shadow-lg border border-[#3f2d63]/20 hover:border-[#3f2d63]/50 transition-all">

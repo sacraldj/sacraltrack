@@ -1,0 +1,125 @@
+/* Mobile profile cards spacing adjustments */
+
+/* Ensure all profile cards have 10px margin from screen edges on mobile */
+@media (max-width: 767px) {
+  /* Profile layout main container */
+  .profile-layout-container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  
+  /* Profile cards containers */
+  .profile-cards-container {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Friends tab cards */
+  .friends-grid-mobile {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Vibes cards */
+  .vibes-grid-mobile {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Purchased tracks cards */
+  .purchases-grid-mobile {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Liked posts cards */
+  .likes-container-mobile {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Releases cards */
+  .releases-container-mobile {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* PostUser cards - ensure they take full width with proper margins */
+  .releases-container-mobile > div {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* VibeCard containers */
+  .vibes-grid-mobile > div {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Specific styles for PostUser and VibeCard components */
+@media (max-width: 767px) {
+  /* PostUser cards - remove any max-width constraints on mobile */
+  [class*="PostUser"] {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  /* VibeCard containers */
+  [class*="VibeCard"] {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  /* Target specific PostUser container */
+  .relative.bg-\\[\\#24183D\\].rounded-xl {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Edit Profile Modal - ensure 10px margins on mobile */
+@media (max-width: 767px) {
+  /* Edit profile overlay container */
+  .edit-profile-overlay {
+    padding: 10px !important;
+    padding-top: 5vh !important;
+  }
+
+  /* Edit profile modal content */
+  .edit-profile-overlay .glass-card {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  /* Modal container inside overlay */
+  .edit-profile-modal {
+    width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
+    margin: 0 !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .profile-layout-container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Ensure edit profile modal has proper spacing on very small screens */
+  .edit-profile-overlay {
+    padding: 10px !important;
+    padding-top: 10px !important;
+  }
+
+  /* Adjust modal content for very small screens */
+  .edit-profile-modal {
+    max-width: calc(100vw - 20px) !important;
+  }
+}

@@ -48,7 +48,7 @@ const UserVibes: React.FC<UserVibesProps> = ({ userId, isProfileOwner }) => {
 
       {/* Отображение вайбов */}
       {isLoadingVibes ? (
-        <div className="grid grid-cols-1 gap-6 max-w-[450px] mx-auto">
+        <div className="grid grid-cols-1 gap-6 max-w-[450px] mx-auto px-0 vibes-grid-mobile">
           {[1, 2, 3].map(i => (
             <VibeCardSkeleton key={i} />
           ))}
@@ -59,7 +59,7 @@ const UserVibes: React.FC<UserVibesProps> = ({ userId, isProfileOwner }) => {
           <p className="text-sm mt-1">{error}</p>
         </div>
       ) : vibePostsByUser && vibePostsByUser.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 max-w-[450px] mx-auto">
+        <div className="grid grid-cols-1 gap-6 max-w-[450px] mx-auto px-0 vibes-grid-mobile">
           <AnimatePresence>
             {vibePostsByUser.map((vibe) => (
               <motion.div

@@ -15,6 +15,7 @@ import { RiDownloadLine } from 'react-icons/ri';
 import { motion, AnimatePresence } from 'framer-motion';
 import EnhancedEditProfileOverlay from "@/app/components/profile/EnhancedEditProfileOverlay";
 import '@/app/globals.css';
+import '@/app/styles/profile-mobile.css';
 import ProfileComponents from "./includes/ProfileComponents"
 import PurchasedTracks from "@/app/components/profile/PurchasedTracks"
 import useDownloadsStore from '@/app/stores/downloadsStore';
@@ -163,7 +164,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
 		
 		{isEditProfileOpen && <EnhancedEditProfileOverlay />}
 
-		<div className="w-full mx-auto px-4 md:px-8 box-border max-w-full overflow-x-hidden smooth-scroll-container content-with-top-nav">
+		<div className="w-full mx-auto px-[10px] md:px-8 box-border max-w-full overflow-x-hidden smooth-scroll-container content-with-top-nav profile-layout-container">
             <div className="max-w-[1500px] mx-auto">
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Left sidebar with user profile */}
@@ -196,7 +197,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    <div className="max-w-[1500px] mx-auto py-6">
+                                    <div className="max-w-[1500px] mx-auto py-6 px-0 profile-cards-container">
                                         {likedLoading ? (
                                             <div className="flex justify-center items-center min-h-[400px]">
                                                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#20DDBB]"></div>
@@ -212,7 +213,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                                 </p>
                                             </div>
                                         ) : (
-                                            <div className="mx-auto w-full max-w-[650px] flex flex-col gap-4 md:relative md:left-[20px]">
+                                            <div className="mx-auto w-full max-w-[650px] flex flex-col gap-4 px-0 md:relative md:left-[20px] likes-container-mobile">
                                                 {likedPosts.map((post) => (
                                                     <PostLikes
                                                         key={post.$id} 
@@ -232,7 +233,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    <div className="max-w-[1500px] mx-auto py-6">
+                                    <div className="max-w-[1500px] mx-auto py-6 px-0 profile-cards-container">
                                         {currentProfile && (
                                             <FriendsTab profileId={currentProfile.user_id} />
                                         )}
@@ -247,7 +248,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    <div className="max-w-[1500px] mx-auto py-6">
+                                    <div className="max-w-[1500px] mx-auto py-6 px-0 profile-cards-container">
                                         {currentProfile && (
                                             <UserVibes userId={currentProfile.user_id} isProfileOwner={isProfileOwner} />
                                         )}
@@ -268,7 +269,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                         </div>
                                     ) : hasUserReleases || (postsByUser && postsByUser.length > 0) ? (
                                         <div className="flex justify-center">
-                                            <div className="max-w-full flex flex-wrap justify-center gap-8 py-4">
+                                            <div className="max-w-full flex flex-wrap justify-center gap-8 py-4 releases-container-mobile">
                                                 {children}
                                             </div>
                                         </div>
@@ -281,24 +282,24 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                     </div>
                     
                     {/* Right sidebar with user activity */}
-                    {currentProfile && isProfileOwner && (
+                    {currentProfile && (
                         <div className="hidden lg:block w-[260px] flex-shrink-0 sticky top-[89px] h-[calc(100vh-89px)] mr-[60px] sm:mr-0">
                             <UserActivitySidebar
                                 userId={currentProfile.user_id}
                                 isOwner={isProfileOwner}
                                 onShowFriends={() => switchToTab('friends')}
-                                onShowLikes={() => switchToTab('likes')} 
+                                onShowLikes={() => switchToTab('likes')}
                                 onShowPurchases={() => switchToTab('purchases')}
                                 onShowVibes={() => switchToTab('vibes')}
                                 activeTab={
-                                    showFriends 
-                                        ? 'friends' 
-                                        : showLikedTracks 
-                                            ? 'likes' 
-                                            : showPurchases 
-                                                ? 'purchases' 
-                                                : showVibes 
-                                                    ? 'vibes' 
+                                    showFriends
+                                        ? 'friends'
+                                        : showLikedTracks
+                                            ? 'likes'
+                                            : showPurchases
+                                                ? 'purchases'
+                                                : showVibes
+                                                    ? 'vibes'
                                                     : 'main'
                                 }
                             />
@@ -358,7 +359,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                     </div>
 
                     {/* Navigation Icons - for both desktop and mobile */}
-                    <div className="flex items-center justify-between gap-2 w-full">
+                    <div className="relative flex items-center justify-between gap-2 w-full">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -428,7 +429,8 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                             <span className={`text-[9px] font-medium ${showLikedTracks ? 'text-pink-400' : 'text-gray-400'}`}>Likes</span>
                         </motion.button>
                         
-                        <div className="relative flex flex-1 flex-col items-center justify-center">
+                        {/* Friends button with relative positioning for action buttons */}
+                        <div className="relative flex flex-1">
                             {/* Super Stylish Friend Button above Friends */}
                             {!isProfileOwner && isMobile && onFriendAction && (
                                 <div className="absolute -top-14 left-1/2 -translate-x-1/2 flex gap-2 z-20">
@@ -498,6 +500,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     )}
                                 </div>
                             )}
+
                             {/* Friends button */}
                             <motion.button
                                 whileHover={{ scale: 1.05 }}

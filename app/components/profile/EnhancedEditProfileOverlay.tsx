@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cropper } from 'react-advanced-cropper';
 import 'react-advanced-cropper/dist/style.css';
+import '@/app/styles/profile-mobile.css';
 import { toast } from 'react-hot-toast';
 import { useGeneralStore } from "@/app/stores/general";
 import { useProfileStore } from "@/app/stores/profile";
@@ -491,14 +492,14 @@ const EnhancedEditProfileOverlay: React.FC = () => {
     <AnimatePresence mode="wait">
       <motion.div
         key="overlay"
-        className="fixed inset-0 z-[9999] flex items-start justify-center pt-[5vh] p-[10px] bg-black/60 backdrop-blur-sm overflow-y-auto"
+        className="fixed inset-0 z-[9999] flex items-start justify-center pt-[5vh] p-[10px] md:p-[20px] bg-black/60 backdrop-blur-sm overflow-y-auto edit-profile-overlay"
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
         <motion.div
-          className="relative w-full max-w-md flex flex-col justify-between my-0 overflow-hidden rounded-2xl"
+          className="relative w-full max-w-md flex flex-col justify-between my-0 overflow-hidden rounded-2xl edit-profile-modal"
           variants={modalVariants}
           initial="hidden"
           animate="visible"
