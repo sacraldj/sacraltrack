@@ -299,7 +299,7 @@ export function handleEnhancedAuth(
       // Set auth in progress flags
       setAuthInProgress(browserInfo);
 
-      // iOS specific handling
+      // iOS specific handling with improved Safari support
       if (browserInfo.isIOS) {
         handleiOSAuth(oauthUrl, resolve, reject);
       }
@@ -322,7 +322,7 @@ export function handleEnhancedAuth(
 }
 
 /**
- * iOS specific authentication handling
+ * iOS specific authentication handling with enhanced Safari support
  */
 function handleiOSAuth(
   oauthUrl: string,
@@ -330,39 +330,87 @@ function handleiOSAuth(
   reject: Function,
 ): void {
   try {
-    // Set iOS specific flags
+    // Set iOS specific flags with enhanced tracking
     if (typeof window !== "undefined") {
       sessionStorage.setItem("iOSAuthAttempt", "true");
       sessionStorage.setItem("iOSAuthTimestamp", Date.now().toString());
 
       // Store current URL for return
       sessionStorage.setItem("preAuthUrl", window.location.href);
+
+      // Enhanced iOS Safari detection and handling
+      const userAgent = navigator.userAgent;
+      const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+      const isInAppBrowser = /FBAN|FBAV|Instagram|Twitter|Line|WhatsApp/.test(userAgent);
+
+      sessionStorage.setItem("iOSSafari", isSafari.toString());
+      sessionStorage.setItem("iOSInAppBrowser", isInAppBrowser.toString());
+
+      // Store viewport info for debugging
+      sessionStorage.setItem("iOSViewport", JSON.stringify({
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio || 1
+      }));
+
+      // For Safari, add special handling to prevent hanging
+      if (isSafari) {
+        // Clear any existing Safari auth flags that might cause conflicts
+        localStorage.removeItem("safariAuthProcessing");
+        localStorage.removeItem("safariAuthSuccessful");
+
+        // Set a flag to track Safari auth attempt
+        localStorage.setItem("safariAuthInProgress", Date.now().toString());
+
+        // Add visibility change listener for Safari
+        const handleVisibilityChange = () => {
+          if (document.visibilityState === 'hidden') {
+            // User likely navigated to Google OAuth
+            sessionStorage.setItem("safariAuthRedirectDetected", Date.now().toString());
+          }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange, { once: true });
+
+        // Clean up listener after timeout
+        setTimeout(() => {
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+        }, 45000);
+      }
     }
 
-    // Add timeout for iOS redirect
+    // Extended timeout for iOS Safari (it can be slower)
     const timeout = setTimeout(() => {
-      reject(new Error("iOS authentication timeout"));
-    }, 30000); // 30 seconds timeout
+      console.error("[iOS Auth] Authentication timeout after 45 seconds");
+      reject(new Error("iOS authentication timeout - please try again"));
+    }, 45000); // 45 seconds timeout for iOS Safari
 
-    // Clear timeout on page unload (successful redirect)
-    window.addEventListener(
-      "beforeunload",
-      () => {
-        clearTimeout(timeout);
-        resolve();
-      },
-      { once: true },
-    );
+    // Enhanced beforeunload handling
+    const handleBeforeUnload = () => {
+      clearTimeout(timeout);
+      sessionStorage.setItem("iOSAuthRedirectSuccess", Date.now().toString());
+      resolve();
+    };
 
-    // Perform redirect
-    window.location.href = oauthUrl;
+    window.addEventListener("beforeunload", handleBeforeUnload, { once: true });
+
+    // Additional pagehide event for iOS Safari
+    window.addEventListener("pagehide", handleBeforeUnload, { once: true });
+
+    // Add a small delay before redirect to ensure all flags are set
+    setTimeout(() => {
+      console.log("[iOS Auth] Redirecting to Google OAuth:", oauthUrl);
+      window.location.href = oauthUrl;
+    }, 100);
+
   } catch (error) {
+    console.error("[iOS Auth] Error in handleiOSAuth:", error);
     reject(error);
   }
 }
 
 /**
- * Safari specific authentication handling
+ * Safari specific authentication handling with enhanced reliability
  */
 function handleSafariAuth(
   oauthUrl: string,
@@ -370,16 +418,53 @@ function handleSafariAuth(
   reject: Function,
 ): void {
   try {
-    // Safari specific storage
+    // Enhanced Safari specific storage and tracking
     if (typeof window !== "undefined") {
       localStorage.setItem("safariAuthAttempt", Date.now().toString());
       localStorage.setItem("safariAuthUrl", oauthUrl);
+
+      // Clear any conflicting flags
+      localStorage.removeItem("safariAuthProcessing");
+      localStorage.removeItem("safariAuthSuccessful");
+
+      // Set tracking flags
+      sessionStorage.setItem("safariDesktopAuth", "true");
+      sessionStorage.setItem("safariAuthTimestamp", Date.now().toString());
+
+      // Store browser capabilities for debugging
+      const capabilities = {
+        cookiesEnabled: navigator.cookieEnabled,
+        localStorage: typeof(Storage) !== "undefined",
+        sessionStorage: typeof(Storage) !== "undefined",
+        thirdPartyCookies: document.cookie.indexOf('test=') !== -1
+      };
+
+      sessionStorage.setItem("safariBrowserCapabilities", JSON.stringify(capabilities));
     }
 
-    // Redirect with Safari optimizations
-    window.location.href = oauthUrl;
-    resolve();
+    // Add timeout for Safari
+    const timeout = setTimeout(() => {
+      console.error("[Safari Auth] Authentication timeout after 30 seconds");
+      reject(new Error("Safari authentication timeout"));
+    }, 30000);
+
+    // Enhanced beforeunload handling for Safari
+    const handleBeforeUnload = () => {
+      clearTimeout(timeout);
+      localStorage.setItem("safariAuthRedirectSuccess", Date.now().toString());
+      resolve();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload, { once: true });
+
+    // Add small delay for Safari to ensure proper state setting
+    setTimeout(() => {
+      console.log("[Safari Auth] Redirecting to Google OAuth:", oauthUrl);
+      window.location.href = oauthUrl;
+    }, 50);
+
   } catch (error) {
+    console.error("[Safari Auth] Error in handleSafariAuth:", error);
     reject(error);
   }
 }

@@ -104,6 +104,12 @@ export interface Like {
     post_id: string;
   }
 
+export interface VibeLike {
+    id: string;
+    user_id: string;
+    vibe_id: string;
+  }
+
 export interface Post {
     id: string;
     user_id: string;

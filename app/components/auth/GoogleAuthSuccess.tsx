@@ -11,6 +11,14 @@ import { account } from '@/libs/AppWriteClient';
 import toast from 'react-hot-toast';
 import { User } from '@/app/types';
 import { clearAllAuthFlags } from '@/app/utils/authCleanup';
+import SafariAuthHelper from './SafariAuthHelper';
+import {
+  getAuthConfig,
+  calculateRetryDelay,
+  getAdditionalDelay,
+  getMaxRetries,
+  withTimeout
+} from '@/app/config/authConfig';
 
 // Global limit for auth attempts across page refreshes
 const AUTH_ATTEMPT_STORAGE_KEY = 'googleAuthAttempts';
@@ -67,7 +75,7 @@ export default function GoogleAuthSuccess() {
     const [checkingAuth, setCheckingAuth] = useState(true);
     const [retryCount, setRetryCount] = useState(0);
     const [secondsLeft, setSecondsLeft] = useState(3);
-    const maxRetries = 5; // Cap per-page retries at 5
+    const [maxRetries, setMaxRetries] = useState(5); // Dynamic based on browser
     const errorShownRef = useRef(false);
     const successShownRef = useRef(false);
     const toastIdRef = useRef<string | null>(null);
@@ -77,6 +85,8 @@ export default function GoogleAuthSuccess() {
     const isMobileRef = useRef<boolean>(false);
     const [isFirefox, setIsFirefox] = useState(false);
     const [isPrivate, setIsPrivate] = useState(false);
+    const [showSafariHelper, setShowSafariHelper] = useState(false);
+    const [safariErrorType, setSafariErrorType] = useState<'cookies' | 'tracking' | 'timeout' | 'general'>('general');
 
     useEffect(() => {
         toast.dismiss();
@@ -91,8 +101,14 @@ export default function GoogleAuthSuccess() {
                     
                     // Check if this is a mobile browser that needs special handling
                     isMobileRef.current = parsedInfo.isIOS || parsedInfo.isMobileSafari || parsedInfo.isMobileFirefox || parsedInfo.isDesktopSafari;
+
+                    // Set dynamic max retries based on browser
+                    const dynamicMaxRetries = getMaxRetries(parsedInfo);
+                    setMaxRetries(dynamicMaxRetries);
+
                     console.log('[GoogleAuthSuccess] Retrieved browser info:', parsedInfo);
                     console.log('[GoogleAuthSuccess] Is browser requiring special handling:', isMobileRef.current);
+                    console.log('[GoogleAuthSuccess] Max retries for this browser:', dynamicMaxRetries);
                 }
             } catch (error) {
                 console.error('[GoogleAuthSuccess] Error parsing stored browser info:', error);
@@ -178,26 +194,29 @@ export default function GoogleAuthSuccess() {
                 let sessionValid = false;
                 try {
                     // Add delay on each retry attempt to spread out the requests
-                    if (retryCount > 0) {
-                        // Exponential backoff with jitter
-                        const baseDelay = Math.min(1000 * Math.pow(1.5, retryCount), 5000);
-                        const jitter = Math.random() * 500; // Add up to 500ms of random jitter
-                        const delay = baseDelay + jitter;
-                        console.log(`[GoogleAuthSuccess] Retry attempt ${retryCount}: Waiting ${delay.toFixed(0)}ms before checking`);
+                    if (retryCount > 0 && browserInfo) {
+                        // Use optimized retry delay based on browser configuration
+                        const authConfig = getAuthConfig(browserInfo);
+                        const delay = calculateRetryDelay(retryCount, authConfig);
+                        console.log(`[GoogleAuthSuccess] Retry attempt ${retryCount}: Waiting ${delay.toFixed(0)}ms before checking (${browserInfo.browserName})`);
                         await new Promise(resolve => setTimeout(resolve, delay));
                     }
                     
                     // For mobile browsers, add additional delay to ensure cookies are properly set
-                    if (isMobileRef.current && retryCount === 0) {
-                        console.log('[GoogleAuthSuccess] Mobile browser detected, adding additional initial delay');
-                        await new Promise(resolve => setTimeout(resolve, 1500));
+                    if (isMobileRef.current && retryCount === 0 && browserInfo) {
+                        const initialDelay = getAdditionalDelay('initialDelay', browserInfo);
+                        if (initialDelay > 0) {
+                            console.log(`[GoogleAuthSuccess] Mobile browser detected, adding initial delay: ${initialDelay}ms`);
+                            await new Promise(resolve => setTimeout(resolve, initialDelay));
+                        }
                     }
                     
                     // Add special Safari handling with additional delay
                     if (browserInfo && (browserInfo.isDesktopSafari || browserInfo.isMobileSafari)) {
-                        console.log('[GoogleAuthSuccess] Safari browser detected, adding extended delay for cookie processing');
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                        
+                        const safariDelay = getAdditionalDelay('safariExtendedDelay', browserInfo);
+                        console.log(`[GoogleAuthSuccess] Safari browser detected, adding extended delay: ${safariDelay}ms`);
+                        await new Promise(resolve => setTimeout(resolve, safariDelay));
+
                         // For Safari, check if we have a redirect attempt in localStorage
                         const authRedirectAttempt = localStorage.getItem('authRedirectAttempt');
                         if (authRedirectAttempt) {
@@ -309,14 +328,17 @@ export default function GoogleAuthSuccess() {
                     console.log('[GoogleAuthSuccess] Checking user authentication after Google OAuth');
                     
                     // Add a small delay before checking user to ensure session is fully established
-                    // Use a longer delay for mobile browsers
-                    const userCheckDelay = isMobileRef.current ? 1500 : 500;
-                    await new Promise(resolve => setTimeout(resolve, userCheckDelay));
-                    
-                    // Special Safari handling for user data retrieval
-                    if (browserInfo && (browserInfo.isDesktopSafari || browserInfo.isMobileSafari) && retryCount >= 1) {
-                        console.log('[GoogleAuthSuccess] Using extended delay for Safari user retrieval');
-                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    if (browserInfo) {
+                        const userCheckDelay = getAdditionalDelay('userCheckDelay', browserInfo);
+                        console.log(`[GoogleAuthSuccess] Adding user check delay: ${userCheckDelay}ms`);
+                        await new Promise(resolve => setTimeout(resolve, userCheckDelay));
+
+                        // Special Safari handling for user data retrieval
+                        if ((browserInfo.isDesktopSafari || browserInfo.isMobileSafari) && retryCount >= 1) {
+                            const safariExtendedDelay = getAdditionalDelay('safariExtendedDelay', browserInfo);
+                            console.log(`[GoogleAuthSuccess] Using extended delay for Safari user retrieval: ${safariExtendedDelay}ms`);
+                            await new Promise(resolve => setTimeout(resolve, safariExtendedDelay));
+                        }
                     }
                     
                     const userData = await userContext.checkUser();
@@ -341,10 +363,17 @@ export default function GoogleAuthSuccess() {
                             
                             toast.dismiss();
                             
-                            toastIdRef.current = toast.success('Successfully logged in!', {
+                            toastIdRef.current = toast.success('🎉 Welcome to Sacral Track!', {
                                 id: 'auth-success',
-                                icon: '✅',
-                                duration: 3000,
+                                icon: '🎵',
+                                duration: 2500,
+                                style: {
+                                    background: 'linear-gradient(135deg, #20DDBB, #8A2BE2)',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    borderRadius: '12px',
+                                    padding: '16px 20px',
+                                },
                             });
                         }
                         
@@ -359,10 +388,16 @@ export default function GoogleAuthSuccess() {
                             sessionStorage.removeItem('authBrowserInfo');
                         }
                         
-                        // Redirect to homepage after successful auth - using a shorter delay
+                        // Redirect to homepage after successful auth - using a shorter delay with smooth transition
                         redirectTimeoutRef.current = setTimeout(() => {
-                            router.push('/');
-                        }, 1500);
+                            // Add smooth transition effect
+                            document.body.style.transition = 'opacity 0.5s ease-out';
+                            document.body.style.opacity = '0';
+
+                            setTimeout(() => {
+                                router.push('/');
+                            }, 300);
+                        }, 1200);
                     } else {
                         // If user data is null but session is valid, retry a few times
                         if (sessionValid && retryCount < maxRetries) {
@@ -455,41 +490,35 @@ export default function GoogleAuthSuccess() {
                     
                     toast.dismiss();
                     
-                    // Customize error message for Safari
-                    const errorMessage = browserInfo && (browserInfo.isDesktopSafari || browserInfo.isMobileSafari)
-                        ? 'Safari authentication error. Try using Chrome or Firefox instead.'
-                        : 'Authentication error, please try again';
-                    
-                    toastIdRef.current = toast.error(errorMessage, {
-                        id: 'auth-error-catch',
-                        duration: 5000,
-                    });
-                    
-                    // For Safari, show additional help toast
+                    // Enhanced Safari error handling
                     if (browserInfo && (browserInfo.isDesktopSafari || browserInfo.isMobileSafari)) {
-                        setTimeout(() => {
-                            toast((t) => (
-                                <div className="flex flex-col gap-2">
-                                    <span>Safari has stricter cookie settings that may affect login.</span>
-                                    <button
-                                        onClick={() => {
-                                            window.location.href = '/';
-                                            toast.dismiss(t.id);
-                                        }}
-                                        className="px-4 py-2 bg-[#20DDBB] rounded-lg text-white"
-                                    >
-                                        Try Again
-                                    </button>
-                                </div>
-                            ), {
-                                duration: 8000,
-                                style: {
-                                    background: '#272B43',
-                                    color: '#fff',
-                                    borderLeft: '4px solid #20DDBB'
-                                }
-                            });
-                        }, 1000);
+                        // Determine error type based on the error
+                        let errorType: 'cookies' | 'tracking' | 'timeout' | 'general' = 'general';
+
+                        if (error.message?.includes('timeout') || retryCount >= maxRetries) {
+                            errorType = 'timeout';
+                        } else if (error.message?.includes('cookie') || error.message?.includes('session')) {
+                            errorType = 'cookies';
+                        } else if (error.message?.includes('tracking') || error.message?.includes('cross-site')) {
+                            errorType = 'tracking';
+                        }
+
+                        setSafariErrorType(errorType);
+                        setShowSafariHelper(true);
+
+                        // Show a brief toast
+                        toastIdRef.current = toast.error('Safari authentication issue detected', {
+                            id: 'auth-error-safari',
+                            duration: 3000,
+                        });
+                    } else {
+                        // Standard error message for non-Safari browsers
+                        const errorMessage = 'Authentication error, please try again';
+
+                        toastIdRef.current = toast.error(errorMessage, {
+                            id: 'auth-error-catch',
+                            duration: 5000,
+                        });
                     }
                 }
             }
@@ -517,12 +546,60 @@ export default function GoogleAuthSuccess() {
         router.push('/auth/login');
     };
 
+    const handleSafariHelperClose = () => {
+        setShowSafariHelper(false);
+    };
+
+    const handleSafariHelperRetry = () => {
+        setShowSafariHelper(false);
+        // Reset retry count and try again
+        setRetryCount(0);
+        setCheckingAuth(true);
+
+        // Clear any existing error states
+        errorShownRef.current = false;
+
+        // Restart the authentication process
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    };
+
     return (
-        <div className="fixed inset-0 bg-[#1E1F2E] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-gradient-to-br from-[#1E1F2E] via-[#2A1B3D] to-[#1E1F2E] flex items-center justify-center p-4 overflow-hidden">
+            {/* Animated background particles */}
+            <div className="absolute inset-0 overflow-hidden">
+                {[...Array(20)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute w-2 h-2 bg-[#20DDBB] rounded-full opacity-20"
+                        initial={{
+                            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+                            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                        }}
+                        animate={{
+                            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+                            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                        }}
+                        transition={{
+                            duration: Math.random() * 10 + 10,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                        }}
+                    />
+                ))}
+            </div>
+
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="max-w-md w-full"
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                    duration: 0.8
+                }}
+                className="max-w-md w-full relative z-10"
             >
                 <div className="relative">
                     {/* Animated background gradient */}
@@ -539,7 +616,10 @@ export default function GoogleAuthSuccess() {
                         }}
                     />
 
-                    <div className="relative bg-[#14151F]/80 rounded-3xl p-8 backdrop-blur-xl border-2 border-[#20DDBB]/20">
+                    <div className="relative bg-[#14151F]/90 rounded-3xl p-8 backdrop-blur-xl border-2 border-[#20DDBB]/30 shadow-2xl shadow-[#20DDBB]/10">
+                        {/* Glowing border effect */}
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#20DDBB]/20 via-[#8A2BE2]/20 to-[#20DDBB]/20 blur-sm -z-10" />
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#20DDBB]/10 via-[#8A2BE2]/10 to-[#20DDBB]/10 blur-lg -z-20" />
                         {/* Firefox warning */}
                         {isFirefox && (
                             <div className="mb-4 p-3 bg-yellow-900/60 border-l-4 border-yellow-400 rounded text-yellow-200 text-sm">
@@ -615,18 +695,35 @@ export default function GoogleAuthSuccess() {
                                 transition={{ delay: 0.5 }}
                                 className="flex flex-col gap-4"
                             >
-                                <button
+                                <motion.button
                                     onClick={handleContinue}
-                                    className="w-full py-3 px-4 bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] rounded-xl text-white font-medium hover:opacity-90 transition-opacity"
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="w-full py-4 px-6 bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] rounded-xl text-white font-semibold hover:shadow-lg hover:shadow-[#20DDBB]/25 transition-all duration-300 relative overflow-hidden group"
                                 >
-                                    Continue to Homepage
-                                </button>
+                                    <span className="relative z-10 flex items-center justify-center gap-2">
+                                        🎵 Continue to Homepage
+                                    </span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-[#8A2BE2] to-[#20DDBB] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                </motion.button>
                                 
-                                <div className="flex justify-center mt-2">
-                                    <p className="text-[#818BAC] text-sm">
-                                        Redirecting automatically in {secondsLeft} seconds...
-                                    </p>
-                                </div>
+                                <motion.div
+                                    className="flex justify-center mt-4"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.5 }}
+                                >
+                                    <div className="flex items-center gap-2 text-[#818BAC] text-sm">
+                                        <motion.div
+                                            animate={{ rotate: 360 }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                            className="w-4 h-4"
+                                        >
+                                            ⏱️
+                                        </motion.div>
+                                        <span>Redirecting in {secondsLeft} seconds...</span>
+                                    </div>
+                                </motion.div>
                             </motion.div>
                         )}
 
@@ -649,6 +746,14 @@ export default function GoogleAuthSuccess() {
                     </div>
                 </div>
             </motion.div>
+
+            {/* Safari Authentication Helper */}
+            <SafariAuthHelper
+                isVisible={showSafariHelper}
+                onClose={handleSafariHelperClose}
+                onRetry={handleSafariHelperRetry}
+                errorType={safariErrorType}
+            />
         </div>
     );
-} 
+}

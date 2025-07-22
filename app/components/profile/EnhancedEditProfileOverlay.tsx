@@ -33,19 +33,19 @@ const overlayVariants = {
   exit: { opacity: 0, transition: { duration: 0.2 } }
 };
 
-const modalVariants = {
+const modalVariants: any = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
+  visible: {
+    opacity: 1,
+    scale: 1,
     y: -20,
-    transition: { type: "spring", damping: 25, stiffness: 300 }
+    transition: { duration: 0.3, ease: "easeOut" }
   },
-  exit: { 
-    opacity: 0, 
-    scale: 0.95, 
-    y: 20, 
-    transition: { duration: 0.2 } 
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20,
+    transition: { duration: 0.2 }
   }
 };
 

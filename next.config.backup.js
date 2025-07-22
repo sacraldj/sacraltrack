@@ -278,14 +278,42 @@ const nextConfig = {
             }
         ]
     },
-    // Configure webpack to optimize bundle size
-    webpack(config, { isServer, nextRuntime }) {
-        // Configure WebAssembly support
+
+    // Additional stability settings
+    compiler: {
+        removeConsole: false,
+    },
+
+    // Completely disable webpack optimizations in development
+    webpack(config, { isServer, nextRuntime, dev }) {
+        if (dev && !isServer) {
+            // Disable ALL optimizations in development
+            config.optimization = {
+                ...config.optimization,
+                splitChunks: false,
+                concatenateModules: false,
+                usedExports: false,
+                sideEffects: false,
+                minimize: false,
+                removeAvailableModules: false,
+                removeEmptyChunks: false,
+                mergeDuplicateChunks: false,
+            };
+
+            // Disable caching in dev
+            config.cache = false;
+
+            // Simplify module resolution
+            config.resolve = {
+                ...config.resolve,
+                symlinks: false,
+            };
+        }
+
+        // Minimal experiments
         config.experiments = {
-            ...config.experiments,
-            asyncWebAssembly: true,
-            syncWebAssembly: true,
             topLevelAwait: true,
+            layers: true,
         };
         
         // Configure rules for FFmpeg WASM files
@@ -323,7 +351,6 @@ const nextConfig = {
                 path: false,
                 os: false,
                 crypto: false,
-                canvas: false,
             };
         }
         

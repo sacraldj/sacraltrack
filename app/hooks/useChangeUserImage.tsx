@@ -1,5 +1,4 @@
 import { storage } from "@/libs/AppWriteClient";
-import Image from "image-js";
 
 const useChangeUserImage = async (file: File, cropper: any, currentImage: string) => {
     let audioId = Math.random().toString(36).slice(2, 22);
@@ -7,7 +6,10 @@ const useChangeUserImage = async (file: File, cropper: any, currentImage: string
     try {
         const response = await fetch(URL.createObjectURL(file));
         const imageBuffer = await response.arrayBuffer();
-        
+
+        // Динамический импорт image-js
+        const { default: Image } = await import('image-js');
+
         // Load the image
         const image = await Image.load(imageBuffer);
         

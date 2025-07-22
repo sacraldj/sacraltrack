@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVibeStore, VibePostWithProfile } from '@/app/stores/vibeStore';
-import VibeCard, { VibeCardSkeleton } from '@/app/components/vibe/VibeCard';
+import VibeCard from '@/app/components/vibe/VibeCard';
+import { VibeCardSkeleton } from '@/app/components/vibe/VibeCardSkeleton';
 import { MdOutlineMusicNote } from 'react-icons/md';
 import { VibeUploader } from '@/app/components/vibe/VibeUploader';
 

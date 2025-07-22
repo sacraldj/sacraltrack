@@ -1,8 +1,6 @@
 import { Account, Avatars, Client, Databases, ID, Query, Storage, Permission, Role, Functions } from 'appwrite';
 // Import everything from node-appwrite
 import * as NodeAppwrite from 'node-appwrite';
-import * as fs from 'fs';
-import * as path from 'path';
 
 // Appwrite конфигурация для использования во всем приложении
 export const APPWRITE_CONFIG = {
@@ -157,29 +155,38 @@ export const uploadFileFromServer = async (
   mimeType: string = 'application/octet-stream'
 ) => {
   try {
+    // Проверяем, что мы на сервере
+    if (typeof window !== 'undefined') {
+      return { success: false, error: 'This function can only be called on the server side' };
+    }
+
     // console.log(`[SERVER-UPLOAD] Attempting to upload file from path: ${filePath}`);
-    
+
     // Проверяем наличие API ключа
     if (!process.env.APPWRITE_API_KEY) {
       // console.error('[SERVER-UPLOAD] Missing APPWRITE_API_KEY in environment variables');
       return { success: false, error: 'Missing API key for server upload' };
     }
-    
+
+    // Динамические импорты для серверных модулей
+    const fs = await import('fs');
+    const path = await import('path');
+
     // Создаем клиент с API ключом
     const client = new NodeAppwrite.Client();
     client
       .setEndpoint(APPWRITE_CONFIG.endpoint)
       .setProject(APPWRITE_CONFIG.projectId)
       .setKey(process.env.APPWRITE_API_KEY);
-    
+
     const storage = new NodeAppwrite.Storage(client);
-    
+
     // Проверяем существование файла
     if (!fs.existsSync(filePath)) {
       // console.error(`[SERVER-UPLOAD] File does not exist at path: ${filePath}`);
       return { success: false, error: 'File does not exist' };
     }
-    
+
     // Получаем расширение файла для имени
     const fileName = path.basename(filePath);
     

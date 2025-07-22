@@ -1,5 +1,8 @@
 'use client';
 
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
+
 import GoogleAuthSuccess from '@/app/components/auth/GoogleAuthSuccess';
 import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -10,6 +13,9 @@ function AuthParamsHandler() {
     const searchParams = useSearchParams();
     
     useEffect(() => {
+        // Check if we're on the client side
+        if (typeof window === 'undefined') return;
+
         // Check if this is a Safari or Firefox browser
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         const isFirefox = /firefox/i.test(navigator.userAgent);

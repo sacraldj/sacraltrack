@@ -10,7 +10,7 @@ export interface MusicStickerProps {
   autoPlay?: boolean;
 }
 
-const animations = {
+const animations: Record<string, any> = {
   bounce: {
     y: [0, -15, 0],
     transition: {
@@ -94,7 +94,7 @@ export const MusicSticker: React.FC<MusicStickerProps> = ({
   return (
     <div className="relative inline-block">
       <motion.div
-        animate={isPlaying ? animations[animationType] : {}}
+        animate={isPlaying ? animations[animationType] : undefined}
         className="cursor-pointer relative"
         onClick={toggleAudio}
         style={{

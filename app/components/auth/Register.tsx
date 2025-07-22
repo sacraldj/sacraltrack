@@ -29,6 +29,7 @@ import {
   handleEnhancedAuth,
 } from "./googleOAuthUtils";
 import { clearAllAuthFlags } from "@/app/utils/authCleanup";
+import SafariAuthHelper from './SafariAuthHelper';
 
 // Password strength checker
 const checkPasswordStrength = (password: string) => {
@@ -98,6 +99,8 @@ export default function Register() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showSafariHelper, setShowSafariHelper] = useState(false);
+  const [safariErrorType, setSafariErrorType] = useState<'cookies' | 'tracking' | 'timeout' | 'general'>('general');
   const [lastAttemptTime, setLastAttemptTime] = useState<number>(0);
   const [attempts, setAttempts] = useState<number>(0);
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
@@ -349,20 +352,39 @@ export default function Register() {
 
           console.log("[GoogleRegister] Using enhanced OAuth URL:", oauthUrl);
 
-          // Enhanced iOS handling
-          if (browserInfo.isIOS) {
+          // Enhanced iOS and Safari handling
+          if (browserInfo.isIOS || browserInfo.isMobileSafari) {
+            console.log("[GoogleRegister] Using enhanced iOS/Safari auth handler");
+
+            // Clear any existing auth state that might interfere
+            if (typeof window !== "undefined") {
+              sessionStorage.removeItem("googleAuthInProgress");
+              localStorage.removeItem("safariAuthProcessing");
+
+              // Set fresh auth state
+              sessionStorage.setItem("googleAuthInProgress", "true");
+              sessionStorage.setItem("authType", "register");
+              const expiryTime = Date.now() + 15 * 60 * 1000; // 15 minutes
+              sessionStorage.setItem("googleAuthExpiryTime", expiryTime.toString());
+            }
+
             // For iOS, use the enhanced auth handler
             await handleEnhancedAuth(browserInfo, oauthUrl);
           } else {
-            // For other enhanced browsers
-            if (browserInfo.isDesktopSafari || browserInfo.isMobileSafari) {
-              localStorage.setItem(
-                "authRedirectAttempt",
-                Date.now().toString(),
-              );
+            // For other enhanced browsers (desktop Safari, mobile Firefox)
+            if (browserInfo.isDesktopSafari) {
+              localStorage.setItem("authRedirectAttempt", Date.now().toString());
               localStorage.setItem("safariAuthUrl", oauthUrl);
+
+              // Add special handling for desktop Safari
+              console.log("[GoogleRegister] Desktop Safari detected, using enhanced redirect");
+
+              // Clear any conflicting flags
+              localStorage.removeItem("safariAuthProcessing");
+              localStorage.removeItem("safariAuthSuccessful");
             }
 
+            // Standard redirect for non-iOS enhanced browsers
             window.location.href = oauthUrl;
           }
         } catch (error) {
@@ -397,28 +419,49 @@ export default function Register() {
         setBlockTimeLeft(10 * 60);
       }
 
-      let errorMessage = "Failed to start Google registration.";
+      // Enhanced Safari error handling
+      const browserInfo = detectBrowser();
+      if (browserInfo.isDesktopSafari || browserInfo.isMobileSafari) {
+        // Determine error type for Safari
+        let errorType: 'cookies' | 'tracking' | 'timeout' | 'general' = 'general';
 
-      if (error.code === 400) {
-        errorMessage =
-          "Invalid OAuth configuration. Please contact support or try email registration.";
-      } else if (error.code === 401) {
-        errorMessage = "Authentication failed. Please try again.";
-      } else if (error.code === 429) {
-        errorMessage =
-          "Too many requests. Please wait a few minutes before trying again.";
-      } else if (error.code === 503) {
-        errorMessage =
-          "Google authentication service is temporarily unavailable. Please try email registration.";
-      } else if (
-        error.message &&
-        error.message.toLowerCase().includes("network")
-      ) {
-        errorMessage =
-          "Network error. Please check your connection and try again.";
+        if (error.code === 429 || newAttempts >= 3) {
+          errorType = 'timeout';
+        } else if (error.message?.includes('cookie') || error.message?.includes('session')) {
+          errorType = 'cookies';
+        } else if (error.message?.includes('tracking') || error.message?.includes('cross-site')) {
+          errorType = 'tracking';
+        }
+
+        setSafariErrorType(errorType);
+        setShowSafariHelper(true);
+
+        showToast("error", "Safari authentication issue detected");
+      } else {
+        // Standard error handling for non-Safari browsers
+        let errorMessage = "Failed to start Google registration.";
+
+        if (error.code === 400) {
+          errorMessage =
+            "Invalid OAuth configuration. Please contact support or try email registration.";
+        } else if (error.code === 401) {
+          errorMessage = "Authentication failed. Please try again.";
+        } else if (error.code === 429) {
+          errorMessage =
+            "Too many requests. Please wait a few minutes before trying again.";
+        } else if (error.code === 503) {
+          errorMessage =
+            "Google authentication service is temporarily unavailable. Please try email registration.";
+        } else if (
+          error.message &&
+          error.message.toLowerCase().includes("network")
+        ) {
+          errorMessage =
+            "Network error. Please check your connection and try again.";
+        }
+
+        showToast("error", errorMessage);
       }
-
-      showToast("error", errorMessage);
 
       // Reopen register modal after a delay
       setTimeout(() => {
@@ -564,6 +607,25 @@ export default function Register() {
     }
   };
 
+  const handleSafariHelperClose = () => {
+    setShowSafariHelper(false);
+  };
+
+  const handleSafariHelperRetry = () => {
+    setShowSafariHelper(false);
+    // Reset attempts and try again
+    setAttempts(0);
+    localStorage.removeItem("registerAttempts");
+
+    // Clear any existing error states
+    setError(null);
+
+    // Retry Google registration
+    setTimeout(() => {
+      handleGoogleRegister();
+    }, 500);
+  };
+
   const switchToLogin = () => {
     setIsLoginOpen(true);
   };
@@ -572,7 +634,7 @@ export default function Register() {
 
   return (
     <motion.div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 auth-modal-overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -583,10 +645,10 @@ export default function Register() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto auth-modal-container"
       >
         <motion.div
-          className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)]"
+          className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)] auth-modal-content"
           whileHover={{ boxShadow: "0 0 50px rgba(32,221,187,0.2)" }}
           transition={{ duration: 0.3 }}
         >
@@ -594,7 +656,7 @@ export default function Register() {
           <button
             onClick={() => setIsRegisterOpen(false)}
             disabled={loading || googleLoading}
-            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50"
+            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50 auth-modal-close"
           >
             <FiX className="text-2xl" />
           </button>
@@ -654,7 +716,7 @@ export default function Register() {
               </motion.div>
 
               <motion.h1
-                className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] mb-3"
+                className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] mb-3 auth-modal-title"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -662,7 +724,7 @@ export default function Register() {
                 Join the Journey!
               </motion.h1>
               <motion.p
-                className="text-[#818BAC]"
+                className="text-[#818BAC] auth-modal-subtitle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -709,7 +771,7 @@ export default function Register() {
 
             {/* Form */}
             <motion.div
-              className="space-y-4"
+              className="space-y-4 auth-form-spacing"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -733,6 +795,7 @@ export default function Register() {
                     focus:border-[#20DDBB] focus:bg-[#14151F]/80
                     transition-all duration-300
                     group-hover:border-[#20DDBB]/50
+                    auth-modal-input
                   `}
                 />
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -759,6 +822,7 @@ export default function Register() {
                     focus:border-[#20DDBB] focus:bg-[#14151F]/80
                     transition-all duration-300
                     group-hover:border-[#20DDBB]/50
+                    auth-modal-input
                   `}
                 />
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -788,6 +852,7 @@ export default function Register() {
                     focus:border-[#20DDBB] focus:bg-[#14151F]/80
                     transition-all duration-300
                     group-hover:border-[#20DDBB]/50
+                    auth-modal-input
                   `}
                 />
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -959,6 +1024,7 @@ export default function Register() {
                   text-white py-4 rounded-xl font-semibold
                   overflow-hidden group
                   disabled:opacity-50 disabled:cursor-not-allowed
+                  auth-modal-button
                 "
               >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -1009,6 +1075,7 @@ export default function Register() {
                   transition-all duration-300
                   disabled:opacity-50 disabled:cursor-not-allowed
                   relative overflow-hidden group
+                  auth-google-button
                 "
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-[#20DDBB]/10 to-[#8A2BE2]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -1085,6 +1152,14 @@ export default function Register() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Safari Authentication Helper */}
+      <SafariAuthHelper
+        isVisible={showSafariHelper}
+        onClose={handleSafariHelperClose}
+        onRetry={handleSafariHelperRetry}
+        errorType={safariErrorType}
+      />
     </motion.div>
   );
 }

@@ -60,18 +60,18 @@ export default function GlobalLoader() {
     }, [pathname]);
 
     // Определяем анимации для музыкальных нот
-    const noteVariants = {
+    const noteVariants: any = {
         hidden: { opacity: 0, y: 20, scale: 0.8 },
-        visible: { 
-            opacity: 1, 
-            y: 0, 
+        visible: {
+            opacity: 1,
+            y: 0,
             scale: 1,
-            transition: { 
+            transition: {
                 duration: 0.5,
                 ease: "easeOut"
             }
         },
-        exit: { 
+        exit: {
             opacity: 0,
             y: -20,
             scale: 0.8,

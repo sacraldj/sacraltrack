@@ -327,8 +327,13 @@ const UserActivitySidebar: React.FC<UserActivitySidebarProps> = ({
         </>
     );
         
+        // Не показываем статистику и активность для чужих профилей
+        if (!isOwner) {
+            return null;
+        }
+
         return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}

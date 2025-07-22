@@ -25,11 +25,8 @@ const ProfileStatsCard = ({
       style={{ minWidth: 200 }}
     >
       <div className="flex flex-col items-center gap-4">
-        <div className="grid grid-cols-2 gap-4 w-full mb-1">
+        <div className="grid grid-cols-1 gap-4 w-full mb-1">
           <StatItem label="Releases" value={stats.releases} />
-          <StatItem label="Likes" value={stats.likes} />
-          <StatItem label="Listens" value={stats.listens} />
-          <StatItem label="Liked" value={stats.liked} />
         </div>
         <motion.button
           onClick={onFriendAction}

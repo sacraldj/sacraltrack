@@ -15,45 +15,27 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({ className = '', isMobile = 
   const adContainerRef = useRef<HTMLDivElement>(null);
   const [adLoaded, setAdLoaded] = useState(false);
 
-  // Проверяем localStorage для состояния баннера
+  // Упрощенная проверка localStorage - всегда показываем баннер по умолчанию
   useEffect(() => {
+    // Принудительно показываем баннер, игнорируя localStorage
+    console.log('[NewsAdBanner] Forcing banner to be visible');
+    setIsVisible(true);
+    setIsMinimized(false);
+
+    // Очищаем старое состояние из localStorage если оно есть
     const bannerState = localStorage.getItem('newsAdBannerState');
     if (bannerState) {
-      try {
-        const state = JSON.parse(bannerState);
-        console.log('[NewsAdBanner] Loaded state from localStorage:', state);
-
-        // Проверяем, не слишком ли старое состояние (сбрасываем через 24 часа)
-        const now = Date.now();
-        const stateAge = now - (state.timestamp || 0);
-        const maxAge = 24 * 60 * 60 * 1000; // 24 часа
-
-        if (stateAge > maxAge) {
-          console.log('[NewsAdBanner] State is too old, resetting to visible');
-          localStorage.removeItem('newsAdBannerState');
-          setIsVisible(true);
-          setIsMinimized(false);
-        } else {
-          setIsVisible(state.isVisible);
-          setIsMinimized(state.isMinimized);
-        }
-      } catch (error) {
-        console.error('[NewsAdBanner] Error parsing localStorage state:', error);
-        localStorage.removeItem('newsAdBannerState');
-        setIsVisible(true);
-        setIsMinimized(false);
-      }
-    } else {
-      console.log('[NewsAdBanner] No saved state, showing banner');
+      console.log('[NewsAdBanner] Clearing old localStorage state');
+      localStorage.removeItem('newsAdBannerState');
     }
   }, []);
 
   // Загружаем AdsTerra Static Banner согласно официальной документации
   useEffect(() => {
-    console.log('[NewsAdBanner] useEffect triggered:', { isVisible, isMinimized, hasContainer: !!adContainerRef.current });
+    console.log('[NewsAdBanner] useEffect triggered:', { hasContainer: !!adContainerRef.current });
 
-    if (!isVisible || isMinimized || !adContainerRef.current) {
-      console.log('[NewsAdBanner] Skipping script load due to conditions');
+    if (!adContainerRef.current) {
+      console.log('[NewsAdBanner] Skipping script load - no container');
       return;
     }
 
@@ -178,25 +160,17 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({ className = '', isMobile = 
 
   }, [isVisible, isMinimized, isMobile]);
 
-  // Сохраняем состояние в localStorage
-  const saveState = (visible: boolean, minimized: boolean) => {
-    localStorage.setItem('newsAdBannerState', JSON.stringify({
-      isVisible: visible,
-      isMinimized: minimized,
-      timestamp: Date.now()
-    }));
-  };
-
+  // Убираем сохранение состояния в localStorage для обеспечения постоянного отображения
   const handleClose = () => {
-    console.log('[NewsAdBanner] Closing banner');
+    console.log('[NewsAdBanner] Temporarily hiding banner (will reappear on page reload)');
     setIsVisible(false);
-    saveState(false, false);
+    // Не сохраняем состояние в localStorage
   };
 
   const handleMinimize = () => {
     console.log('[NewsAdBanner] Toggling minimize:', !isMinimized);
     setIsMinimized(!isMinimized);
-    saveState(true, !isMinimized);
+    // Не сохраняем состояние в localStorage
   };
 
   // Функция для принудительного показа баннера (для отладки)
@@ -261,13 +235,14 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({ className = '', isMobile = 
     }
   }, []);
 
-  // Не показываем баннер если пользователь его скрыл
-  if (!isVisible) {
-    console.log('[NewsAdBanner] Banner is not visible, returning null');
-    return null;
-  }
+  // Принудительно показываем баннер (убираем проверку видимости)
+  console.log('[NewsAdBanner] Force rendering banner, isVisible:', isVisible, 'isMinimized:', isMinimized);
 
-  console.log('[NewsAdBanner] Rendering banner, isVisible:', isVisible, 'isMinimized:', isMinimized);
+  // Если баннер был скрыт, принудительно показываем его
+  if (!isVisible) {
+    console.log('[NewsAdBanner] Banner was hidden, forcing it to be visible');
+    setIsVisible(true);
+  }
 
   return (
     <motion.div

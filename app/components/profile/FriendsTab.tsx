@@ -243,12 +243,12 @@ const FriendCard: React.FC<{
             </>
           )}
 
-          {isFriend && (
+          {isFriend && onRemove && (
             <motion.button
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
               className="p-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg shadow-red-900/20 hover:from-red-600 hover:to-pink-600 transition-all duration-300 border border-white/10"
-              onClick={() => onRemove && onRemove(user.user_id)}
+              onClick={() => onRemove(user.user_id)}
             >
               <BsPersonDash size={18} />
             </motion.button>
@@ -478,31 +478,25 @@ export default function FriendsTab({ profileId }: { profileId: string }) {
           label="Friends"
           count={friends.length}
         />
-        <TabButton
-          isActive={activeTab === "requests"}
-          onClick={() => setActiveTab("requests")}
-          icon={<FaUserClock className="w-4 h-4" />}
-          label="Friend Requests"
-          count={pendingRequests.length}
-        />
-        <TabButton
-          isActive={activeTab === "sent"}
-          onClick={() => setActiveTab("sent")}
-          icon={<FaPaperPlane className="w-4 h-4" />}
-          label="Sent Requests"
-          count={sentRequests.length}
-        />
         {isOwner && (
-          <motion.button
-            onClick={() => setShowSearchModal(true)}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#20DDBB]/80 to-[#5D59FF]/80 rounded-xl text-white font-medium shadow-md border border-[#20DDBB]/30 ml-2 text-xs hover:from-[#20DDBB] hover:to-[#5D59FF] transition-all"
-          >
-            <FaSearch className="w-4 h-4" />
-            <span>Find Friends</span>
-          </motion.button>
+          <>
+            <TabButton
+              isActive={activeTab === "requests"}
+              onClick={() => setActiveTab("requests")}
+              icon={<FaUserClock className="w-4 h-4" />}
+              label="Friend Requests"
+              count={pendingRequests.length}
+            />
+            <TabButton
+              isActive={activeTab === "sent"}
+              onClick={() => setActiveTab("sent")}
+              icon={<FaPaperPlane className="w-4 h-4" />}
+              label="Sent Requests"
+              count={sentRequests.length}
+            />
+          </>
         )}
+
       </motion.div>
 
       {/* Tab contents */}
@@ -526,19 +520,7 @@ export default function FriendsTab({ profileId }: { profileId: string }) {
                       : `${currentProfile?.name} doesn't have any friends yet.`
                   }
                   icon={<FaUserFriends />}
-                  actionButton={
-                    isOwner && (
-                      <motion.button
-                        onClick={() => setShowSearchModal(true)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-6 py-3 bg-gradient-to-r from-[#20DDBB]/20 to-[#20DDBB]/30 text-[#20DDBB] rounded-xl font-medium border border-[#20DDBB]/30 flex items-center gap-2"
-                      >
-                        <BsPersonPlus size={18} />
-                        <span>Find New Friends</span>
-                      </motion.button>
-                    )
-                  }
+                  actionButton={undefined}
                 />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:p-2 lg:ml-[30px] lg:mr-[30px] friends-grid-mobile">

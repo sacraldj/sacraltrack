@@ -1,0 +1,290 @@
+/* Mobile Authentication Modal Styles */
+/* Optimized for iPhone 13 Pro (390x844) and similar devices */
+
+/* Base mobile styles for authentication modals */
+@media (max-width: 767px) {
+  /* Authentication modal overlay */
+  .auth-modal-overlay {
+    padding: 10px !important;
+    padding-top: max(10px, env(safe-area-inset-top)) !important;
+    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    padding-left: max(10px, env(safe-area-inset-left)) !important;
+    padding-right: max(10px, env(safe-area-inset-right)) !important;
+  }
+
+  /* Authentication modal container */
+  .auth-modal-container {
+    width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 20px) !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Authentication modal content */
+  .auth-modal-content {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border-radius: 20px !important;
+    min-height: auto !important;
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
+  }
+
+  /* Form inputs in auth modals */
+  .auth-modal-input {
+    padding: 14px 16px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    border-radius: 12px !important;
+  }
+
+  /* Buttons in auth modals */
+  .auth-modal-button {
+    padding: 14px 20px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    min-height: 48px !important; /* Touch-friendly size */
+  }
+
+  /* Google button specific styling */
+  .auth-google-button {
+    padding: 12px 16px !important;
+    min-height: 48px !important;
+    font-size: 15px !important;
+  }
+
+  /* Close button positioning */
+  .auth-modal-close {
+    top: 12px !important;
+    right: 12px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 18px !important;
+  }
+}
+
+/* iPhone 13 Pro and similar (390px width) */
+@media (max-width: 390px) {
+  .auth-modal-overlay {
+    padding: 8px !important;
+    padding-top: max(8px, env(safe-area-inset-top)) !important;
+    padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .auth-modal-container {
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100vh - 16px) !important;
+  }
+
+  .auth-modal-content {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Adjust form spacing for smaller screens */
+  .auth-form-spacing {
+    gap: 16px !important;
+  }
+
+  /* Input adjustments */
+  .auth-modal-input {
+    padding: 12px 14px !important;
+    font-size: 16px !important;
+  }
+
+  /* Button adjustments */
+  .auth-modal-button {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+  }
+
+  /* Title adjustments */
+  .auth-modal-title {
+    font-size: 20px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Subtitle adjustments */
+  .auth-modal-subtitle {
+    font-size: 14px !important;
+    margin-bottom: 20px !important;
+  }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .auth-modal-overlay {
+    padding: 6px !important;
+  }
+
+  .auth-modal-container {
+    max-width: calc(100vw - 12px) !important;
+    max-height: calc(100vh - 12px) !important;
+  }
+
+  .auth-modal-content {
+    padding: 18px 14px !important;
+    border-radius: 14px !important;
+  }
+
+  .auth-modal-title {
+    font-size: 18px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .auth-modal-subtitle {
+    font-size: 13px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .auth-form-spacing {
+    gap: 14px !important;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 767px) and (orientation: landscape) {
+  .auth-modal-overlay {
+    padding: 4px !important;
+    align-items: flex-start !important;
+    padding-top: max(4px, env(safe-area-inset-top)) !important;
+  }
+
+  .auth-modal-container {
+    max-height: calc(100vh - 8px) !important;
+    margin-top: 0 !important;
+  }
+
+  .auth-modal-content {
+    padding: 16px !important;
+    max-height: calc(100vh - 16px) !important;
+  }
+
+  /* Reduce spacing in landscape */
+  .auth-form-spacing {
+    gap: 12px !important;
+  }
+
+  .auth-modal-title {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .auth-modal-subtitle {
+    font-size: 13px !important;
+    margin-bottom: 16px !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari viewport fix */
+  .auth-modal-overlay {
+    min-height: -webkit-fill-available !important;
+  }
+
+  .auth-modal-container {
+    max-height: -webkit-fill-available !important;
+  }
+
+  /* Prevent zoom on input focus */
+  .auth-modal-input {
+    font-size: 16px !important;
+    transform: translateZ(0) !important;
+    -webkit-appearance: none !important;
+  }
+
+  /* Smooth scrolling for iOS */
+  .auth-modal-content {
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+  }
+}
+
+/* High DPI displays (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .auth-modal-content {
+    border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+/* Dark mode adjustments for mobile */
+@media (prefers-color-scheme: dark) and (max-width: 767px) {
+  .auth-modal-content {
+    background: rgba(30, 31, 46, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+  }
+}
+
+/* Accessibility improvements for mobile */
+@media (max-width: 767px) {
+  /* Larger touch targets */
+  .auth-modal-button,
+  .auth-modal-close,
+  .auth-google-button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  /* Better focus indicators */
+  .auth-modal-input:focus,
+  .auth-modal-button:focus {
+    outline: 2px solid #20DDBB !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Improved text contrast */
+  .auth-modal-text {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* Animation optimizations for mobile */
+@media (max-width: 767px) {
+  .auth-modal-container {
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    .auth-modal-container {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* Notch and safe area handling for newer iPhones */
+@media (max-width: 767px) {
+  .auth-modal-overlay {
+    /* Handle notch areas */
+    padding-top: max(10px, env(safe-area-inset-top, 10px)) !important;
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 10px)) !important;
+    padding-left: max(10px, env(safe-area-inset-left, 10px)) !important;
+    padding-right: max(10px, env(safe-area-inset-right, 10px)) !important;
+  }
+}
+
+/* Specific fixes for iPhone 13 Pro Max (428px) */
+@media (max-width: 428px) and (min-width: 391px) {
+  .auth-modal-content {
+    padding: 24px 20px !important;
+  }
+
+  .auth-modal-title {
+    font-size: 22px !important;
+  }
+
+  .auth-modal-input {
+    padding: 16px 18px !important;
+  }
+
+  .auth-modal-button {
+    padding: 16px 24px !important;
+  }
+}

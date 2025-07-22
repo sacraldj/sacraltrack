@@ -27,7 +27,7 @@ import { BiLoaderCircle } from 'react-icons/bi';
 import { useShareVibeContext } from './useShareVibe';
 import { usePathname } from "next/navigation";
 import { format } from 'date-fns';
-import VibeLikeButton from './VibeLikeButton';
+import VibeLikes from './VibeLikes';
 
 // Интерфейс для комментариев
 interface VibeComment {
@@ -1112,15 +1112,23 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
                 Details
               </motion.button>
               
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowOptions(!showOptions); }} 
-                className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowOptions(!showOptions); }}
+                className={`p-1.5 rounded-full hover:bg-white/10 transition-colors relative z-30 ${showOptions ? 'bg-white/10' : ''}`}
               >
                 <EllipsisHorizontalIcon className="h-5 w-5 text-gray-400" />
               </button>
-              
+
               {showOptions && (
-                <div className="absolute right-0 mt-1 bg-[#1E1A36] border border-white/10 rounded-xl overflow-hidden shadow-lg z-20 min-w-[160px]">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute right-0 top-full mt-2 bg-[#1E1A36] border border-white/10 rounded-xl overflow-hidden shadow-lg z-20 min-w-[160px]"
+                >
+                  {/* Стрелочка указывающая на кнопку */}
+                  <div className="absolute -top-1 right-3 w-2 h-2 bg-[#1E1A36] border-l border-t border-white/10 transform rotate-45"></div>
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleShare(); }}
                     className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2"
@@ -1148,7 +1156,7 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
                       )}
                     </button>
                   )}
-                </div>
+                </motion.div>
               )}
             </div>
           </div>
@@ -1181,11 +1189,11 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
           {/* Action buttons */}
           <div className="flex items-center justify-between w-full mt-[5px]">
             <div className="flex items-center gap-4">
-              <VibeLikeButton 
-                vibeId={vibe.id}
-                initialLikeCount={vibeStats.likesCount}
+              <VibeLikes
+                vibe={vibe}
                 onLikeUpdated={handleLikeUpdate}
                 className="h-[50px] flex p-4 hover:bg-white/5 rounded-lg transition-colors duration-200"
+                size="md"
               />
 
               <motion.button 

@@ -49,35 +49,32 @@ const TopRankingUsers: React.FC<TopRankingUsersProps> = ({ users: externalUsers,
     };
 
     useEffect(() => {
-        // Если пользователи переданы через пропсы, используем их
+        // Если пользователи переданы через пропсы, используем их (оптимизированная обработка)
         if (externalUsers && externalUsers.length > 0) {
             try {
-                // Сначала фильтруем пользователей с необходимыми полями
-                const validUsers = externalUsers.filter(user => user && user.user_id);
-                
-                // Затем преобразуем их в нужный формат
-                const processedUsers: RankedUser[] = validUsers.map((user: any) => {
-                    const score = calculateUserScore(user);
-                    const { rank, color } = determineRank(score);
-                    
-                    return {
-                        id: user.$id || user.id || '',
-                        user_id: user.user_id,
-                        name: user.name || 'Unknown Artist',
-                        username: user.username,
-                        image: user.image || '/images/placeholders/user-placeholder.svg',
-                        score,
-                        rank,
-                        color
-                    };
-                });
-                
-                // Сортировка по убыванию счёта
-                const sortedUsers = processedUsers
-                    .sort((a, b) => b.score - a.score)
-                    .slice(0, 10);
-                
-                setUsers(sortedUsers);
+                // Быстрая фильтрация и обработка
+                const processedUsers: RankedUser[] = externalUsers
+                    .filter(user => user && user.user_id && user.name) // Фильтруем только валидных пользователей
+                    .map((user: any) => {
+                        // Используем уже рассчитанный score если он есть
+                        const score = user.calculatedScore || calculateUserScore(user);
+                        const { rank, color } = determineRank(score);
+
+                        return {
+                            id: user.$id || user.id || '',
+                            user_id: user.user_id,
+                            name: user.name,
+                            username: user.username,
+                            image: user.image || '/images/placeholders/user-placeholder.svg',
+                            score,
+                            rank,
+                            color
+                        };
+                    })
+                    .sort((a, b) => b.score - a.score) // Сортируем сразу
+                    .slice(0, 10); // Берем топ-10
+
+                setUsers(processedUsers);
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error processing external users:', error);
@@ -85,64 +82,10 @@ const TopRankingUsers: React.FC<TopRankingUsersProps> = ({ users: externalUsers,
             }
             return;
         }
-        
-        // Если пропсы не переданы, загружаем пользователей из базы
-        const fetchUsers = async () => {
-            try {
-                // Получаем друзей
-                const userFriendsResponses = await database.listDocuments(
-                    process.env.NEXT_PUBLIC_DATABASE_ID!,
-                    process.env.NEXT_PUBLIC_COLLECTION_ID_FRIENDS!,
-                    [
-                        Query.limit(100),
-                    ]
-                );
-                
-                // Получаем все профили
-                const userProfiles = await database.listDocuments(
-                    process.env.NEXT_PUBLIC_DATABASE_ID!,
-                    process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILES!,
-                    [
-                        Query.limit(100),
-                    ]
-                );
-                
-                if (userProfiles && userProfiles.documents) {
-                    // Затем обработаем оставшиеся профили
-                    const rankedUsers: RankedUser[] = userProfiles.documents.map((profile: any) => {
-                        // Расчет счета
-                        const score = calculateUserScore(profile, userFriendsResponses?.documents);
-                        
-                        // Определение ранга и цвета
-                        const { rank, color } = determineRank(score);
-                        
-                        return {
-                            id: profile.$id,
-                            user_id: profile.user_id,
-                            name: profile.name || 'Unknown Artist',
-                            username: profile.username,
-                            image: profile.image || '/images/placeholders/user-placeholder.svg',
-                            score, // Добавляем рассчитанный счет
-                            rank, // Добавляем ранг
-                            color // Добавляем цвет для ранга
-                        };
-                    });
-                    
-                    // Сортируем пользователей по счету и берем топ-10
-                    const topUsers = rankedUsers
-                        .sort((a, b) => b.score - a.score)
-                        .slice(0, 10);
-                    
-                    setUsers(topUsers);
-                }
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        
-        fetchUsers();
+
+        // Если пропсы не переданы, показываем пустое состояние (данные должны приходить через пропсы)
+        setUsers([]);
+        setIsLoading(false);
     }, [externalUsers]);
     
     // Расчет счета пользователя на основе различных метрик

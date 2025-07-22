@@ -282,22 +282,52 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Функция для получения количества лайков для вайба
+// Функция для получения количества лайков для вайба с retry logic
 async function getLikesCount(vibe_id: string): Promise<number> {
-  try {
-    const likesData = await database.listDocuments(
-      APPWRITE_CONFIG.databaseId,
-      VIBE_LIKES_COLLECTION_ID, // Используем константу с ID коллекции vibe_likes
-      [
-        Query.equal("vibe_id", vibe_id)
-      ]
-    );
-    
-    return likesData.total;
-  } catch (error) {
-    console.error("Error counting likes:", error);
-    return 0;
+  const maxRetries = 3;
+  let retryCount = 0;
+
+  while (retryCount < maxRetries) {
+    try {
+      // Создаем Promise с таймаутом
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 8000); // 8 секунд таймаут
+      });
+
+      const requestPromise = database.listDocuments(
+        APPWRITE_CONFIG.databaseId,
+        VIBE_LIKES_COLLECTION_ID,
+        [Query.equal("vibe_id", vibe_id)]
+      );
+
+      const likesData = await Promise.race([requestPromise, timeoutPromise]) as any;
+
+      return likesData.total;
+    } catch (error: any) {
+      retryCount++;
+
+      // Проверяем, стоит ли повторять запрос
+      const isRetryableError = error.code === 0 ||
+                              error.message?.includes('ETIMEDOUT') ||
+                              error.message?.includes('timeout') ||
+                              error.message?.includes('network') ||
+                              error.message?.includes('Request timeout') ||
+                              error.type === '';
+
+      if (retryCount >= maxRetries || !isRetryableError) {
+        if (retryCount >= maxRetries) {
+          console.error(`[VIBE-LIKE] Failed to get likes count after ${maxRetries} attempts for vibe ${vibe_id}`);
+        }
+        return 0; // Graceful degradation
+      }
+
+      // Exponential backoff
+      const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000); // Max 5 seconds
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
+
+  return 0; // Fallback
 }
 
 // Улучшенная функция обновления статистики вайба
@@ -430,7 +460,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Получаем общее количество лайков
+    // Получаем общее количество лайков напрямую из базы (real-time)
     const likesCount = await getLikesCount(vibe_id);
 
     // Если передан user_id, проверяем, поставил ли пользователь лайк
@@ -438,20 +468,28 @@ export async function GET(request: NextRequest) {
     if (user_id) {
       const userLikes = await database.listDocuments(
         APPWRITE_CONFIG.databaseId,
-        VIBE_LIKES_COLLECTION_ID, // Используем константу с ID коллекции vibe_likes
+        VIBE_LIKES_COLLECTION_ID,
         [
           Query.equal("user_id", user_id),
           Query.equal("vibe_id", vibe_id)
         ]
       );
-      
+
       hasLiked = userLikes.total > 0;
     }
 
-    return NextResponse.json({
+    // Добавляем заголовки для предотвращения кэширования
+    const response = NextResponse.json({
       count: likesCount,
-      hasLiked
+      hasLiked,
+      timestamp: Date.now() // Добавляем timestamp для отслеживания актуальности
     });
+
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+
+    return response;
   } catch (error) {
     console.error("Error getting likes:", error);
     return NextResponse.json(
@@ -459,4 +497,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

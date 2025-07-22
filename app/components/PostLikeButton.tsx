@@ -1,27 +1,25 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useLikesManager } from '@/app/hooks/useLikesManager';
+import { usePostLikesManager } from '@/app/hooks/usePostLikesManager';
 import { useUser } from '@/app/context/user';
 import { useGeneralStore } from '@/app/stores/general';
-import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import { AiFillHeart } from "react-icons/ai";
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
-interface VibeLikeButtonProps {
-  vibeId: string;
-  initialLikeCount?: number | string;
-  initialLikeState?: boolean;
+interface PostLikeButtonProps {
+  postId: string;
+  initialLikeCount?: number;
   onLikeUpdated?: (count: number, isLiked: boolean) => void;
   showCount?: boolean;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
-const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
-  vibeId,
+const PostLikeButton: React.FC<PostLikeButtonProps> = ({
+  postId,
   initialLikeCount = 0,
-  initialLikeState = false,
   onLikeUpdated,
   showCount = true,
   size = 'md',
@@ -29,15 +27,15 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
 }) => {
   const { user } = useUser() || { user: null };
   const { setIsLoginOpen } = useGeneralStore();
-
-  // Используем новый менеджер лайков с дедупликацией
+  
+  // Используем новый менеджер лайков
   const {
     count: likesCount,
     hasLiked: isLiked,
     isUpdating,
     error,
     toggleLike,
-  } = useLikesManager(vibeId, user?.id);
+  } = usePostLikesManager(postId, user?.id);
 
   // Состояние для анимаций
   const [animationState, setAnimationState] = useState<'idle' | 'liking' | 'unliking'>('idle');
@@ -64,7 +62,7 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
     // Запускаем анимацию
     const newState = isLiked ? 'unliking' : 'liking';
     setAnimationState(newState);
-
+    
     // Показываем ripple эффект
     setShowRipple(true);
     if (rippleTimeoutRef.current) {
@@ -77,14 +75,14 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
     try {
       // Выполняем переключение лайка
       const success = await toggleLike();
-
+      
       // Сбрасываем анимацию
       setTimeout(() => {
         setAnimationState('idle');
       }, success ? 400 : 300);
     } catch (error) {
-      console.error('[VibeLikeButton] Toggle error:', error);
-      toast.error("Please log in to like vibes");
+      console.error('[PostLikeButton] Toggle error:', error);
+      toast.error("Please log in to like posts");
       setTimeout(() => {
         setAnimationState('idle');
       }, 300);
@@ -110,13 +108,22 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
     }
     return num.toString();
   };
+
+  // Размеры в зависимости от size prop
+  const sizeClasses = {
+    sm: { icon: 16, text: 'text-xs' },
+    md: { icon: 20, text: 'text-sm' },
+    lg: { icon: 27, text: 'text-base' }
+  };
+
+  const currentSize = sizeClasses[size];
   
   return (
     <button
       onClick={handleLikeClick}
       aria-label={isLiked ? 'Unlike' : 'Like'}
       title={isLiked ? 'Unlike' : 'Like'}
-      className={`group relative flex items-center gap-1.5 ${className} focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 rounded-full transition-all duration-200`}
+      className={`group relative flex items-center gap-2 ${className} focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 rounded-full transition-all duration-200`}
     >
       {/* Ripple effect */}
       {showRipple && (
@@ -126,30 +133,25 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
       )}
       
       {/* Heart icon container */}
-      <div className={`relative flex items-center justify-center transition-all duration-300 ${
-        animationState === 'liking'
-          ? 'animate-likePopIn'
-          : animationState === 'unliking'
-            ? 'animate-likePopOut'
-            : isLiked
-              ? 'scale-110 hover:scale-105'
-              : 'hover:scale-110'
-      }`}>
-        {/* Heart icon */}
-        {isLiked ? (
-          <HeartIconSolid
-            className={`${
-              size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'
-            } text-red-500 ${animationState === 'idle' ? 'animate-heartbeat' : ''}`}
-          />
-        ) : (
-          <HeartIconOutline
-            className={`${
-              size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'
-            } text-gray-400 group-hover:text-red-500 transition-colors duration-300`}
-          />
-        )}
-      </div>
+      <motion.div 
+        className={`relative flex items-center justify-center transition-all duration-300 ${
+          animationState === 'liking' 
+            ? 'animate-likePopIn' 
+            : animationState === 'unliking'
+              ? 'animate-likePopOut'
+              : isLiked 
+                ? 'scale-110 hover:scale-105' 
+                : 'hover:scale-110'
+        }`}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <AiFillHeart 
+          color={isLiked ? '#FF0000' : 'white'} 
+          size={currentSize.icon}
+          className={`transition-colors ${!isLiked ? 'group-hover:text-red-500' : ''} ${animationState === 'idle' && isLiked ? 'animate-heartbeat' : ''}`}
+        />
+      </motion.div>
       
       {/* Like count */}
       {showCount && (
@@ -157,10 +159,8 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
           animationState === 'liking' ? 'animate-countUp' : animationState === 'unliking' ? 'animate-countDown' : ''
         }`}>
           <span className={`${
-            isLiked ? 'text-red-500' : 'text-gray-400 group-hover:text-red-500'
-          } transition-colors font-medium ${
-            size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm'
-          }`}>
+            isLiked ? 'text-red-500' : 'text-white group-hover:text-red-500'
+          } transition-colors font-semibold ${currentSize.text}`}>
             {formatNumber(likesCount)}
           </span>
           
@@ -174,4 +174,4 @@ const VibeLikeButton: React.FC<VibeLikeButtonProps> = ({
   );
 };
 
-export default VibeLikeButton;
+export default PostLikeButton;
