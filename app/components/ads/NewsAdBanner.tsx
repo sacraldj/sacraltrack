@@ -17,10 +17,40 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({
   const [isMinimized, setIsMinimized] = useState(false);
   const adContainerRef = useRef<HTMLDivElement>(null);
   const [adLoaded, setAdLoaded] = useState(false);
+  const [showFallback, setShowFallback] = useState(false);
 
-  // Упрощенная проверка localStorage - всегда показываем баннер по умолчанию
+  // Move showFallbackBanner function to component level
+  const showFallbackBanner = () => {
+    if (!adContainerRef.current) return;
+    
+    const atOptions = {
+      height: isMobile ? 50 : 50,
+      width: isMobile ? 300 : 320,
+    };
+    
+    const fallbackDiv = document.createElement('div');
+    fallbackDiv.className = 'fallback-ad flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg cursor-pointer hover:from-blue-700 hover:to-purple-700 transition-all duration-300';
+    fallbackDiv.style.height = `${atOptions.height}px`;
+    fallbackDiv.style.width = `${atOptions.width}px`;
+    fallbackDiv.onclick = () => {
+      window.open('https://publishers.adsterra.com/referral/4Lx5vMNjC3', '_blank');
+    };
+    fallbackDiv.innerHTML = `
+      <div class="text-center p-2">
+        <div class="text-sm font-medium">🎵 Music Advertisement</div>
+        <div class="text-xs opacity-80">Click to learn more</div>
+      </div>
+    `;
+    
+    adContainerRef.current.innerHTML = '';
+    adContainerRef.current.appendChild(fallbackDiv);
+    setAdLoaded(true);
+    setShowFallback(true);
+    console.log('[NewsAdBanner] Fallback banner displayed');
+  };
+
+  // Принудительно показываем баннер
   useEffect(() => {
-    // Принудительно показываем баннер, игнорируя localStorage
     console.log("[NewsAdBanner] Forcing banner to be visible");
     setIsVisible(true);
     setIsMinimized(false);
@@ -39,7 +69,7 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({
       return;
     }
 
-    // Проверяем, если скрипт уже загружен
+    // Проверяем, если баннер уже загружен
     if (adContainerRef.current.children.length > 0) {
       setAdLoaded(true);
       return;
@@ -50,23 +80,31 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({
     const loadAdsterra = () => {
       if (!adContainerRef.current) return;
 
-      try {
         // Очищаем контейнер
-        adContainerRef.current.innerHTML = "";
+      adContainerRef.current.innerHTML = '';
 
-        // Создаем уникальный ID для контейнера
+      // Уникальный ID для предотвращения конфликтов
         const containerId = `adsterra-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        adContainerRef.current.id = containerId;
 
-        // Создаем конфигурационный скрипт
-        const configScript = document.createElement("script");
-        configScript.type = "text/javascript";
+      // Конфигурация AdsTerra с правильными параметрами
+      const atOptions = {
+        key: '4385a5a6b91cfc53c3cdf66ea55b3291',
+        format: 'iframe',
+        height: isMobile ? 50 : 50,
+        width: isMobile ? 300 : 320,
+        params: {}
+      };
+
+      // Создаем скрипт конфигурации (точно как в документации AdsTerra)
+      const configScript = document.createElement('script');
+      configScript.type = 'text/javascript';
         configScript.text = `
+        console.log('[AdsTerra] Loading banner with options:', ${JSON.stringify(atOptions)});
           window.atOptions_${containerId} = {
-            'key': '4385a5a6b91cfc53c3cdf66ea55b3291',
+          'key': '${atOptions.key}',
             'format': 'iframe',
-            'height': 50,
-            'width': 320,
+          'height': ${atOptions.height},
+          'width': ${atOptions.width},
             'params': {}
           };
           if (typeof window.atOptions === 'undefined') {
@@ -74,421 +112,176 @@ const NewsAdBanner: React.FC<NewsAdBannerProps> = ({
           }
         `;
 
-        // Создаем загружающий скрипт
-        const adScript = document.createElement("script");
-        adScript.type = "text/javascript";
-        adScript.src =
-          "https://www.highperformanceformat.com/4385a5a6b91cfc53c3cdf66ea55b3291/invoke.js";
-        adScript.async = true;
+      // Создаем скрипт загрузки (HTTPS для безопасности)
+      const invokeScript = document.createElement('script');
+      invokeScript.type = 'text/javascript';
+      invokeScript.src = `https://www.highperformanceformat.com/${atOptions.key}/invoke.js`;
+      invokeScript.async = true;
 
-        let loadTimeout;
-        let checkInterval;
+      try {
+        // Добавляем скрипты в правильном порядке
+        adContainerRef.current.appendChild(configScript);
+        adContainerRef.current.appendChild(invokeScript);
+        
+        console.log('[NewsAdBanner] AdsTerra scripts added successfully');
+
+        // Проверяем появление iframe с интервалами
+        let attempts = 0;
+        const maxAttempts = 10;
+        let checkInterval: NodeJS.Timeout;
+        let loadTimeout: NodeJS.Timeout;
 
         const cleanup = () => {
-          if (loadTimeout) clearTimeout(loadTimeout);
           if (checkInterval) clearInterval(checkInterval);
+          if (loadTimeout) clearTimeout(loadTimeout);
         };
 
-        adScript.onload = () => {
-          console.log("[NewsAdBanner] ✅ AdsTerra script loaded");
-          setAdLoaded(true);
-
-          // Проверяем появление iframe
-          let attempts = 0;
-          const maxAttempts = 10;
-
+        // Проверяем каждые 500ms появление iframe
           checkInterval = setInterval(() => {
             attempts++;
-            const iframe = adContainerRef.current?.querySelector("iframe");
+          const iframe = adContainerRef.current?.querySelector('iframe');
+          const anyAdElement = adContainerRef.current?.querySelector('[id*="adsterra"], [class*="adsterra"], iframe, ins');
 
-            if (iframe) {
-              console.log("[NewsAdBanner] 🎯 AdsTerra iframe found!");
+          if (iframe || anyAdElement) {
+            console.log('[NewsAdBanner] ✅ AdsTerra element found!');
+            setAdLoaded(true);
               cleanup();
             } else if (attempts >= maxAttempts) {
-              console.log(
-                "[NewsAdBanner] ⚠️ No iframe after maximum attempts, showing fallback",
-              );
-              showFallback();
+            console.log('[NewsAdBanner] ⚠️ Max attempts reached, showing fallback');
+            showFallbackBanner();
               cleanup();
             }
           }, 500);
-        };
 
-        adScript.onerror = () => {
-          console.error("[NewsAdBanner] ❌ Failed to load AdsTerra script");
-          showFallback();
-          cleanup();
-        };
-
-        // Таймаут для полной загрузки
+        // Общий таймаут безопасности (15 секунд)
         loadTimeout = setTimeout(() => {
-          const iframe = adContainerRef.current?.querySelector("iframe");
-          if (!iframe) {
-            console.log("[NewsAdBanner] ⏰ Timeout reached, showing fallback");
-            showFallback();
+          const iframe = adContainerRef.current?.querySelector('iframe');
+          const anyAdElement = adContainerRef.current?.querySelector('[id*="adsterra"], [class*="adsterra"], iframe, ins');
+          
+          if (!iframe && !anyAdElement) {
+            console.log('[NewsAdBanner] ⏰ Timeout reached, showing fallback');
+            showFallbackBanner();
           }
           cleanup();
         }, 15000);
 
-        // Добавляем скрипты
-        adContainerRef.current.appendChild(configScript);
-        adContainerRef.current.appendChild(adScript);
+        // Обработчик ошибок скрипта
+        invokeScript.onerror = () => {
+          console.log('[NewsAdBanner] ❌ Script load error, showing fallback');
+          showFallbackBanner();
+          cleanup();
+        };
 
-        return cleanup;
       } catch (error) {
-        console.error("[NewsAdBanner] Error loading banner:", error);
-        showFallback();
+        console.error('[NewsAdBanner] Error loading AdsTerra:', error);
+        showFallbackBanner();
       }
     };
 
-    const showFallback = () => {
-      if (
-        !adContainerRef.current ||
-        adContainerRef.current.querySelector(".fallback-ad")
-      )
-        return;
-
-      const fallbackDiv = document.createElement("div");
-      fallbackDiv.className =
-        "fallback-ad flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg h-[50px] w-[320px]";
-      fallbackDiv.innerHTML = `
-        <div class="text-center">
-          <div class="text-sm font-medium">Advertisement</div>
-          <div class="text-xs opacity-80">320x50 Banner Space</div>
-        </div>
-      `;
-      adContainerRef.current.innerHTML = "";
-      adContainerRef.current.appendChild(fallbackDiv);
-      setAdLoaded(true);
-    };
-
-    const cleanup = loadAdsterra();
+    // Запускаем загрузку после небольшой задержки
+    const timer = setTimeout(loadAdsterra, 100);
 
     return () => {
-      if (cleanup) cleanup();
+      clearTimeout(timer);
     };
   }, [isVisible, isMinimized, isMobile]);
 
-  // Убираем сохранение состояния в localStorage для обеспечения постоянного отображения
   const handleClose = () => {
-    console.log(
-      "[NewsAdBanner] Temporarily hiding banner (will reappear on page reload)",
-    );
     setIsVisible(false);
-    // Не сохраняем состояние в localStorage
+    localStorage.setItem("newsAdBannerState", JSON.stringify({ 
+      hidden: true, 
+      timestamp: Date.now() 
+    }));
   };
 
   const handleMinimize = () => {
-    console.log("[NewsAdBanner] Toggling minimize:", !isMinimized);
     setIsMinimized(!isMinimized);
-    // Не сохраняем состояние в localStorage
   };
 
-  // Функция для принудительного показа баннера (для отладки)
-  const forceShow = () => {
-    console.log("[NewsAdBanner] Force showing banner");
-    localStorage.removeItem("newsAdBannerState");
-    setIsVisible(true);
-    setIsMinimized(false);
-  };
-
-  // Функция для перезагрузки AdsTerra скрипта
-  const reloadAdScript = () => {
-    console.log("[NewsAdBanner] Reloading AdsTerra script");
-    if (adContainerRef.current) {
-      adContainerRef.current.innerHTML = "";
-      setAdLoaded(false);
-
-      // Принудительно перезапускаем useEffect
-      setTimeout(() => {
-        if (adContainerRef.current && isVisible && !isMinimized) {
-          const event = new Event("reload-ad");
-          adContainerRef.current.dispatchEvent(event);
-        }
-      }, 100);
-    }
-  };
-
-  // Альтернативный метод загрузки AdsTerra (для отладки)
-  const loadAdAlternative = () => {
-    console.log("[NewsAdBanner] 🔄 Trying alternative loading method...");
-    if (!adContainerRef.current) return;
-
-    // Очищаем контейнер
-    adContainerRef.current.innerHTML = "";
-
-    // Создаем iframe напрямую (для тестирования нового баннера)
-    const testIframe = document.createElement("iframe");
-    testIframe.src = `https://www.highperformanceformat.com/4385a5a6b91cfc53c3cdf66ea55b3291/invoke.js`;
-    testIframe.width = "320";
-    testIframe.height = "50";
-    testIframe.style.border = "none";
-    testIframe.style.display = "block";
-
-    testIframe.onload = () => {
-      console.log("[NewsAdBanner] 🎯 Test iframe loaded");
-    };
-
-    testIframe.onerror = () => {
-      console.log("[NewsAdBanner] ❌ Test iframe failed");
-    };
-
-    adContainerRef.current.appendChild(testIframe);
-  };
-
-  // Добавляем глобальные функции для отладки
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      (window as any).showNewsAdBanner = forceShow;
-      (window as any).reloadAdScript = reloadAdScript;
-      (window as any).loadAdAlternative = loadAdAlternative;
-      console.log(
-        "[NewsAdBanner] Added global functions: window.showNewsAdBanner(), window.reloadAdScript(), window.loadAdAlternative()",
-      );
-    }
-  }, []);
-
-  // Принудительно показываем баннер (убираем проверку видимости)
-  console.log(
-    "[NewsAdBanner] Force rendering banner, isVisible:",
-    isVisible,
-    "isMinimized:",
-    isMinimized,
-  );
-
-  // Если баннер был скрыт, принудительно показываем его
-  if (!isVisible) {
-    console.log("[NewsAdBanner] Banner was hidden, forcing it to be visible");
-    setIsVisible(true);
-  }
+  if (!isVisible) return null;
 
   return (
+    <AnimatePresence>
     <motion.div
-      initial={{
-        opacity: 0,
-        y: isMobile ? -20 : 0,
-        x: isMobile ? 0 : -30,
-        scale: 0.95,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        x: 0,
-        scale: 1,
-      }}
-      exit={{
-        opacity: 0,
-        y: isMobile ? -20 : 0,
-        x: isMobile ? 0 : -30,
-        scale: 0.95,
-      }}
-      transition={{
-        duration: 0.5,
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      }}
-      whileHover={{
-        scale: 1.02,
-        transition: { duration: 0.2 },
-      }}
-      className={`relative bg-gradient-to-br from-[#1A1D2E]/90 to-[#16213E]/80 backdrop-blur-md rounded-xl border border-purple-500/20 overflow-hidden shadow-2xl hover:shadow-purple-500/10 ${className}`}
-    >
-      {/* Header с кнопками управления */}
-      <div className="flex items-center justify-between p-3 border-b border-gradient-to-r from-purple-500/20 to-blue-500/20">
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className={`relative ${className}`}
+      >
+        <div
+          className={`
+            relative overflow-hidden rounded-xl 
+            bg-gradient-to-br from-[#1A1D2E]/80 to-[#2A2151]/80 
+            backdrop-blur-sm border border-white/10
+            ${isMinimized ? 'h-12' : 'h-auto'}
+            transition-all duration-300 ease-out
+          `}
+        >
+          {/* Header bar */}
+          <div className="flex items-center justify-between p-3 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <motion.div
-            className="w-2 h-2 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.7, 1, 0.7],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          ></motion.div>
-          <span className="text-white/70 text-xs font-medium bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            Sponsored
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-white/70 text-xs font-medium">
+                {showFallback ? 'Music Advertisement' : 'Loading Advertisement'}
           </span>
         </div>
 
         <div className="flex items-center gap-1">
-          {!isMobile && (
-            <motion.button
+              <button
               onClick={handleMinimize}
-              className="p-2 hover:bg-gradient-to-r hover:from-purple-500/20 hover:to-blue-500/20 rounded-lg transition-all duration-300 group"
-              whileHover={{
-                scale: 1.1,
-                rotate: isMinimized ? 180 : 0,
-              }}
-              whileTap={{ scale: 0.9 }}
+                className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               title={isMinimized ? "Expand" : "Minimize"}
-            >
-              <svg
-                className="w-4 h-4 text-white/60 group-hover:text-white transition-colors"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
               >
-                {isMinimized ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20 12H4"
-                  />
-                )}
-              </svg>
-            </motion.button>
-          )}
-
-          {/* Close button - доступна на всех устройствах */}
-          <motion.button
+                <span className="text-white/70 text-xs">
+                  {isMinimized ? "+" : "−"}
+                </span>
+              </button>
+              
+              <button
             onClick={handleClose}
-            className="p-2 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-pink-500/20 rounded-lg transition-all duration-300 group"
-            whileHover={{
-              scale: 1.1,
-              rotate: 90,
-            }}
-            whileTap={{ scale: 0.9 }}
-            title="Close Ad"
-          >
-            <XMarkIcon className="w-4 h-4 text-white/60 group-hover:text-red-400 transition-colors" />
-          </motion.button>
+                className="w-6 h-6 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors"
+                title="Close"
+              >
+                <XMarkIcon className="w-3 h-3 text-white/70" />
+              </button>
         </div>
       </div>
 
-      {/* Контент баннера */}
-      <AnimatePresence>
+          {/* Ad content */}
         {!isMinimized && (
-          <motion.div
-            initial={{
-              height: 0,
-              opacity: 0,
-              y: -20,
-            }}
-            animate={{
-              height: "auto",
-              opacity: 1,
-              y: 0,
-            }}
-            exit={{
-              height: 0,
-              opacity: 0,
-              y: -20,
-            }}
-            transition={{
-              duration: 0.4,
-              type: "spring",
-              stiffness: 100,
-              damping: 15,
-            }}
-            className="overflow-hidden"
-          >
             <motion.div
-              className="relative"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.1 }}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="p-4"
             >
-              {/* Декоративный градиент */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-lg"></div>
-
-              <div className="relative">
-                {/* AdsTerra Banner Container */}
+              <div className="flex items-center justify-center">
                 <div
                   ref={adContainerRef}
-                  className="flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 relative overflow-hidden"
+                  className="flex items-center justify-center min-h-[50px]"
                   style={{
-                    width: 320, // Новый размер баннера
-                    height: 50, // Новый размер баннера
-                    minHeight: 50, // Новый размер баннера
+                    minWidth: isMobile ? '300px' : '320px',
+                    minHeight: '50px'
                   }}
                 >
                   {!adLoaded && (
-                    <div className="text-center text-gray-400 z-10 flex flex-col items-center justify-center h-full">
-                      <div className="animate-spin w-6 h-6 border-2 border-gray-600 border-t-blue-500 rounded-full mx-auto mb-2"></div>
-                      <div className="text-sm">Loading Advertisement...</div>
-                      <div className="text-xs mt-1 opacity-70">
-                        AdsTerra Banner
-                      </div>
-                      <div className="text-xs mt-1 opacity-50">320x50</div>
-                    </div>
-                  )}
-
-                  {/* Отладочная информация (только в development) */}
-                  {process.env.NODE_ENV === "development" && (
-                    <>
-                      <div className="absolute top-1 left-1 text-xs text-green-400 bg-black/50 px-1 rounded z-20">
-                        {adLoaded ? "✅ Script Loaded" : "⏳ Loading Script"}
-                      </div>
-
-                      <div className="absolute bottom-1 left-1 text-xs text-blue-400 bg-black/50 px-1 rounded z-20">
-                        Container:{" "}
-                        {adContainerRef.current?.children.length || 0} children
-                      </div>
-                    </>
-                  )}
-
-                  {/* Кнопки для отладки (только в development) */}
-                  {process.env.NODE_ENV === "development" && (
-                    <div className="absolute top-1 right-1 flex gap-1 z-30">
-                      <button
-                        onClick={reloadAdScript}
-                        className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded"
-                        title="Reload Ad Script"
-                      >
-                        🔄
-                      </button>
-                      <button
-                        onClick={loadAdAlternative}
-                        className="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
-                        title="Try Alternative Method"
-                      >
-                        🧪
-                      </button>
+                    <div className="flex flex-col items-center justify-center text-white/50 space-y-2">
+                      <div className="w-8 h-8 border-2 border-[#20DDBB] border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-xs">Loading ad...</span>
                     </div>
                   )}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Минимизированное состояние */}
-      {isMinimized && !isMobile && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-b-xl"></div>
-          <motion.span
-            className="text-white/50 text-xs font-medium relative"
-            animate={{
-              opacity: [0.5, 0.8, 0.5],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            Ad minimized - Click to expand
-          </motion.span>
-        </motion.div>
-      )}
-    </motion.div>
+              {/* Ad label */}
+              <div className="mt-2 text-center">
+                <span className="text-white/40 text-xs">Advertisement</span>
+              </div>
+            </motion.div>
+          )}
+        </div>
+          </motion.div>
+      </AnimatePresence>
   );
 };
 

@@ -433,14 +433,14 @@
 
 /* Enhanced notch and safe area handling for newer iPhones */
 @supports (padding: max(0px)) {
-  @media (max-width: 767px) {
-    .auth-modal-overlay {
+@media (max-width: 767px) {
+  .auth-modal-overlay {
       /* Dynamic safe area handling */
       padding-top: max(env(safe-area-inset-top), 10px) !important;
       padding-bottom: max(env(safe-area-inset-bottom), 10px) !important;
       padding-left: max(env(safe-area-inset-left), 10px) !important;
       padding-right: max(env(safe-area-inset-right), 10px) !important;
-    }
+}
 
     /* Ensure content doesn't hide behind dynamic island */
     .auth-modal-close {

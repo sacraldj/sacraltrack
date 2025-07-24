@@ -60,9 +60,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
+    return (
     <html lang="en" className="scroll-smooth">
-        <head>
+            <head>
             {/* Enhanced viewport meta tag for iOS devices */}
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
             
@@ -149,8 +149,8 @@ export default function RootLayout({
                     border-radius: 0;
                     font-size: 16px; /* Prevent zoom on focus */
                 }
-            ` }} />
-        </head>
+                ` }} />
+            </head>
             <body className={clsx(inter.variable, 'bg-[#0F1122]')}>
                 <GlobalLoader />
                 <IOSOptimizer />

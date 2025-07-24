@@ -103,7 +103,7 @@ export default function NotFound() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen px-[10px] md:px-4 py-4 text-center relative overflow-hidden">
       {/* Animated particles background */}
       <canvas 
         ref={canvasRef} 

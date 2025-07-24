@@ -366,9 +366,8 @@ const TopNav = React.memo(({ params }: { params: { id: string } }) => {
           {/* Logo - улучшенная версия с более надежной навигацией */}
           <Link
             href="/"
-            className="flex items-center relative group touch-manipulation"
+            className="flex items-center relative group"
             aria-label="Go to home page"
-            style={{ minHeight: '44px', minWidth: '44px' }} // iOS touch target
             onClick={(e) => {
               // Только для страницы people используем прямой переход
               if (pathname === "/people") {
@@ -396,7 +395,7 @@ const TopNav = React.memo(({ params }: { params: { id: string } }) => {
             )}
           </Link>
 
-          {/* Genres - Only visible on home page */}
+          {/* Genres - Only visible on home page and desktop */}
           {isHomePage && (
             <div className="hidden lg:flex items-center">
               <GenreSelector isHomePage={isHomePage} />

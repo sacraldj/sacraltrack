@@ -16,7 +16,7 @@ export default function HomePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#2E2469] to-[#351E43]">
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-[10px] md:px-4 py-8">
                 <section className="text-center mb-12">
                     <h1 className="text-4xl font-bold mb-4">
                         {translations.welcome}

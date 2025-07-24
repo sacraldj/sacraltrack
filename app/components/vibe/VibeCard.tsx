@@ -921,59 +921,85 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
                     </div>
                   </div>
 
-                  {/* Central element with music note */}
-                  <div className="relative z-10 flex flex-col items-center justify-center p-6 text-center">
-                    {/* Круг с градиентной обводкой */}
-                    <div
-                      className="relative w-24 h-24 mb-4 rounded-full flex items-center justify-center"
-                      style={{
-                        background: "rgba(26, 26, 46, 0.8)",
-                        boxShadow: "0 0 20px rgba(32, 221, 187, 0.3)",
-                        border: "1px solid rgba(32, 221, 187, 0.3)",
-                      }}
-                    >
-                      {/* Музыкальная нота */}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-12 w-12 text-[#20DDBB]"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                        />
-                      </svg>
+                  {/* Central element with ultra-modern Musical Vibe design */}
+                  <div className="relative z-10 flex flex-col items-center justify-center p-8 text-center">
+                    {/* Ultra-modern Musical Vibe text with futuristic styling */}
+                    <div className="relative mb-6">
+                      {/* Background glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 blur-xl opacity-30 animate-pulse"></div>
+                      
+                      {/* Main text container */}
+                      <div className="relative px-8 py-4 bg-black/40 backdrop-blur-xl border border-transparent overflow-hidden">
+                        {/* Animated border gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-50 animate-pulse"></div>
+                        <div className="absolute inset-[1px] bg-black/60 backdrop-blur-xl"></div>
+                        
+                        {/* Text content */}
+                        <div className="relative">
+                          <h3 className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-purple-400 to-pink-400 font-black text-2xl tracking-wider uppercase transform hover:scale-105 transition-all duration-300">
+                            <span className="inline-block hover:animate-pulse">M</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.1s'}}>U</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.2s'}}>S</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.3s'}}>I</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.4s'}}>C</span>
+                            <span className="inline-block mx-2 text-white/30">|</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.5s'}}>V</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.6s'}}>I</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.7s'}}>B</span>
+                            <span className="inline-block hover:animate-pulse" style={{animationDelay: '0.8s'}}>E</span>
+                    </h3>
+                          
+                          {/* Subtitle with neon effect */}
+                          <div className="mt-2 text-white/60 text-xs font-mono tracking-widest uppercase">
+                            <span className="inline-block w-2 h-2 bg-cyan-400 mr-2 animate-ping"></span>
+                            EXPERIENCE
+                            <span className="inline-block w-2 h-2 bg-purple-400 mx-2 animate-ping" style={{animationDelay: '0.5s'}}></span>
+                            THE
+                            <span className="inline-block w-2 h-2 bg-pink-400 ml-2 animate-ping" style={{animationDelay: '1s'}}></span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Текст */}
-                    <h3 className="text-[#20DDBB] font-medium text-lg mb-1">
-                      Musical Vibe
-                    </h3>
-                    <p className="text-white/70 text-sm max-w-[80%]">
+                    {/* Caption with futuristic styling */}
+                    <div className="relative mb-8">
+                      <p className="text-white/80 text-sm font-light tracking-wide max-w-[85%] leading-relaxed">
+                        <span className="text-cyan-300/70 font-mono text-xs">&gt;&gt;</span>{" "}
                       {vibe.caption
                         ? vibe.caption.substring(0, 60) +
                           (vibe.caption.length > 60 ? "..." : "")
                         : "Click to play"}
-                    </p>
+                        {" "}<span className="text-purple-300/70 font-mono text-xs animate-blink">_</span>
+                      </p>
+                    </div>
 
-                    {/* Play button */}
-                    <div className="mt-6 bg-gradient-to-r from-[#20DDBB]/20 to-[#20DDBB]/10 hover:from-[#20DDBB]/30 hover:to-[#20DDBB]/20 border border-[#20DDBB]/30 hover:border-[#20DDBB]/50 rounded-xl px-5 py-2.5 flex items-center gap-2 transition-all duration-300">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <polygon points="8,5 19,12 8,19" fill="#20DDBB" />
-                      </svg>
-                      <span className="text-white text-sm font-medium">
-                        Play
+                    {/* Ultra-modern Play button */}
+                    <div className="relative group cursor-pointer transform hover:scale-110 transition-all duration-300">
+                      {/* Button background with animated border */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 blur-sm opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      
+                      <div className="relative px-8 py-3 bg-black/70 backdrop-blur-xl border border-transparent overflow-hidden">
+                        {/* Animated border */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-60"></div>
+                        <div className="absolute inset-[1px] bg-black/80 backdrop-blur-xl"></div>
+                        
+                        {/* Button content */}
+                        <div className="relative flex items-center gap-3">
+                          {/* Triangle play icon */}
+                          <div className="w-0 h-0 border-l-[6px] border-l-white border-y-[4px] border-y-transparent group-hover:border-l-cyan-300 transition-colors duration-300"></div>
+                          
+                          <span className="text-white group-hover:text-cyan-300 text-sm font-bold tracking-wider uppercase transition-colors duration-300">
+                            PLAY
                       </span>
+                          
+                          {/* Animated dots */}
+                          <div className="flex gap-1">
+                            <div className="w-1 h-1 bg-white/40 group-hover:bg-cyan-400 animate-pulse"></div>
+                            <div className="w-1 h-1 bg-white/40 group-hover:bg-purple-400 animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                            <div className="w-1 h-1 bg-white/40 group-hover:bg-pink-400 animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -197,7 +197,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    <div className="max-w-[1500px] mx-auto py-6 px-0 profile-cards-container">
+                                    <div className="max-w-[1500px] mx-auto py-6 px-[10px] md:px-0 profile-cards-container">
                                         {likedLoading ? (
                                             <div className="flex justify-center items-center min-h-[400px]">
                                                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#20DDBB]"></div>
@@ -213,7 +213,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                                 </p>
                                             </div>
                                         ) : (
-                                            <div className="mx-auto w-full max-w-[650px] flex flex-col gap-4 px-0 md:relative md:left-[20px] likes-container-mobile">
+                                            <div className="mx-auto w-full max-w-[650px] flex flex-col gap-4 px-[10px] md:px-0 md:relative md:left-[20px] likes-container-mobile">
                                                 {likedPosts.map((post) => (
                                                     <PostLikes
                                                         key={post.$id} 
@@ -233,7 +233,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    <div className="max-w-[1500px] mx-auto py-6 px-0 profile-cards-container">
+                                    <div className="max-w-[1500px] mx-auto py-6 px-[10px] md:px-0 profile-cards-container">
                                         {currentProfile && (
                                             <FriendsTab profileId={currentProfile.user_id} />
                                         )}
@@ -248,7 +248,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    <div className="max-w-[1500px] mx-auto py-6 px-0 profile-cards-container">
+                                    <div className="max-w-[1500px] mx-auto py-6 px-[10px] md:px-0 profile-cards-container">
                                         {currentProfile && (
                                             <UserVibes userId={currentProfile.user_id} isProfileOwner={isProfileOwner} />
                                         )}
@@ -269,7 +269,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                         </div>
                                     ) : hasUserReleases || (postsByUser && postsByUser.length > 0) ? (
                                         <div className="flex justify-center">
-                                            <div className="max-w-full flex flex-wrap justify-center gap-8 py-4 releases-container-mobile">
+                                            <div className="max-w-full flex flex-wrap justify-center gap-8 py-4 px-[10px] md:px-0 releases-container-mobile">
                                                 {children}
                                             </div>
                                         </div>

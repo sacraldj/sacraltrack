@@ -5,6 +5,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ultra-modern Musical Vibe animations */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+/* Enhanced button hover effects for Musical Vibe */
+@keyframes neon-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(6, 182, 212, 0.1); 
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), 0 0 60px rgba(6, 182, 212, 0.2); 
+  }
+}
+
+.neon-hover:hover {
+  animation: neon-glow 2s ease-in-out infinite;
+}
+
 /* 3D Fire Icon Animation Styles */
 .fire-icon-3d {
   position: relative;

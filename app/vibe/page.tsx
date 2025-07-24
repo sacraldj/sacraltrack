@@ -125,7 +125,7 @@ export default function VibePage() {
   
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-[10px] md:px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">VIBE</h1>

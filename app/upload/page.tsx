@@ -1469,7 +1469,7 @@ export default function Upload() {
                 />
             )}
             
-            <div className="max-w-4xl mx-auto px-4 py-24">
+            <div className="max-w-4xl mx-auto px-[10px] md:px-4 py-24">
                 {/* New animated header with floating gradient */}
                 <div className="mb-8 text-center relative">
                     {/* Animated background gradient orbs */}

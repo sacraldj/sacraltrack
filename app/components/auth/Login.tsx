@@ -776,70 +776,70 @@ export default function Login() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              {/* Email Input */}
-              <motion.div
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <TextInput
-                  string={email}
-                  placeholder="Email"
-                  onUpdate={setEmail}
-                  inputType="email"
-                  error={showError("email")}
-                  className={`
-                    w-full bg-[#14151F]/60 border-2
-                    ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
-                    rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
-                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                    transition-all duration-300
-                    group-hover:border-[#20DDBB]/50
-                    auth-modal-input
-                  `}
-                />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                </div>
-              </motion.div>
+                  {/* Email Input */}
+                  <motion.div
+                    className="relative group"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <TextInput
+                      string={email}
+                      placeholder="Email"
+                      onUpdate={setEmail}
+                      inputType="email"
+                      error={showError("email")}
+                      className={`
+                                                w-full bg-[#14151F]/60 border-2
+                                                ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
+                                                rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
+                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
+                                                transition-all duration-300
+                                                group-hover:border-[#20DDBB]/50
+                                                auth-modal-input
+                                            `}
+                    />
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                    </div>
+                  </motion.div>
 
-              {/* Password Input */}
-              <motion.div
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <TextInput
-                  string={password}
-                  placeholder="Password"
-                  onUpdate={setPassword}
-                  inputType={showPassword ? "text" : "password"}
-                  error={showError("password")}
-                  className={`
-                    w-full bg-[#14151F]/60 border-2
-                    ${error?.type === "password" ? "border-red-500" : "border-[#2A2B3F]"}
-                    rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
-                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                    transition-all duration-300
-                    group-hover:border-[#20DDBB]/50
-                    auth-modal-input
-                  `}
-                />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
-                >
-                  {showPassword ? (
-                    <FiEyeOff className="text-xl" />
-                  ) : (
-                    <FiEye className="text-xl" />
-                  )}
-                </button>
-              </motion.div>
+                  {/* Password Input */}
+                  <motion.div
+                    className="relative group"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <TextInput
+                      string={password}
+                      placeholder="Password"
+                      onUpdate={setPassword}
+                      inputType={showPassword ? "text" : "password"}
+                      error={showError("password")}
+                      className={`
+                                                w-full bg-[#14151F]/60 border-2
+                                                ${error?.type === "password" ? "border-red-500" : "border-[#2A2B3F]"}
+                                                rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
+                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
+                                                transition-all duration-300
+                                                group-hover:border-[#20DDBB]/50
+                                                auth-modal-input
+                                            `}
+                    />
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
+                    >
+                      {showPassword ? (
+                        <FiEyeOff className="text-xl" />
+                      ) : (
+                        <FiEye className="text-xl" />
+                      )}
+                    </button>
+                  </motion.div>
 
               {/* Error Display */}
               <AnimatePresence>
@@ -855,84 +855,84 @@ export default function Login() {
                       <p className="text-red-400 text-sm">
                         {showError("general") || showError("email") || showError("password")}
                       </p>
-                    </div>
-                  </motion.div>
+                  </div>
+            </motion.div>
                 )}
               </AnimatePresence>
 
-              {/* Action Buttons */}
-              <motion.div
+            {/* Action Buttons */}
+            <motion.div
                 className="space-y-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                {/* Login Button */}
-                <motion.button
-                  disabled={loading || isBlocked}
-                  onClick={login}
-                  whileHover={{ scale: loading || isBlocked ? 1 : 1.02 }}
-                  whileTap={{ scale: loading || isBlocked ? 1 : 0.98 }}
-                  className="
-                    relative w-full bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
-                    text-white py-4 rounded-xl font-semibold
-                    overflow-hidden group
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    auth-modal-button
-                  "
-                >
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <div className="relative flex items-center justify-center gap-2">
-                    {loading ? (
-                      <BiLoaderCircle className="animate-spin text-2xl" />
-                    ) : (
-                      <>
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+                  {/* Login Button */}
+                  <motion.button
+                    disabled={loading || isBlocked}
+                    onClick={login}
+                    whileHover={{ scale: loading || isBlocked ? 1 : 1.02 }}
+                    whileTap={{ scale: loading || isBlocked ? 1 : 0.98 }}
+                    className="
+                                            relative w-full bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
+                                            text-white py-4 rounded-xl font-semibold
+                                            overflow-hidden group
+                                            disabled:opacity-50 disabled:cursor-not-allowed
+                                            auth-modal-button
+                                        "
+                  >
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    <div className="relative flex items-center justify-center gap-2">
+                      {loading ? (
+                        <BiLoaderCircle className="animate-spin text-2xl" />
+                      ) : (
+                        <>
                         <span>Sign In</span>
-                        <motion.div
-                          animate={{ x: [0, 5, 0] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          →
-                        </motion.div>
-                      </>
-                    )}
-                  </div>
-                </motion.button>
+                          <motion.div
+                            animate={{ x: [0, 5, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            →
+                          </motion.div>
+                        </>
+                      )}
+                    </div>
+                  </motion.button>
 
-                {/* Divider */}
+                  {/* Divider */}
                 <div className="flex items-center gap-4 my-6">
                   <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#818BAC]/30 to-transparent"></div>
                   <span className="text-[#818BAC] text-sm font-medium">OR</span>
                   <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#818BAC]/30 to-transparent"></div>
-                </div>
+                  </div>
 
-                {/* Google Login Button */}
-                <motion.button
+                  {/* Google Login Button */}
+                  <motion.button
                   disabled={googleLoading || loading}
-                  onClick={handleGoogleLogin}
+                    onClick={handleGoogleLogin}
                   whileHover={{ scale: googleLoading || loading ? 1 : 1.02 }}
                   whileTap={{ scale: googleLoading || loading ? 1 : 0.98 }}
-                  className="
+                    className="
                     relative w-full bg-[#14151F]/60 border-2 border-[#2A2B3F]
                     hover:border-[#20DDBB]/50 text-white py-4 rounded-xl font-medium
                     overflow-hidden group transition-all duration-300
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    auth-google-button
-                  "
-                >
+                                            disabled:opacity-50 disabled:cursor-not-allowed
+                                            auth-google-button
+                                        "
+                  >
                   <div className="absolute inset-0 bg-gradient-to-r from-[#20DDBB]/5 to-[#8A2BE2]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative flex items-center justify-center gap-3">
-                    {googleLoading ? (
-                      <BiLoaderCircle className="animate-spin text-xl" />
-                    ) : (
-                      <FcGoogle className="text-xl" />
-                    )}
-                    <span>
+                      {googleLoading ? (
+                        <BiLoaderCircle className="animate-spin text-xl" />
+                      ) : (
+                        <FcGoogle className="text-xl" />
+                      )}
+                      <span>
                       {googleLoading ? "Connecting..." : "Continue with Google"}
-                    </span>
-                  </div>
-                </motion.button>
-              </motion.div>
+                      </span>
+                    </div>
+                  </motion.button>
+            </motion.div>
 
               {/* Footer */}
               <motion.div
@@ -951,10 +951,10 @@ export default function Login() {
                   </button>
                 </p>
               </motion.div>
-            </motion.div>
-          </div>
         </motion.div>
-      </motion.div>
+            </div>
+          </motion.div>
+          </motion.div>
 
       {/* Safari Authentication Helper */}
       <SafariAuthHelper

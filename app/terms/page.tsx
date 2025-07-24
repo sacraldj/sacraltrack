@@ -191,7 +191,7 @@ export default function TermsOfUse() {
           </motion.div>
 
           {/* Main Content */}
-          <div className="flex-1 px-4 md:px-6 lg:px-8 pt-[100px] md:pt-[100px] md:ml-0">
+          <div className="flex-1 px-[10px] md:px-6 lg:px-8 pt-[100px] md:pt-[100px] md:ml-0">
             {/* Mobile dropdown menu */}
             <div className="md:hidden mb-6 sticky top-[70px] z-50">
               <MobileTableOfContents />

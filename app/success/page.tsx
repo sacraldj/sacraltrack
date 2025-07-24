@@ -94,20 +94,20 @@ function SuccessPageContent() {
             console.log("Using user ID from URL:", urlUserId);
           }
         }
-
+        
         if (!currentUserId) {
           console.log("User ID is missing, but proceeding without creating purchase");
         }
 
         try {
-          if (currentUserId) {
+            if (currentUserId) {
             console.log("User authenticated, payment processed for userId:", currentUserId, "sessionId:", sessionId);
             // Mark as processed since we have valid session and user
           }
 
-          setIsProcessed(true);
+            setIsProcessed(true);
           console.log("Payment processing completed successfully");
-        } catch (purchaseError: any) {
+          } catch (purchaseError: any) {
           console.error("Purchase creation error:", purchaseError);
           
           if (purchaseError?.message?.includes('Purchase already exists') || 
@@ -176,16 +176,16 @@ function SuccessPageContent() {
       <div className="flex justify-center items-center h-screen p-[20px] bg-gradient-to-b from-[#1a1a2e] to-[#16213e]">
         <div className="bg-[#1E2136] rounded-2xl p-8 w-full max-w-md shadow-2xl">
           <div className="text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
               className="bg-[#1E2136] rounded-full p-3 z-10 mx-auto mb-4 w-16 h-16 flex items-center justify-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </motion.div>
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </motion.div>
             <h1 className="text-2xl font-bold mb-4 text-white text-center">Oops, Something Went Wrong!</h1>
             <p className="text-[#a0a0c0] mb-6 text-center">{error || createPurchaseError?.message}</p>
             <motion.button
@@ -201,15 +201,15 @@ function SuccessPageContent() {
       </div>
     )
   }
-
+  
   // Успешная страница без загрузок
   return (
     <div className="flex justify-center items-center h-screen p-[20px] bg-gradient-to-b from-[#1a1a2e] to-[#16213e]">
       <div className="bg-[#1E2136] rounded-2xl p-8 w-full max-w-md shadow-2xl">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
           className="text-center"
         >
           <div className="mb-6">
@@ -224,48 +224,48 @@ function SuccessPageContent() {
               </svg>
             </motion.div>
           </div>
-
-          <motion.h1
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+        
+        <motion.h1 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
             className="text-3xl font-bold mb-4 text-white"
-          >
+        >
             Payment Successful! 🎉
-          </motion.h1>
-
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+        </motion.h1>
+        
+        <motion.p 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
             className="text-[#a0a0c0] mb-8"
-          >
+        >
             Your purchase has been completed successfully. You can now access your new track!
-          </motion.p>
-
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="space-y-4"
-          >
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
+        </motion.p>
+        
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="space-y-4"
+        >
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
               className="bg-gradient-to-r from-[#20DDBB] to-[#5D59FF] hover:from-[#20DDBB]/80 hover:to-[#5D59FF]/80 text-white font-bold py-3 px-4 rounded-xl w-full transition-all duration-300 shadow-lg"
               onClick={handleNavigateProfile}
             >
               My Profile
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
               className="bg-gradient-to-r from-[#8A2BE2] to-[#FF6B6B] hover:from-[#8A2BE2]/80 hover:to-[#FF6B6B]/80 text-white font-bold py-3 px-4 rounded-xl w-full transition-all duration-300 shadow-lg"
-              onClick={handleNavigateExplore}
+            onClick={handleNavigateExplore}
             >
               Explore Music
-            </motion.button>
+          </motion.button>
           </motion.div>
         </motion.div>
       </div>
