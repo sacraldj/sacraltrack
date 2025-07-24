@@ -22,6 +22,7 @@ import toast, { Toaster } from "react-hot-toast";
 import getStripe from "@/libs/getStripe";
 import { usePlayerContext } from "@/app/context/playerContext";
 import { AudioPlayer } from "@/app/components/AudioPlayer";
+import { useStableAudioPlayer } from "@/app/hooks/useStableAudioPlayer";
 import Image from "next/image";
 import { HiMusicNote } from "react-icons/hi";
 import {
@@ -905,7 +906,6 @@ interface PostMainProps {
 const PostMain = memo(({ post }: PostMainProps) => {
   const [imageError, setImageError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isPurchased, setIsPurchased] = useState(false);
@@ -931,17 +931,30 @@ const PostMain = memo(({ post }: PostMainProps) => {
   // Memoized values to prevent unnecessary recalculations
   const userContext = useUser();
   const { setIsLoginOpen } = useGeneralStore();
-  const {
-    currentAudioId,
-    setCurrentAudioId,
-    isPlaying: globalIsPlaying,
-    togglePlayPause,
-    stopAllPlayback,
-  } = usePlayerContext();
   const { checkIfTrackPurchased } = useCheckPurchasedTrack();
   const { commentsByPost, setCommentsByPost, getCommentsByPostId } =
     useCommentStore();
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Use stable audio player hook
+  const { 
+    isPlaying, 
+    handlePlay, 
+    handlePause,
+    m3u8Url: stableM3u8Url 
+  } = useStableAudioPlayer({
+    postId: post?.id || '',
+    m3u8Url: useCreateBucketUrl(post?.m3u8_url || ''),
+    onPlayStatusChange: (isPlaying) => {
+      if (isPlaying) {
+        // Update stats when playing starts
+        if (statsCounterRef.current) {
+          statsCounterRef.current.updateStatistics();
+        }
+        incrementPlayCount();
+      }
+    }
+  });
 
   // Добавляем состояния для реакций
   const [reactions, setReactions] = useState<Record<string, number>>({
@@ -1012,11 +1025,6 @@ const PostMain = memo(({ post }: PostMainProps) => {
     return () => clearTimeout(timer);
   }, [post?.id]);
 
-  // Sync play state from global context
-  useEffect(() => {
-    setIsPlaying(currentAudioId === post.id && globalIsPlaying);
-  }, [currentAudioId, globalIsPlaying, post.id]);
-
   // Проверяем наличие документа статистики при загрузке компонента
   useEffect(() => {
     if (post?.id) {
@@ -1025,44 +1033,14 @@ const PostMain = memo(({ post }: PostMainProps) => {
     }
   }, [post?.id]);
 
-  // Toggle play/pause function
+  // Toggle play/pause function - simplified with stable audio player
   const handleTogglePlay = useCallback(() => {
-    if (currentAudioId === post.id) {
-      // Если этот трек уже активный
-      if (globalIsPlaying) {
-        // Если играет, останавливаем
-        stopAllPlayback();
-      } else {
-        // Если на паузе, запускаем
-        togglePlayPause();
-        if (statsCounterRef.current) {
-          statsCounterRef.current.updateStatistics();
-        }
-        incrementPlayCount();
-      }
+    if (isPlaying) {
+      handlePause();
     } else {
-      // Если выбран другой трек или нет активного трека
-      // Останавливаем предыдущее воспроизведение и активируем текущий трек
-      if (globalIsPlaying) {
-        stopAllPlayback();
-      }
-      setCurrentAudioId(post.id);
-      // Сразу запускаем воспроизведение без задержки
-      togglePlayPause();
-      if (statsCounterRef.current) {
-        statsCounterRef.current.updateStatistics();
-      }
-      incrementPlayCount();
+      handlePlay();
     }
-  }, [
-    post.id,
-    currentAudioId,
-    globalIsPlaying,
-    togglePlayPause,
-    stopAllPlayback,
-    setCurrentAudioId,
-    incrementPlayCount,
-  ]);
+  }, [isPlaying, handlePlay, handlePause]);
 
   // Handle intersection observer for lazy loading
   useEffect(() => {
@@ -1510,28 +1488,10 @@ const PostMain = memo(({ post }: PostMainProps) => {
 
         <div className="px-4 py-2 border-t border-white/5">
           <AudioPlayer
-            m3u8Url={m3u8UrlRef.current}
-            isPlaying={currentAudioId === post.id && globalIsPlaying}
-            onPlay={() => {
-              // Stop other tracks first for clean audio switching
-              if (currentAudioId && currentAudioId !== post.id) {
-                stopAllPlayback();
-              }
-
-              // Set this track as active
-              setCurrentAudioId(post.id);
-
-              // Start playback if not already playing
-              if (!globalIsPlaying) {
-                togglePlayPause();
-              }
-            }}
-            onPause={() => {
-              // Only pause if this is the active track
-              if (currentAudioId === post.id && globalIsPlaying) {
-                togglePlayPause();
-              }
-            }}
+            m3u8Url={stableM3u8Url}
+            isPlaying={isPlaying}
+            onPlay={handlePlay}
+            onPause={handlePause}
           />
         </div>
 

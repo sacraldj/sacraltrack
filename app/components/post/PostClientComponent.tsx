@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Comments from "@/app/components/post/Comments"
 import Link from "next/link"
 import { AiOutlineClose } from "react-icons/ai"
@@ -11,7 +11,7 @@ import { useLikeStore } from "@/app/stores/like"
 import { useCommentStore } from "@/app/stores/comment"
 import useCreateBucketUrl from "@/app/hooks/useCreateBucketUrl"
 import { AudioPlayer } from '@/app/components/AudioPlayer'
-import { usePlayerContext } from '@/app/context/playerContext'
+import { useStableAudioPlayer } from '@/app/hooks/useStableAudioPlayer'
 import Image from 'next/image'
 import { FaHeart, FaMusic } from 'react-icons/fa'
 import { IoMusicalNotes } from 'react-icons/io5'
@@ -63,14 +63,23 @@ export default function PostClientComponent() {
     const { postById, setPostById, setPostsByUser } = usePostStore()
     const { setLikesByPost, likesByPost } = useLikeStore()
     const { setCommentsByPost, commentsByPost } = useCommentStore()
-    const { currentAudioId, setCurrentAudioId } = usePlayerContext()
+    const { 
+        isPlaying, 
+        handlePlay, 
+        handlePause
+    } = useStableAudioPlayer({
+        postId: postById?.id || '',
+        m3u8Url: postById?.m3u8_url ? useCreateBucketUrl(postById.m3u8_url) : '',
+        onPlayStatusChange: (isPlaying) => {
+            // Update UI or track info if needed
+        }
+    });
     const [imageError, setImageError] = useState(false)
     const [isShareModalOpen, setIsShareModalOpen] = useState(false)
     const router = useRouter()
 
     const imageUrl = postById?.image_url ? useCreateBucketUrl(postById.image_url) : ''
     const m3u8Url = postById?.m3u8_url ? useCreateBucketUrl(postById.m3u8_url) : ''
-    const isPlaying = currentAudioId === postId
 
     useEffect(() => { 
         const loadData = async () => {
@@ -195,12 +204,14 @@ export default function PostClientComponent() {
                                 <div className="px-[5px] mb-6">
                                     <div className="bg-[#1A1A2E] p-3 rounded-md shadow border border-[#2E2469]/30 flex items-center gap-4 mt-3">
                                         <div className="flex-grow">
-                                            <AudioPlayer
-                                                m3u8Url={m3u8Url}
-                                                isPlaying={isPlaying}
-                                                onPlay={() => postId ? setCurrentAudioId(postId) : null}
-                                                onPause={() => setCurrentAudioId(null)}
-                                            />
+                                            {postById?.m3u8_url && (
+                                                <AudioPlayer 
+                                                    m3u8Url={useCreateBucketUrl(postById.m3u8_url)}
+                                                    isPlaying={isPlaying}
+                                                    onPlay={handlePlay}
+                                                    onPause={handlePause}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 </div>

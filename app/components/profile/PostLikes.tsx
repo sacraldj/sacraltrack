@@ -5,6 +5,7 @@ import Link from "next/link";
 import useCreateBucketUrl from "@/app/hooks/useCreateBucketUrl";
 import { usePlayerContext } from "@/app/context/playerContext";
 import { AudioPlayer } from "@/app/components/AudioPlayer";
+import { useStableAudioPlayer } from "@/app/hooks/useStableAudioPlayer";
 import PostMainLikes from "./PostMainLikes";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -33,25 +34,38 @@ const PostLikes = ({ post }: PostLikesProps) => {
   console.log("PostLikes received post:", post);
 
   const router = useRouter();
-  const {
-    currentTrack,
-    isPlaying,
-    setCurrentTrack,
-    togglePlayPause,
-    currentAudioId,
-    setCurrentAudioId,
-    stopAllPlayback,
-  } = usePlayerContext();
+  const { currentTrack, setCurrentTrack } = usePlayerContext();
   const [imageError, setImageError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [comments, setComments] = useState<any[]>([]);
+  
+  // Use stable audio player hook
+  const { 
+    isPlaying, 
+    handlePlay, 
+    handlePause,
+    m3u8Url: stableM3u8Url 
+  } = useStableAudioPlayer({
+    postId: post.$id,
+    m3u8Url: useCreateBucketUrl(post?.m3u8_url),
+    onPlayStatusChange: (isPlaying) => {
+      // Update track info when playing
+      if (isPlaying) {
+        setCurrentTrack({
+          id: post.$id,
+          audio_url: post.m3u8_url,
+          image_url: post.image_url,
+          name: post.trackname,
+          artist: post.profile.name,
+        });
+      }
+    }
+  });
 
   const imageUrl = useCreateBucketUrl(post?.image_url);
   const avatarUrl = useCreateBucketUrl(post?.profile?.image);
-  const m3u8Url = useCreateBucketUrl(post?.m3u8_url);
 
   const isCurrentTrack = currentTrack?.id === post.$id;
-  const isActiveInPlayer = currentAudioId === post.$id;
 
   console.log("PostLikes - Raw post data:", post);
 
@@ -87,42 +101,21 @@ const PostLikes = ({ post }: PostLikesProps) => {
     loadComments();
   }, [post.$id]);
 
-  const handlePlay = useCallback(() => {
-    if (!post.m3u8_url) return;
-
-    if (isCurrentTrack && isPlaying) {
-      // Если трек уже воспроизводится, останавливаем его
-      stopAllPlayback();
-      setCurrentAudioId(null);
+  const handlePlayPause = useCallback(() => {
+    if (isPlaying) {
+      handlePause();
     } else {
-      // Устанавливаем текущий трек
+      // Update track info when playing
       setCurrentTrack({
         id: post.$id,
-        audio_url: m3u8Url,
+        audio_url: post.m3u8_url,
         image_url: imageUrl,
         name: post.trackname,
         artist: post.profile.name,
       });
-
-      // Активируем его в PlayerContext
-      setCurrentAudioId(post.$id);
-
-      // Если воспроизведение остановлено, запускаем
-      if (!isPlaying) {
-        togglePlayPause();
-      }
+      handlePlay();
     }
-  }, [
-    isCurrentTrack,
-    isPlaying,
-    post,
-    m3u8Url,
-    imageUrl,
-    setCurrentTrack,
-    togglePlayPause,
-    setCurrentAudioId,
-    stopAllPlayback,
-  ]);
+  }, [isPlaying, handlePlay, handlePause, post, imageUrl, setCurrentTrack]);
 
   // Переход на страницу комментариев
   const navigateToComments = (e: React.MouseEvent) => {
@@ -221,21 +214,10 @@ const PostLikes = ({ post }: PostLikesProps) => {
         >
           <div className="py-1">
             <AudioPlayer
-              m3u8Url={m3u8Url}
-              isPlaying={isCurrentTrack && isPlaying}
-              onPlay={() => {
-                setCurrentAudioId(post.$id);
-                setCurrentTrack({
-                  id: post.$id,
-                  audio_url: m3u8Url,
-                  image_url: imageUrl,
-                  name: post.trackname,
-                  artist: post.profile.name,
-                });
-              }}
-              onPause={() => {
-                stopAllPlayback();
-              }}
+              m3u8Url={stableM3u8Url}
+              isPlaying={isPlaying}
+              onPlay={handlePlay}
+              onPause={handlePause}
             />
           </div>
         </motion.div>

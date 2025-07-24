@@ -36,7 +36,7 @@ import {
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import EditTrackPopup from "@/app/components/trackedit/EditTrackPopup";
-import useAudioPlayer from "@/app/hooks/useAudioPlayer";
+import { useStableAudioPlayer } from "@/app/hooks/useStableAudioPlayer";
 import useTrackStatistics from "@/app/hooks/useTrackStatistics";
 import useTrackInteraction from "@/app/hooks/useTrackInteraction";
 import { AudioPlayer } from "@/app/components/AudioPlayer";
@@ -446,39 +446,48 @@ const SoundWave = memo(() => {
 SoundWave.displayName = "SoundWave";
 
 export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
+  // Router and context
   const router = useRouter();
   const contextUser = useUser();
+  const { isEditMode, setIsEditMode } = useEditContext();
+  const { setIsLoginOpen } = useGeneralStore();
+  const { commentsByPost, setCommentsByPost, getCommentsByPostId } = useCommentStore();
+  
+  // UI state
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [showStats, setShowStats] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const { isEditMode, setIsEditMode } = useEditContext();
-
+  
+  // Track statistics and interactions
   const {
     statistics,
     isLoading: statsLoading,
     fetchStatistics,
   } = useTrackStatistics(post?.id);
-  const { recordInteraction, getUserDeviceInfo, getGeographicInfo } =
-    useTrackInteraction();
+  
+  const { recordInteraction, getUserDeviceInfo, getGeographicInfo } = useTrackInteraction();
+  
+  // Audio player state
+  const { 
+    isPlaying, 
+    handlePlay, 
+    handlePause,
+    m3u8Url: stableM3u8Url 
+  } = useStableAudioPlayer({
+    postId: post.id,
+    m3u8Url: useCreateBucketUrl(post?.m3u8_url),
+    onPlayStatusChange: (isPlaying) => {
+      // Update local UI state if needed
+    }
+  });
+  
+  // Derived state
   const isOwner = contextUser?.user?.id === post?.user_id;
-
-  const { commentsByPost, setCommentsByPost, getCommentsByPostId } =
-    useCommentStore();
-  const { setIsLoginOpen } = useGeneralStore();
-
-  const {
-    currentAudioId,
-    setCurrentAudioId,
-    isPlaying: isGlobalPlaying,
-    stopAllPlayback,
-  } = usePlayerContext();
-  const isActiveInPlayer = currentAudioId === post?.id;
 
   useEffect(() => {
     const loadComments = async () => {
@@ -527,57 +536,43 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
 
       return () => clearInterval(interval);
     }
-  }, [showStats, post?.id, fetchStatistics]);
+  }, [showStats, post?.id]);
 
-  const handlePlay = async () => {
-    if (!post?.m3u8_url) {
-      console.error("Missing m3u8_url for post:", post?.id);
-      return;
-    }
-
-    const deviceInfo = getUserDeviceInfo();
-    const geoInfo = await getGeographicInfo();
-
-    // Запись взаимодействия пользователя с треком
-    try {
-      await recordInteraction({
-        track_id: post.id,
-        user_id: contextUser?.user?.id || "anonymous",
-        interaction_type: "play",
-        device_info: deviceInfo,
-        geographic_info: geoInfo,
-      });
-
-      // Обновляем статистику после записи взаимодействия
-      // Это ручное обновление, так как вызвано действием пользователя
-      if (post?.id) {
-        // Принудительно запрашиваем свежие данные статистики
-        setTimeout(() => {
-          fetchStatistics();
-        }, 500);
-      }
-    } catch (error) {
-      console.error("Error recording interaction:", error);
-    }
-
-    // Управление глобальным состоянием воспроизведения через PlayerContext
-    if (isActiveInPlayer && isGlobalPlaying) {
-      // Если этот трек уже воспроизводится, останавливаем его
-      stopAllPlayback();
-      setCurrentAudioId(null);
-      setIsPlaying(false);
-    } else {
-      // Если другой трек воспроизводится или ничего не играет,
-      // устанавливаем текущий трек как активный
-      setCurrentAudioId(post.id);
-      setIsPlaying(true);
-    }
+  const formatReleaseDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return format(date, "MMMM d, yyyy");
   };
 
-  // Синхронизируем локальное состояние isPlaying с глобальным состоянием PlayerContext
-  useEffect(() => {
-    setIsPlaying(isActiveInPlayer && isGlobalPlaying);
-  }, [isActiveInPlayer, isGlobalPlaying]);
+  const handleComments = (e: React.MouseEvent) => {
+    // Add stopPropagation to prevent the event from bubbling up to parent elements (like the play button)
+    if (e) e.stopPropagation();
+
+    if (!contextUser?.user) {
+      setIsLoginOpen(true);
+      return;
+    }
+    router.push(`/post/${post.user_id}/${post.id}`);
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    router.push(`/profile/${params.userId}`);
+  };
+
+  // Update the function that opens the edit popup
+  const handleOpenEditPopup = () => {
+    setShowEditPopup(true);
+    setIsDropdownOpen(false);
+    setIsEditMode(true); // Set edit mode to true, which will trigger bottom panel animation
+  };
+
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      handlePause();
+    } else {
+      handlePlay();
+    }
+  };
 
   const handleDownload = async () => {
     try {
@@ -637,35 +632,6 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
     }
   }, [params, post]);
 
-  const formatReleaseDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return format(date, "MMMM d, yyyy");
-  };
-
-  const handleComments = (e: React.MouseEvent) => {
-    // Add stopPropagation to prevent the event from bubbling up to parent elements (like the play button)
-    if (e) e.stopPropagation();
-
-    if (!contextUser?.user) {
-      setIsLoginOpen(true);
-      return;
-    }
-    router.push(`/post/${post.user_id}/${post.id}`);
-  };
-
-  const handleSuccessModalClose = () => {
-    setShowSuccessModal(false);
-    router.push(`/profile/${params.userId}`);
-  };
-
-  // Update the function that opens the edit popup
-  const handleOpenEditPopup = () => {
-    setShowEditPopup(true);
-    setIsDropdownOpen(false);
-    setIsEditMode(true); // Set edit mode to true, which will trigger bottom panel animation
-  };
-
-  // Update the edit popup close handler
   const handleCloseEditPopup = () => {
     setShowEditPopup(false);
     setIsEditMode(false); // Set edit mode to false, which will restore bottom panel
@@ -1099,16 +1065,10 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
             className="p-4"
           >
             <AudioPlayer
-              m3u8Url={useCreateBucketUrl(post?.m3u8_url)}
+              m3u8Url={stableM3u8Url}
               isPlaying={isPlaying}
-              onPlay={() => {
-                setCurrentAudioId(post.id);
-                setIsPlaying(true);
-              }}
-              onPause={() => {
-                stopAllPlayback();
-                setIsPlaying(false);
-              }}
+              onPlay={handlePlay}
+              onPause={handlePause}
             />
 
             <motion.div
