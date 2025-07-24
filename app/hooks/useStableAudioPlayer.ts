@@ -27,8 +27,9 @@ export const useStableAudioPlayer = ({
   useEffect(() => {
     if (m3u8Url && m3u8Url !== m3u8UrlRef.current) {
       m3u8UrlRef.current = m3u8Url;
+      console.log(`useStableAudioPlayer: Updated m3u8Url for ${postId}: ${m3u8Url}`);
     }
-  }, [m3u8Url]);
+  }, [m3u8Url, postId]);
 
   const isCurrentTrack = currentAudioId === postId;
   const isPlaying = isCurrentTrack && globalIsPlaying;
@@ -48,31 +49,39 @@ export const useStableAudioPlayer = ({
   useEffect(() => {
     return () => {
       if (isCurrentTrack && globalIsPlaying) {
+        console.log(`useStableAudioPlayer: Cleanup - stopping ${postId}`);
         stopAllPlayback?.();
       }
     };
-  }, [isCurrentTrack, globalIsPlaying, stopAllPlayback]);
+  }, [isCurrentTrack, globalIsPlaying, stopAllPlayback, postId]);
 
   const handlePlay = useCallback(() => {
+    console.log(`useStableAudioPlayer: Play requested for ${postId}`);
+    
+    // Stop other tracks if a different track is playing
     if (currentAudioId && currentAudioId !== postId) {
-      // Stop other tracks first
+      console.log(`useStableAudioPlayer: Stopping ${currentAudioId} to play ${postId}`);
       stopAllPlayback?.();
     }
     
     // Set this track as current
+    console.log(`useStableAudioPlayer: Setting ${postId} as current track`);
     setCurrentAudioId(postId);
     
-    // Start playing if not already playing
+    // Start playing - ensure we toggle to play state
     if (!globalIsPlaying || currentAudioId !== postId) {
+      console.log(`useStableAudioPlayer: Starting playback for ${postId}`);
       togglePlayPause();
     }
   }, [currentAudioId, postId, setCurrentAudioId, togglePlayPause, stopAllPlayback, globalIsPlaying]);
 
   const handlePause = useCallback(() => {
+    console.log(`useStableAudioPlayer: Pause requested for ${postId}`);
     if (isCurrentTrack && globalIsPlaying) {
+      console.log(`useStableAudioPlayer: Pausing ${postId}`);
       togglePlayPause();
     }
-  }, [isCurrentTrack, globalIsPlaying, togglePlayPause]);
+  }, [isCurrentTrack, globalIsPlaying, togglePlayPause, postId]);
 
   return {
     isPlaying,

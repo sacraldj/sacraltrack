@@ -250,7 +250,7 @@ const PostHeader = memo(
     text,
     genre,
   }: PostHeaderProps) => (
-    <div className="p-4 flex items-center justify-between">
+    <div className="p-[5px] flex items-center justify-between">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <Link
           href={`/profile/${profile.user_id}`}
@@ -1486,7 +1486,7 @@ const PostMain = memo(({ post }: PostMainProps) => {
           statsCounterRef={statsCounterRef}
         />
 
-        <div className="px-4 py-2 border-t border-white/5">
+        <div className="p-[5px] border-t border-white/5">
           <AudioPlayer
             m3u8Url={stableM3u8Url}
             isPlaying={isPlaying}
@@ -1495,13 +1495,13 @@ const PostMain = memo(({ post }: PostMainProps) => {
           />
         </div>
 
-        <div className="px-4 py-3 flex justify-between items-center w-full">
+        <div className="p-[5px] flex justify-between items-center w-full">
           <div className="flex items-center gap-4 flex-shrink-0">
             <PostMainLikes post={post} />
           </div>
 
           {/* Action buttons section */}
-          <div className="px-5 py-4 border-t border-white/5 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
+          <div className="p-[5px] border-t border-white/5 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {!isPurchased ? (
@@ -1516,8 +1516,7 @@ const PostMain = memo(({ post }: PostMainProps) => {
                     aria-label={`Buy track ${post.trackname} for $2`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative font-bold">Buy Track</span>
-                    <span className="relative text-sm opacity-90">$2.00</span>
+                    <span className="relative font-bold">Buy</span>
                     {isProcessingPayment && (
                       <motion.div
                         className="relative w-4 h-4 border-2 border-white/30 border-t-white rounded-full"

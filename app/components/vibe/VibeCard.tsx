@@ -1201,7 +1201,7 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
         ref={vibeCardRef}
         className="relative p-0.5 rounded-2xl overflow-hidden group cursor-pointer"
         onClick={handleCardClick}
-        whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
+        whileHover={{ y: -2, scale: 1.005, transition: { duration: 0.2 } }}
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
       >
@@ -1278,7 +1278,7 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="p-5"
+            className="p-[5px]"
           >
             {/* Vibe header section */}
             <div className="flex items-center justify-between mb-4">
@@ -1433,7 +1433,7 @@ const VibeCard: React.FC<VibeCardProps> = ({ vibe, onLike, onUnlike }) => {
             )}
 
             {/* Action buttons */}
-            <div className="px-5 py-4 border-t border-white/5 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
+            <div className="p-[5px] border-t border-white/5 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <VibeLikes

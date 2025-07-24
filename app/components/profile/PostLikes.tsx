@@ -49,6 +49,7 @@ const PostLikes = ({ post }: PostLikesProps) => {
     postId: post.$id,
     m3u8Url: useCreateBucketUrl(post?.m3u8_url),
     onPlayStatusChange: (isPlaying) => {
+      console.log(`PostLikes: Play status changed for ${post.$id} -> ${isPlaying}`);
       // Update track info when playing
       if (isPlaying) {
         setCurrentTrack({
@@ -61,6 +62,27 @@ const PostLikes = ({ post }: PostLikesProps) => {
       }
     }
   });
+
+  // Debug m3u8 URL availability
+  useEffect(() => {
+    console.log(`PostLikes: Checking ${post.$id}:`);
+    console.log(`  - post.m3u8_url: ${post?.m3u8_url}`);
+    console.log(`  - Generated URL: ${useCreateBucketUrl(post?.m3u8_url)}`);
+    console.log(`  - stableM3u8Url: ${stableM3u8Url}`);
+    
+    if (!post?.m3u8_url) {
+      console.warn(`PostLikes: No m3u8_url found for post ${post.$id}`);
+    }
+  }, [post.$id, post?.m3u8_url, stableM3u8Url]);
+
+  // Debug logging for audio URLs
+  useEffect(() => {
+    console.log(`PostLikes: Debug info for ${post.$id}:`);
+    console.log(`  - Raw m3u8_url: ${post?.m3u8_url}`);
+    console.log(`  - Generated m3u8Url: ${useCreateBucketUrl(post?.m3u8_url)}`);
+    console.log(`  - Stable m3u8Url: ${stableM3u8Url}`);
+    console.log(`  - Is playing: ${isPlaying}`);
+  }, [post.$id, post?.m3u8_url, stableM3u8Url, isPlaying]);
 
   const imageUrl = useCreateBucketUrl(post?.image_url);
   const avatarUrl = useCreateBucketUrl(post?.profile?.image);
@@ -102,9 +124,19 @@ const PostLikes = ({ post }: PostLikesProps) => {
   }, [post.$id]);
 
   const handlePlayPause = useCallback(() => {
-    if (isPlaying) {
+    console.log(`PostLikes: handlePlayPause called for ${post.$id}, isPlaying: ${isPlaying}`);
+    console.log(`PostLikes: stableM3u8Url: ${stableM3u8Url}`);
+    
+    if (!stableM3u8Url) {
+      console.error(`PostLikes: No stable M3U8 URL available for ${post.$id}`);
+      return;
+    }
+    
+    if (isPlaying && isCurrentTrack) {
+      console.log(`PostLikes: Pausing ${post.$id}`);
       handlePause();
     } else {
+      console.log(`PostLikes: Playing ${post.$id}`);
       // Update track info when playing
       setCurrentTrack({
         id: post.$id,
@@ -115,7 +147,7 @@ const PostLikes = ({ post }: PostLikesProps) => {
       });
       handlePlay();
     }
-  }, [isPlaying, handlePlay, handlePause, post, imageUrl, setCurrentTrack]);
+  }, [isPlaying, isCurrentTrack, handlePlay, handlePause, post, imageUrl, setCurrentTrack, stableM3u8Url]);
 
   // Переход на страницу комментариев
   const navigateToComments = (e: React.MouseEvent) => {
@@ -144,7 +176,11 @@ const PostLikes = ({ post }: PostLikesProps) => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={handlePlay}
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log(`PostLikes: Play button clicked for ${post.$id}`);
+                handlePlayPause();
+              }}
               className="w-8 h-8 bg-[#20DDBB] rounded-full flex items-center justify-center shadow-lg"
             >
               {isCurrentTrack && isPlaying ? (
@@ -192,7 +228,11 @@ const PostLikes = ({ post }: PostLikesProps) => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handlePlay}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log(`PostLikes: Action button clicked for ${post.$id}`);
+              handlePlayPause();
+            }}
             className="p-2 rounded-lg bg-gradient-to-r from-[#20DDBB]/10 to-[#5D59FF]/10 hover:from-[#20DDBB]/20 hover:to-[#5D59FF]/20 border border-[#20DDBB]/20 transition-all"
           >
             {isCurrentTrack && isPlaying ? (
@@ -204,8 +244,8 @@ const PostLikes = ({ post }: PostLikesProps) => {
         </div>
       </div>
 
-      {/* Compact audio player - only visible when playing */}
-      {isCurrentTrack && (
+      {/* Compact audio player - only visible when this track is current */}
+      {isCurrentTrack && stableM3u8Url && (
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
@@ -216,8 +256,14 @@ const PostLikes = ({ post }: PostLikesProps) => {
             <AudioPlayer
               m3u8Url={stableM3u8Url}
               isPlaying={isPlaying}
-              onPlay={handlePlay}
-              onPause={handlePause}
+              onPlay={() => {
+                console.log(`PostLikes: AudioPlayer onPlay for ${post.$id}`);
+                handlePlay();
+              }}
+              onPause={() => {
+                console.log(`PostLikes: AudioPlayer onPause for ${post.$id}`);
+                handlePause();
+              }}
             />
           </div>
         </motion.div>

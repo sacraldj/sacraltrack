@@ -46,7 +46,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({
     setIsPlaying((prev) => {
       const newState = !prev;
       console.log(
-        `PlayerContext: Toggle playback - ${newState ? "Playing" : "Paused"}`,
+        `PlayerContext: Toggle playback - ${newState ? "Playing" : "Paused"} for track ${currentAudioId}`,
       );
       return newState;
     });
@@ -60,18 +60,14 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({
     // Only reset when a different track is explicitly selected
   };
 
-  // Handle track changes with improved timing
+  // Handle track changes - removed automatic play to avoid conflicts
   useEffect(() => {
     if (currentAudioId && currentTrack) {
-      console.log(`PlayerContext: New track selected - ${currentTrack.name}`);
-      // Give AudioPlayer more time to initialize HLS
-      const timer = setTimeout(() => {
-        setIsPlaying(true);
-      }, 200);
-
-      return () => clearTimeout(timer);
+      console.log(`PlayerContext: Track selected - ${currentTrack.name} (${currentAudioId}), but not auto-playing`);
+      // Don't automatically start playing - let components control this
     } else if (!currentAudioId) {
       // Reset playing state when no track is selected
+      console.log("PlayerContext: No track selected, stopping playback");
       setIsPlaying(false);
     }
   }, [currentAudioId, currentTrack]);

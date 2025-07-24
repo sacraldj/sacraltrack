@@ -482,9 +482,18 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
     postId: post.id,
     m3u8Url: useCreateBucketUrl(post?.m3u8_url),
     onPlayStatusChange: (isPlaying) => {
-      // Update local UI state if needed
+      console.log(`PostUser: Play status changed for ${post.id} -> ${isPlaying}`);
     }
   });
+  
+  // Debug logging for audio URLs
+  useEffect(() => {
+    console.log(`PostUser: Debug info for ${post.id}:`);
+    console.log(`  - Raw m3u8_url: ${post?.m3u8_url}`);
+    console.log(`  - Generated m3u8Url: ${useCreateBucketUrl(post?.m3u8_url)}`);
+    console.log(`  - Stable m3u8Url: ${stableM3u8Url}`);
+    console.log(`  - Is playing: ${isPlaying}`);
+  }, [post.id, post?.m3u8_url, stableM3u8Url, isPlaying]);
   
   // Derived state
   const isOwner = contextUser?.user?.id === post?.user_id;
@@ -576,9 +585,49 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
 
   const handleDownload = async () => {
     try {
-      const audioUrl = useCreateBucketUrl(post.audio_url);
+      console.log("PostUser: Post object for download:", post);
+      console.log("PostUser: Available fields:", Object.keys(post));
+      
+      // Check multiple possible field names for WAV download
+      const downloadUrl = (post as any).wav_url || 
+                         (post as any).wavUrl || 
+                         (post as any).original_audio_url ||
+                         post.audio_url;
+      
+      console.log("PostUser: Download URL found:", downloadUrl);
+      
+      if (!downloadUrl) {
+        console.warn("PostUser: No download URL available");
+        toast.error(`WAV download for "${post.trackname}" is not available.`, {
+          duration: 3000,
+          position: 'top-center',
+          style: {
+            background: "#1E2136",
+            color: "#fff",
+            border: "1px solid #ff5555",
+          },
+          icon: "⚠️"
+        });
+        return;
+      }
+
+      const audioUrl = useCreateBucketUrl(downloadUrl);
+      console.log("PostUser: Full download URL:", audioUrl);
+      
+      // Show loading toast
+      toast.loading("Downloading track...", {
+        id: 'download-toast',
+        position: 'top-center'
+      });
+      
       const response = await fetch(audioUrl);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const blob = await response.blob();
+      console.log("PostUser: Blob size:", blob.size, "bytes");
 
       // Create a temporary link element
       const downloadLink = document.createElement("a");
@@ -593,22 +642,32 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
       // Cleanup
       URL.revokeObjectURL(downloadLink.href);
 
-      toast.custom(
-        (t) => (
-          <DownloadToast
-            message={`Track "${post.trackname}" downloaded successfully!`}
-          />
-        ),
-        { duration: 3000 },
-      );
+      // Dismiss loading toast and show success
+      toast.dismiss('download-toast');
+      toast.success(`Track "${post.trackname}" downloaded successfully!`, {
+        duration: 3000,
+        position: 'top-center',
+        style: {
+          background: "#1E2136",
+          color: "#fff",
+          border: "1px solid #20DDBB",
+        },
+        icon: "✅"
+      });
     } catch (error) {
       console.error("Error downloading track:", error);
-      toast.custom(
-        (t) => (
-          <ErrorToast message="Couldn't download the track. Please try again." />
-        ),
-        { duration: 4000 },
-      );
+      // Dismiss loading toast and show error
+      toast.dismiss('download-toast');
+      toast.error("Couldn't download the track. Please try again.", {
+        duration: 4000,
+        position: 'top-center',
+        style: {
+          background: "#1E2136",
+          color: "#fff",
+          border: "1px solid #ff5555",
+        },
+        icon: "❌"
+      });
     }
   };
 
@@ -623,12 +682,16 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
     } catch (error) {
       console.error(error);
       setIsDeleting(false);
-      toast.custom(
-        (t) => (
-          <ErrorToast message="We couldn't process your deletion request. Please try again later." />
-        ),
-        { duration: 4000 },
-      );
+      toast.error("We couldn't process your deletion request. Please try again later.", {
+        duration: 4000,
+        position: 'top-center',
+        style: {
+          background: "#1E2136",
+          color: "#fff",
+          border: "1px solid #ff5555",
+        },
+        icon: "❌"
+      });
     }
   }, [params, post]);
 
@@ -1036,14 +1099,16 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
                           whileTap={{ scale: 0.98 }}
                           onClick={() => {
                             setShowStats(false);
-                            toast.custom(
-                              (t) => (
-                                <StatsToast
-                                  message={`Your track "${post.trackname}" has been played ${parseInt(statistics?.plays_count || "0", 10)} times!`}
-                                />
-                              ),
-                              { duration: 4000 },
-                            );
+                                        toast.success(`Your track "${post.trackname}" has been played ${parseInt(statistics?.plays_count || "0", 10)} times!`, {
+              duration: 4000,
+              position: 'top-center',
+              style: {
+                background: "#1E2136",
+                color: "#fff",
+                border: "1px solid #20DDBB",
+              },
+              icon: "📊"
+            });
                           }}
                           className="w-full py-2.5 px-4 rounded-xl transition-all bg-[#20DDBB]/10 text-[#20DDBB] border border-[#20DDBB]/30 flex items-center justify-center gap-2"
                         >
