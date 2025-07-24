@@ -662,6 +662,29 @@ function HomePageContent() {
             </div>
           )}
 
+          {/* Emergency fallback for when content fails to load */}
+          <ClientOnly>
+            {!isLoading && !initialContentLoaded && filteredFeed.length === 0 && (
+              <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1E1A36] to-[#2A2151]">
+                <div className="text-center p-8">
+                  <div className="mb-4">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-[#20DDBB]/20 rounded-full flex items-center justify-center">
+                      <FaInfoCircle className="text-[#20DDBB] text-2xl" />
+                    </div>
+                  </div>
+                  <h2 className="text-xl font-bold text-white mb-2">Welcome to Sacral Track!</h2>
+                  <p className="text-[#818BAC] mb-6">Loading your personalized music feed...</p>
+                  <button 
+                    onClick={() => window.location.reload()} 
+                    className="px-6 py-3 bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+                  >
+                    Refresh Page
+                  </button>
+                </div>
+              </div>
+            )}
+          </ClientOnly>
+
           {/* No content message - wrapped in ClientOnly to prevent hydration mismatch */}
           <ClientOnly>
             {initialContentLoaded &&

@@ -17,6 +17,31 @@ export default function GlobalLoader() {
 
     useEffect(() => {
         const startLoading = () => {
+            // Check if we should skip loading for certain routes or auth states
+            if (typeof window !== 'undefined') {
+                // Skip loading if we're coming from auth success
+                const isAuthFlow = pathname.includes('auth/google/success') || 
+                                 pathname.includes('success') ||
+                                 sessionStorage.getItem('googleAuthInProgress') === 'true' ||
+                                 sessionStorage.getItem('authJustCompleted') === 'true';
+                
+                // Skip loading for main pages when user is already authenticated
+                const isMainPage = pathname === '/' || pathname === '';
+                const hasRecentAuth = sessionStorage.getItem('authJustCompleted') === 'true';
+                
+                if (isAuthFlow || (isMainPage && hasRecentAuth)) {
+                    console.log('GlobalLoader: Skipping loader due to auth flow or recent auth');
+                    return;
+                }
+                
+                // Clear auth completion flag after 10 seconds
+                if (hasRecentAuth) {
+                    setTimeout(() => {
+                        sessionStorage.removeItem('authJustCompleted');
+                    }, 10000);
+                }
+            }
+            
             setLoading(true);
             setProgress(0);
             
@@ -25,9 +50,9 @@ export default function GlobalLoader() {
                 setAudioVisualization(generateRandomAudioBars());
             }, 180);
             
-            // Использовать CSS-переход для более плавного прогресса
-            const duration = 1600; // 1.6 секунды
-            const steps = 15;
+            // Reduced loading time for better UX
+            const duration = 800; // Reduced from 1600ms to 800ms
+            const steps = 10; // Reduced steps
             const stepDuration = duration / steps;
             
             let currentStep = 0;
@@ -45,8 +70,8 @@ export default function GlobalLoader() {
                         setTimeout(() => {
                             setLoading(false);
                             clearInterval(audioInterval);
-                        }, 300);
-                    }, 150);
+                        }, 200); // Reduced from 300ms
+                    }, 100); // Reduced from 150ms
                 }
             }, stepDuration);
 
@@ -56,7 +81,10 @@ export default function GlobalLoader() {
             };
         };
 
-        startLoading();
+        // Add a small delay to prevent immediate loading on auth redirects
+        const timer = setTimeout(startLoading, 100);
+        
+        return () => clearTimeout(timer);
     }, [pathname]);
 
     // Определяем анимации для музыкальных нот
@@ -155,9 +183,12 @@ export default function GlobalLoader() {
                                     ))}
                                 </div>
                                 
-                                <div className="flex items-center justify-center text-center">
-                                    <p className="text-white font-medium text-sm sm:text-base text-center">Sacral Track is preparing the platform for you</p>
-                                </div>
+                                {/* Показываем сообщение только если НЕ на странице success */}
+                                {!pathname.includes('success') && (
+                                    <div className="flex items-center justify-center text-center">
+                                        <p className="text-white font-medium text-sm sm:text-base text-center">Sacral Track is preparing the platform for you</p>
+                                    </div>
+                                )}
                                 
                                 <motion.div 
                                     className="mt-1 px-6 py-1.5 rounded-full text-white/80 text-xs border border-white/10 text-center bg-[#24183D]/50"

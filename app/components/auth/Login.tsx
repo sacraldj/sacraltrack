@@ -27,6 +27,7 @@ import {
 import { clearAllAuthFlags } from "@/app/utils/authCleanup";
 import SafariAuthHelper from './SafariAuthHelper';
 import { getRedirectTimeout, getAdditionalDelay } from '@/app/config/authConfig';
+import { useIsClient } from '@/app/hooks/useIsClient';
 
 // Custom toast styling function
 const showToast = (
@@ -64,6 +65,7 @@ const showToast = (
 export default function Login() {
   const { setIsLoginOpen, setIsRegisterOpen } = useGeneralStore();
   const contextUser = useUser();
+  const isClient = useIsClient();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [googleLoading, setGoogleLoading] = useState<boolean>(false);
@@ -449,35 +451,31 @@ export default function Login() {
       localStorage.removeItem("loginAttempts");
       localStorage.removeItem("loginBlockTime");
 
+      // If we reach here, login was successful
       console.log("Login completed successfully");
       showToast("success", `Welcome back! 🎉`);
+      
+      // Clear form data
+      setEmail("");
+      setPassword("");
+      setError({ type: "", message: "" });
+      
+      // No need for additional redirect here as it's handled in UserContext
+      console.log("Login process completed, user should be redirected");
     } catch (error: any) {
-      console.error("[Login Error]:", error);
       setLoading(false);
-      toast.dismiss("login-loading");
+      console.error("Login error:", error);
 
-      // Track failed attempts
-      const newAttempts = loginAttempts + 1;
+      let errorMessage = "An error occurred during login.";
+      const newAttempts = Math.min(loginAttempts + 1, 5);
       setLoginAttempts(newAttempts);
       localStorage.setItem("loginAttempts", newAttempts.toString());
 
-      // Block user after 5 failed attempts for 15 minutes
       if (newAttempts >= 5) {
         const blockTime = Date.now() + 15 * 60 * 1000; // 15 minutes
         localStorage.setItem("loginBlockTime", blockTime.toString());
-        setIsBlocked(true);
-        setBlockTimeLeft(15 * 60);
-        showToast(
-          "error",
-          "Too many failed attempts. Account temporarily locked for 15 minutes.",
-        );
-        return;
-      }
-
-      // Handle specific error cases
-      let errorMessage = "Login failed. Please try again.";
-
-      if (error.code === 401) {
+        errorMessage = `Too many failed attempts. Account locked for ${15} minutes.`;
+      } else if (error.code === 401) {
         if (error.message?.includes("Invalid credentials")) {
           errorMessage =
             "Invalid email or password. Please check your credentials.";
@@ -530,6 +528,9 @@ export default function Login() {
           );
         }, 1000);
       }
+
+      // Re-open modal if login failed
+      setIsLoginOpen(true);
     }
   };
 
@@ -680,7 +681,7 @@ export default function Login() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="w-full max-w-[420px] relative auth-modal-container"
+        className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto auth-modal-container"
       >
         <motion.div
           className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)] auth-modal-content"
@@ -764,368 +765,196 @@ export default function Login() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                Continue your musical journey
+                Sign in to continue your musical journey
               </motion.p>
-
-              {/* Security warning for blocked users */}
-              <AnimatePresence>
-                {isBlocked && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg"
-                  >
-                    <div className="flex items-center gap-2 text-red-400 text-sm">
-                      <FiAlertCircle />
-                      <span>
-                        Account locked for {formatTimeLeft(blockTimeLeft)}
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Login attempts warning */}
-              <AnimatePresence>
-                {loginAttempts >= 3 && loginAttempts < 5 && !isBlocked && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg"
-                  >
-                    <div className="flex items-center gap-2 text-yellow-400 text-sm">
-                      <FiAlertCircle />
-                      <span>{5 - loginAttempts} attempts remaining</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
 
             {/* Form */}
             <motion.div
-              className="space-y-4 auth-form-spacing"
+              className="space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              {showForgotPassword ? (
-                <>
-                  <div className="text-center mb-6">
-                    <h2 className="text-xl font-semibold text-white mb-2">
-                      Reset Password
-                    </h2>
-                    <p className="text-[#818BAC] text-sm">
-                      Enter your email address and we'll send you instructions
-                      to reset your password
-                    </p>
-                  </div>
-
-                  <motion.div
-                    className="relative group"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <TextInput
-                      string={email}
-                      placeholder="Email"
-                      onUpdate={setEmail}
-                      inputType="email"
-                      error={showError("email")}
-                      className={`
-                                                w-full bg-[#14151F]/60 border-2
-                                                ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
-                                                rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
-                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                                                transition-all duration-300
-                                                group-hover:border-[#20DDBB]/50
-                                            `}
-                    />
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                    </div>
-                  </motion.div>
-
-                  <div className="flex gap-3 mt-6">
-                    <button
-                      onClick={toggleForgotPassword}
-                      className="flex-1 py-3 px-4 border border-[#2A2B3F] text-[#818BAC] rounded-xl
-                                            hover:bg-[#2A2B3F]/50 hover:text-white transition-all duration-300"
-                      disabled={loading}
-                    >
-                      Back to Login
-                    </button>
-
-                    <motion.button
-                      onClick={sendPasswordRecovery}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="
-                                                flex-1 bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
-                                                text-white py-3 px-4 rounded-xl font-medium
-                                                relative overflow-hidden group
-                                                disabled:opacity-50 disabled:cursor-not-allowed
-                                            "
-                      disabled={loading}
-                    >
-                      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                      <div className="relative flex items-center justify-center">
-                        {loading ? (
-                          <BiLoaderCircle className="animate-spin text-xl" />
-                        ) : (
-                          <span>Send Reset Link</span>
-                        )}
-                      </div>
-                    </motion.button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Email Input */}
-                  <motion.div
-                    className="relative group"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <TextInput
-                      string={email}
-                      placeholder="Email"
-                      onUpdate={setEmail}
-                      inputType="email"
-                      error={showError("email")}
-                      className={`
-                                                w-full bg-[#14151F]/60 border-2
-                                                ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
-                                                rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
-                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                                                transition-all duration-300
-                                                group-hover:border-[#20DDBB]/50
-                                                auth-modal-input
-                                            `}
-                    />
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                    </div>
-                  </motion.div>
-
-                  {/* Password Input */}
-                  <motion.div
-                    className="relative group"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <TextInput
-                      string={password}
-                      placeholder="Password"
-                      onUpdate={setPassword}
-                      inputType={showPassword ? "text" : "password"}
-                      error={showError("password")}
-                      className={`
-                                                w-full bg-[#14151F]/60 border-2
-                                                ${error?.type === "password" ? "border-red-500" : "border-[#2A2B3F]"}
-                                                rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
-                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                                                transition-all duration-300
-                                                group-hover:border-[#20DDBB]/50
-                                                auth-modal-input
-                                            `}
-                    />
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
-                    >
-                      {showPassword ? (
-                        <FiEyeOff className="text-xl" />
-                      ) : (
-                        <FiEye className="text-xl" />
-                      )}
-                    </button>
-                  </motion.div>
-
-                  <div className="text-right">
-                    <button
-                      onClick={toggleForgotPassword}
-                      className="text-[#20DDBB] hover:text-[#8A2BE2] text-sm transition-colors duration-300"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                </>
-              )}
-            </motion.div>
-
-            {/* Action Buttons */}
-            <motion.div
-              className="mt-8 space-y-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              {!showForgotPassword && (
-                <>
-                  {/* Login Button */}
-                  <motion.button
-                    disabled={loading || isBlocked}
-                    onClick={login}
-                    whileHover={{ scale: loading || isBlocked ? 1 : 1.02 }}
-                    whileTap={{ scale: loading || isBlocked ? 1 : 0.98 }}
-                    className="
-                                            relative w-full bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
-                                            text-white py-4 rounded-xl font-semibold
-                                            overflow-hidden group
-                                            disabled:opacity-50 disabled:cursor-not-allowed
-                                            auth-modal-button
-                                        "
-                  >
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                    <div className="relative flex items-center justify-center gap-2">
-                      {loading ? (
-                        <BiLoaderCircle className="animate-spin text-2xl" />
-                      ) : (
-                        <>
-                          <span>Log In</span>
-                          <motion.div
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            →
-                          </motion.div>
-                        </>
-                      )}
-                    </div>
-                  </motion.button>
-
-                  {/* Divider */}
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-[#2A2B3F]"></div>
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-2 text-[#818BAC] bg-[#1E1F2E]">
-                        Or continue with
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Google Login Button */}
-                  <motion.button
-                    onClick={handleGoogleLogin}
-                    disabled={loading || googleLoading}
-                    whileHover={{ scale: loading || googleLoading ? 1 : 1.02 }}
-                    whileTap={{ scale: loading || googleLoading ? 1 : 0.98 }}
-                    className="
-                                            w-full flex items-center justify-center gap-3 px-4 py-3
-                                            bg-[#14151F]/60 hover:bg-[#14151F]/80
-                                            text-white rounded-xl font-medium
-                                            border-2 border-[#2A2B3F] hover:border-[#20DDBB]/50
-                                            transition-all duration-300
-                                            disabled:opacity-50 disabled:cursor-not-allowed
-                                            relative overflow-hidden group
-                                            auth-google-button
-                                        "
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#20DDBB]/10 to-[#8A2BE2]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                    <div className="relative flex items-center gap-3">
-                      {googleLoading ? (
-                        <BiLoaderCircle className="animate-spin text-xl" />
-                      ) : (
-                        <FcGoogle className="text-xl" />
-                      )}
-                      <span>
-                        {googleLoading
-                          ? "Redirecting..."
-                          : "Continue with Google"}
-                      </span>
-                    </div>
-                  </motion.button>
-                </>
-              )}
-            </motion.div>
-
-            {/* Footer Links */}
-            {!showForgotPassword && (
+              {/* Email Input */}
               <motion.div
-                className="mt-6 text-center space-y-3"
+                className="relative group"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <TextInput
+                  string={email}
+                  placeholder="Email"
+                  onUpdate={setEmail}
+                  inputType="email"
+                  error={showError("email")}
+                  className={`
+                    w-full bg-[#14151F]/60 border-2
+                    ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
+                    rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
+                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
+                    transition-all duration-300
+                    group-hover:border-[#20DDBB]/50
+                    auth-modal-input
+                  `}
+                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                </div>
+              </motion.div>
+
+              {/* Password Input */}
+              <motion.div
+                className="relative group"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <TextInput
+                  string={password}
+                  placeholder="Password"
+                  onUpdate={setPassword}
+                  inputType={showPassword ? "text" : "password"}
+                  error={showError("password")}
+                  className={`
+                    w-full bg-[#14151F]/60 border-2
+                    ${error?.type === "password" ? "border-red-500" : "border-[#2A2B3F]"}
+                    rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
+                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
+                    transition-all duration-300
+                    group-hover:border-[#20DDBB]/50
+                    auth-modal-input
+                  `}
+                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
+                >
+                  {showPassword ? (
+                    <FiEyeOff className="text-xl" />
+                  ) : (
+                    <FiEye className="text-xl" />
+                  )}
+                </button>
+              </motion.div>
+
+              {/* Error Display */}
+              <AnimatePresence>
+                {(showError("general") || showError("email") || showError("password")) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl"
+                  >
+                    <div className="flex items-center gap-2">
+                      <FiAlertCircle className="text-red-400 flex-shrink-0" />
+                      <p className="text-red-400 text-sm">
+                        {showError("general") || showError("email") || showError("password")}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Action Buttons */}
+              <motion.div
+                className="space-y-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                {/* Login Button */}
+                <motion.button
+                  disabled={loading || isBlocked}
+                  onClick={login}
+                  whileHover={{ scale: loading || isBlocked ? 1 : 1.02 }}
+                  whileTap={{ scale: loading || isBlocked ? 1 : 0.98 }}
+                  className="
+                    relative w-full bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
+                    text-white py-4 rounded-xl font-semibold
+                    overflow-hidden group
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    auth-modal-button
+                  "
+                >
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <div className="relative flex items-center justify-center gap-2">
+                    {loading ? (
+                      <BiLoaderCircle className="animate-spin text-2xl" />
+                    ) : (
+                      <>
+                        <span>Sign In</span>
+                        <motion.div
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          →
+                        </motion.div>
+                      </>
+                    )}
+                  </div>
+                </motion.button>
+
+                {/* Divider */}
+                <div className="flex items-center gap-4 my-6">
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#818BAC]/30 to-transparent"></div>
+                  <span className="text-[#818BAC] text-sm font-medium">OR</span>
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#818BAC]/30 to-transparent"></div>
+                </div>
+
+                {/* Google Login Button */}
+                <motion.button
+                  disabled={googleLoading || loading}
+                  onClick={handleGoogleLogin}
+                  whileHover={{ scale: googleLoading || loading ? 1 : 1.02 }}
+                  whileTap={{ scale: googleLoading || loading ? 1 : 0.98 }}
+                  className="
+                    relative w-full bg-[#14151F]/60 border-2 border-[#2A2B3F]
+                    hover:border-[#20DDBB]/50 text-white py-4 rounded-xl font-medium
+                    overflow-hidden group transition-all duration-300
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    auth-google-button
+                  "
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#20DDBB]/5 to-[#8A2BE2]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative flex items-center justify-center gap-3">
+                    {googleLoading ? (
+                      <BiLoaderCircle className="animate-spin text-xl" />
+                    ) : (
+                      <FcGoogle className="text-xl" />
+                    )}
+                    <span>
+                      {googleLoading ? "Connecting..." : "Continue with Google"}
+                    </span>
+                  </div>
+                </motion.button>
+              </motion.div>
+
+              {/* Footer */}
+              <motion.div
+                className="text-center pt-6 border-t border-[#2A2B3F]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                <button
-                  onClick={sendVerificationEmail}
-                  disabled={loading}
-                  className="text-[#20DDBB] hover:text-[#8A2BE2] transition-colors duration-300 text-sm font-medium disabled:opacity-50"
-                >
-                  Need to verify your email?
-                </button>
-
                 <p className="text-[#818BAC] text-sm">
                   Don't have an account?{" "}
                   <button
                     onClick={switchToRegister}
-                    className="text-[#20DDBB] hover:text-[#8A2BE2] transition-colors duration-300 font-medium"
+                    className="text-[#20DDBB] hover:text-[#8A2BE2] font-medium transition-colors duration-300"
                   >
-                    Sign up
+                    Sign up here
                   </button>
                 </p>
               </motion.div>
-            )}
+            </motion.div>
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Success notification */}
-      <AnimatePresence>
-        {isEmailSent && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -50, scale: 0.8 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] text-white p-6 rounded-2xl shadow-lg backdrop-blur-xl max-w-sm"
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-white/20 p-2 rounded-lg">
-                <FiCheck className="text-xl" />
-              </div>
-              <div>
-                <p className="font-medium">Email sent!</p>
-                <p className="text-sm opacity-90">
-                  Check your inbox for verification
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Reset email sent notification */}
-      <AnimatePresence>
-        {resetEmailSent && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -50, scale: 0.8 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] text-white p-6 rounded-2xl shadow-lg backdrop-blur-xl max-w-sm"
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-white/20 p-2 rounded-lg">
-                <FiMail className="text-xl" />
-              </div>
-              <div>
-                <p className="font-medium">Reset link sent!</p>
-                <p className="text-sm opacity-90">
-                  Check your email for instructions
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Safari Authentication Helper */}
       <SafariAuthHelper

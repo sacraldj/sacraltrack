@@ -63,15 +63,28 @@ function AuthParamsHandler() {
     return null; // This component just handles the parameters, doesn't render anything
 }
 
-// Main page component that doesn't directly use useSearchParams
+// Enhanced loading fallback
+const AuthSuccessLoading = () => (
+    <div className="min-h-screen bg-gradient-to-br from-[#1E1A36] to-[#2A2151] flex items-center justify-center">
+        <div className="text-center p-8">
+            <div className="mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 border-4 border-[#20DDBB] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">Finalizing Your Login</h2>
+            <p className="text-[#818BAC]">Please wait while we complete your authentication...</p>
+        </div>
+    </div>
+);
+
 export default function GoogleAuthSuccessPage() {
     return (
         <>
-            {/* Wrap the component using useSearchParams in Suspense */}
-            <Suspense fallback={<div className="text-center p-4">Loading authentication parameters...</div>}>
+            <Suspense fallback={<AuthSuccessLoading />}>
                 <AuthParamsHandler />
             </Suspense>
-            <GoogleAuthSuccess />
+            <Suspense fallback={<AuthSuccessLoading />}>
+                <GoogleAuthSuccess />
+            </Suspense>
         </>
     );
 } 

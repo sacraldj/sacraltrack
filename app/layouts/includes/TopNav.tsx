@@ -352,16 +352,23 @@ const TopNav = React.memo(({ params }: { params: { id: string } }) => {
       <TopNavGuide />
       <div
         id="TopNav"
-        className="fixed top-0 bg-[linear-gradient(60deg,#2E2469,#351E43)] z-[49] flex items-center h-[60px] right-0 left-0 border-b border-white/10"
+        className="fixed top-0 bg-[linear-gradient(60deg,#2E2469,#351E43)] z-[49] flex items-center right-0 left-0 border-b border-white/10 safe-area-top"
+        style={{
+          height: 'calc(60px + env(safe-area-inset-top))',
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingLeft: 'max(16px, env(safe-area-inset-left))',
+          paddingRight: 'max(16px, env(safe-area-inset-right))'
+        }}
       >
         <div
-          className={`flex items-center justify-between w-full px-3 md:px-5 mx-auto ${isHomePage ? "max-w-full" : ""}`}
+          className={`flex items-center justify-between w-full mx-auto ${isHomePage ? "max-w-full px-3 md:px-5" : "px-3 md:px-5"}`}
         >
           {/* Logo - улучшенная версия с более надежной навигацией */}
           <Link
             href="/"
-            className="flex items-center relative group"
+            className="flex items-center relative group touch-manipulation"
             aria-label="Go to home page"
+            style={{ minHeight: '44px', minWidth: '44px' }} // iOS touch target
             onClick={(e) => {
               // Только для страницы people используем прямой переход
               if (pathname === "/people") {
@@ -390,48 +397,14 @@ const TopNav = React.memo(({ params }: { params: { id: string } }) => {
           </Link>
 
           {/* Genres - Only visible on home page */}
-          <div className="flex items-center">
-            {/* Используем компонент GenreSelector вместо ручной кнопки */}
-            <GenreSelector isHomePage={isHomePage} />
+          {isHomePage && (
+            <div className="hidden lg:flex items-center">
+              <GenreSelector isHomePage={isHomePage} />
+            </div>
+          )}
 
-            {/* Кнопка сброса жанров */}
-            {selectedGenre !== "all" && (
-              <button
-                className="ml-2 md:ml-4 text-[13px] flex items-center px-2.5 py-1 rounded-full bg-[#20DDBB]/20 text-[#20DDBB] hover:bg-[#20DDBB]/30 transition-all duration-150"
-                onClick={() => {
-                  setSelectedGenre("all");
-                  toast.success("Showing all genres", {
-                    icon: "🎵",
-                    style: {
-                      backgroundColor: "#24183D",
-                      color: "#fff",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                    },
-                  });
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  className="w-3 h-3 mr-1"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-                <span className="hidden md:inline">All Genres</span>
-                <span className="inline md:hidden">Reset</span>
-              </button>
-            )}
-          </div>
-
-          {/* Search Bar - Conditional based on page */}
-          <div className="md:-ml-[60px] lg:-ml-[120px] xl:-ml-[140px]">
+          {/* Search Bar - центрированная позиция */}
+          <div className="flex-1 max-w-md mx-4 lg:mx-8">
             {isPeoplePage && peopleSearchContext ? (
               <PeopleSearchBar onSearch={peopleSearchContext.onSearch} />
             ) : (

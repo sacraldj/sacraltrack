@@ -40,6 +40,7 @@ export default function MainLayout({
   const router = useRouter();
   const { currentProfile, setCurrentProfile } = useProfileStore();
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   const { setIsLoginOpen, setIsEditProfileOpen } = useGeneralStore();
 
@@ -73,23 +74,51 @@ export default function MainLayout({
     }
   }, [userContext?.user?.id, currentProfile, setCurrentProfile]);
 
+  // Set layout ready after a short delay to ensure everything is initialized
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLayoutReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Handle welcome modal close
   const handleWelcomeModalClose = () => {
     setShowWelcomeModal(false);
   };
+
+  // Show loading state while layout is initializing
+  if (!isLayoutReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#1E1A36] to-[#2A2151] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#20DDBB] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white/80">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
       <TopNav params={{ id: userContext?.user?.id as string }} />
       <AuthObserver />
 
-      <div className="flex mx-auto w-full px-0 smooth-scroll-container content-with-top-nav">
+      <div className="flex mx-auto w-full px-0 smooth-scroll-container min-h-screen safe-area-all"
+           style={{
+             paddingTop: 'calc(60px + env(safe-area-inset-top))',
+             minHeight: '100vh'
+           }}>
         <div className="hidden md:flex w-[350px] relative">
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full sticky top-[70px] h-[calc(100vh-70px)]"
+            className="w-full sticky h-[calc(100vh-70px)]"
+            style={{
+              top: 'calc(70px + env(safe-area-inset-top))',
+              height: 'calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom))'
+            }}
           >
             {/* Profile card for desktop and iPad */}
             {userContext?.user && currentProfile && (
@@ -97,8 +126,6 @@ export default function MainLayout({
                 <UserProfileSidebar profile={currentProfile} />
               </div>
             )}
-            {/*<SideNavMain />*/}
-            {/*<MainComponentsFilter />*/}
           </motion.div>
         </div>
 
@@ -108,7 +135,11 @@ export default function MainLayout({
               initial={{ opacity: 0, y: -100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="w-full pb-[80px] md:pb-0 content-with-bottom-nav"
+              className="w-full min-h-screen content-with-bottom-nav"
+              style={{
+                paddingBottom: 'max(80px, calc(80px + env(safe-area-inset-bottom)))',
+                minHeight: '100vh'
+              }}
             >
               {children}
             </motion.div>
@@ -122,9 +153,10 @@ export default function MainLayout({
             transition={{ duration: 0.5 }}
             className="w-full"
           >
-            {/*	TOP 100 <RightSideBar />
-                <TechMessage />*/}
-            <div className="sticky top-[80px] pt-0">
+            <div className="sticky pt-0"
+                 style={{
+                   top: 'calc(80px + env(safe-area-inset-top))'
+                 }}>
               <ContentFilter />
             </div>
           </motion.div>
@@ -140,9 +172,17 @@ export default function MainLayout({
             damping: 20,
             duration: 0.5,
           }}
-          className="md:hidden fixed bottom-0 left-0 right-0 z-[99998] bg-[#0F1225]/50 backdrop-blur-xl px-4 py-2 pb-2 border-t border-white/5 shadow-lg fixed-bottom-panel"
+          className="md:hidden fixed bottom-0 left-0 right-0 z-[99998] bg-[#0F1225]/50 backdrop-blur-xl border-t border-white/5 shadow-lg mobile-nav-safe"
+          style={{
+            paddingLeft: 'max(16px, env(safe-area-inset-left))',
+            paddingRight: 'max(16px, env(safe-area-inset-right))',
+            paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+            height: 'calc(60px + env(safe-area-inset-bottom))'
+          }}
         >
-          <ContentFilter />
+          <div className="px-4 py-2 pb-2">
+            <ContentFilter />
+          </div>
         </motion.div>
 
         {/* Welcome Modal */}

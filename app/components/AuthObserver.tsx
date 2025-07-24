@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser, AUTH_STATE_CHANGE_EVENT } from '@/app/context/user';
+import { useUser, AUTH_STATE_CHANGE_EVENT, dispatchAuthStateChange } from '@/app/context/user';
 import { useProfileStore } from '@/app/stores/profile';
 import { useVibeStore } from '@/app/stores/vibeStore';
 import { toast } from 'react-hot-toast';
@@ -285,7 +285,7 @@ const AuthObserver = () => {
       console.log('Initial auth check on component mount');
       
       // Delay the initial check to avoid conflicts with OAuth process
-      setTimeout(() => {
+      setTimeout(async () => {
         // Only perform check if no Google auth is in progress
         if (typeof window !== 'undefined' && 
             sessionStorage.getItem('googleAuthInProgress') !== 'true') {
@@ -293,36 +293,37 @@ const AuthObserver = () => {
           refreshingRef.current = true;
           lastAuthCheckTime = Date.now();
           
-          checkUser();
-          
-          setTimeout(() => {
+          try {
+            await checkUser();
+            console.log('Initial auth check completed');
+          } catch (error) {
+            console.error('Initial auth check error:', error);
+          } finally {
             refreshingRef.current = false;
-          }, 500);
+          }
         } else {
           console.log('Skipping initial auth check due to Google auth in progress');
         }
-      }, 500); // Short delay to let any auth processes initialize
+      }, 300); // Reduced delay for faster initial check
       
       // Additional check after a longer delay to catch OAuth redirects
-      setTimeout(() => {
+      setTimeout(async () => {
         console.log('Running delayed auth check to catch OAuth redirects');
         if (checkUser && !refreshingRef.current && 
             sessionStorage.getItem('googleAuthInProgress') !== 'true') {
           refreshingRef.current = true;
           lastAuthCheckTime = Date.now();
           
-          // Call checkUser
-          checkUser();
-          
-          // Force router refresh to update all components
-          throttledRefresh();
-          
-          // Reset refreshing flag
-          setTimeout(() => {
+          try {
+            await checkUser();
+            console.log('Delayed auth check completed');
+          } catch (error) {
+            console.error('Delayed auth check error:', error);
+          } finally {
             refreshingRef.current = false;
-          }, 500);
+          }
         }
-      }, 2000);
+      }, 1500); // Reduced delay for faster auth detection
     }
     
     // Set up interval for periodic session checks, but with less frequency
@@ -335,10 +336,12 @@ const AuthObserver = () => {
         const now = Date.now();
         if (now - lastAuthCheckTime >= AUTH_CHECK_DEBOUNCE_MS) {
           lastAuthCheckTime = now;
-          checkUser();
+          checkUser().catch((error) => {
+            console.error('Periodic auth check error:', error);
+          });
         }
       }
-    }, 180000); // Check every 3 minutes (reduced from 2 minutes)
+    }, 120000); // Check every 2 minutes (reduced from 3 minutes)
     
     return () => clearInterval(interval);
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -579,29 +579,29 @@ body {
 
 /* Adjusts the main content containers to use this spacing consistently */
 .content-with-top-nav {
-  padding-top: 80px !important;
+  padding-top: calc(80px + env(safe-area-inset-top)) !important;
   margin-top: 0 !important;
   position: relative;
   z-index: 1;
 }
 
 .pt-\[80px\] {
-  padding-top: 80px !important;
+  padding-top: calc(80px + env(safe-area-inset-top)) !important;
 }
 
 /* Replace pt-[100px] with content-with-top-nav */
 .pt-\[100px\] {
-  padding-top: 80px !important;
+  padding-top: calc(80px + env(safe-area-inset-top)) !important;
 }
 
 /* Ensure main layout elements respect the top nav */
 .smooth-scroll-container {
-  padding-top: 60px;
+  padding-top: calc(60px + env(safe-area-inset-top));
 }
 
 /* For post detail pages */
 .post-detail-container {
-  padding-top: 80px !important;
+  padding-top: calc(80px + env(safe-area-inset-top)) !important;
 }
 
 /* Fix background elements to position properly under the top nav */
@@ -611,5 +611,288 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: calc(60px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+/* === iOS и iPhone ОПТИМИЗАЦИИ === */
+
+/* iOS Safari viewport fixes */
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  /* Prevent bounce scrolling */
+  overscroll-behavior: none;
+  /* Smooth scrolling for iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent text size adjust */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Safe area insets for devices with notch/dynamic island */
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(10px, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-left {
+    padding-left: max(10px, env(safe-area-inset-left));
+  }
+  
+  .safe-area-right {
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+  
+  .safe-area-all {
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+}
+
+/* iPhone 13 Pro specific optimizations (390x844) */
+@media only screen and (max-width: 390px) and (max-height: 844px) {
+  /* Optimize layout for iPhone 13 Pro */
+  .container {
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  /* Ensure buttons are touch-friendly */
+  button, .btn, [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    padding: 12px 16px !important;
+  }
+  
+  /* Optimize text sizes */
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
+  
+  /* Optimize form inputs */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevent zoom */
+    padding: 14px !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* iPhone 13 Pro Max specific optimizations (428x926) */
+@media only screen and (max-width: 428px) and (min-width: 391px) {
+  .container {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  /* Slightly larger touch targets */
+  button, .btn, [role="button"] {
+    min-height: 48px !important;
+    padding: 14px 20px !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS Safari viewport height issues */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  
+  .h-screen {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, textarea, select {
+    font-size: 16px !important;
+    transform: translateZ(0);
+    -webkit-appearance: none;
+  }
+  
+  /* Fix for sticky elements */
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+  
+  /* Smooth scrolling for iOS */
+  .overflow-y-auto, .overflow-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Touch optimization for all interactive elements */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Re-enable text selection for content */
+p, span, div[contenteditable], input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Optimize performance on mobile */
+@media (max-width: 768px) {
+  * {
+    /* Force hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: auto;
+  }
+  
+  /* Optimize animations */
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Optimize images */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Enhanced mobile navigation with safe areas */
+.mobile-nav-safe {
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  height: calc(60px + env(safe-area-inset-bottom));
+}
+
+/* Modal optimizations for mobile */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  }
+  
+  .modal-content {
+    max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 40px);
+    width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 20px);
+    border-radius: 20px !important;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (max-width: 844px) and (orientation: landscape) {
+  /* Adjust for landscape mode on phones */
+  .content-with-top-nav {
+    padding-top: calc(50px + env(safe-area-inset-top)) !important;
+  }
+  
+  #TopNav {
+    height: calc(50px + env(safe-area-inset-top));
+  }
+  
+  /* Reduce modal padding in landscape */
+  .modal-overlay {
+    padding: max(5px, env(safe-area-inset-top)) max(5px, env(safe-area-inset-right)) max(5px, env(safe-area-inset-bottom)) max(5px, env(safe-area-inset-left));
+  }
+}
+
+/* High DPI displays (Retina) optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper borders on high DPI */
+  .border {
+    border-width: 0.5px;
+  }
+  
+  /* Optimize shadows */
+  .shadow-lg, .shadow-xl {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Dark mode specific mobile optimizations */
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
+  /* Ensure proper contrast on mobile */
+  body {
+    background: linear-gradient(135deg, #1E1A36 0%, #2A2151 100%);
+  }
+  
+  /* Optimize text contrast */
+  .text-white {
+    color: #f8fafc;
+  }
+  
+  .text-gray-300 {
+    color: #cbd5e1;
+  }
+}
+
+/* Accessibility improvements for mobile */
+@media (max-width: 768px) {
+  /* Larger focus indicators */
+  *:focus {
+    outline: 3px solid #20DDBB;
+    outline-offset: 2px;
+  }
+  
+  /* Better contrast for buttons */
+  button:focus,
+  .btn:focus {
+    box-shadow: 0 0 0 3px rgba(32, 221, 187, 0.5);
+  }
+  
+  /* Ensure minimum text size */
+  small, .text-xs {
+    font-size: 14px !important;
+  }
+}
+
+/* Improved scroll behavior */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbars while maintaining functionality */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Performance optimizations for animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize for notched devices */
+@supports (padding: max(0px)) and (max-width: 768px) {
+  .notch-safe {
+    padding-top: max(20px, env(safe-area-inset-top));
+  }
+  
+  .notch-safe-bottom {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
 }

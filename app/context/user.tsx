@@ -220,13 +220,26 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return () => clearInterval(authCheckInterval);
   }, []);
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+  ) => {
     try {
-      console.log("Starting registration process...");
+      console.log("[UserContext] Starting registration process");
+
+      // Clear previous user cache before registration
+      clearUserCache();
 
       // Validate inputs
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !confirmPassword) {
         throw new Error("All fields are required");
+      }
+
+      // Check password confirmation
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
       }
 
       // Email validation
@@ -240,81 +253,19 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         throw new Error("Password must be at least 8 characters long");
       }
 
-      // Проверяем соединение с Appwrite API и валидность переменных окружения
-      console.log(
-        "[DEBUG] Checking Appwrite connection and environment variables",
-      );
-      console.log(
-        "[DEBUG] NEXT_PUBLIC_APPWRITE_URL:",
-        process.env.NEXT_PUBLIC_APPWRITE_URL,
-      );
-      console.log(
-        "[DEBUG] NEXT_PUBLIC_ENDPOINT:",
-        process.env.NEXT_PUBLIC_ENDPOINT,
-      );
-      console.log(
-        "[DEBUG] NEXT_PUBLIC_DATABASE_ID:",
-        process.env.NEXT_PUBLIC_DATABASE_ID,
-      );
-      console.log(
-        "[DEBUG] NEXT_PUBLIC_COLLECTION_ID_PROFILE:",
-        process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE,
-      );
-
-      // Не проверяем существующую сессию здесь, так как это вызывает ошибку guests missing scope
-
       console.log("Creating user account...");
       const userId = ID.unique();
       const promise = await account.create(userId, email, password, name);
-      console.log("[DEBUG] Account created successfully:", promise?.$id);
+      console.log("[UserContext] Account created successfully:", promise?.$id);
 
       console.log("Creating email session...");
       const session = await account.createEmailSession(email, password);
-      console.log("[DEBUG] Email session created successfully:", session.$id);
+      console.log("[UserContext] Email session created successfully:", session.$id);
 
       console.log("Creating user profile...");
       try {
-        // Используем SVG изображение вместо ID в хранилище
+        // Use SVG image placeholder
         const profileImagePath = "/images/placeholders/user-placeholder.svg";
-
-        // Проверяем переменные окружения перед созданием профиля
-        if (
-          !process.env.NEXT_PUBLIC_DATABASE_ID ||
-          !process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE
-        ) {
-          console.error(
-            "[DEBUG] Missing environment variables:",
-            !process.env.NEXT_PUBLIC_DATABASE_ID
-              ? "NEXT_PUBLIC_DATABASE_ID"
-              : "",
-            !process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE
-              ? "NEXT_PUBLIC_COLLECTION_ID_PROFILE"
-              : "",
-          );
-          throw new Error(
-            "Missing required environment variables for profile creation",
-          );
-        }
-
-        // Проверяем валидность userId
-        if (!userId || typeof userId !== "string") {
-          console.error("[DEBUG] Invalid userId:", userId);
-          throw new Error("Invalid user ID for profile creation");
-        }
-
-        // Выводим дополнительную информацию
-        console.log(
-          "[DEBUG] Creating profile with image path:",
-          profileImagePath,
-        );
-        console.log(
-          "[DEBUG] Database ID:",
-          process.env.NEXT_PUBLIC_DATABASE_ID,
-        );
-        console.log(
-          "[DEBUG] Collection ID:",
-          process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE,
-        );
 
         const profileResult = await useCreateProfile(
           userId,
@@ -322,74 +273,76 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           profileImagePath,
           "",
         );
-        console.log("[DEBUG] Profile created successfully:", profileResult);
-        console.log("[DEBUG] Profile created successfully for user:", userId);
+        console.log("[UserContext] Profile created successfully:", profileResult);
       } catch (profileError: any) {
-        console.error("[DEBUG] Error creating profile:", profileError);
-        console.error("[DEBUG] Error details:", {
-          code: profileError.code,
-          message: profileError.message,
-          type: profileError.type,
-          response: profileError.response,
-        });
-
-        // Если профиль не удалось создать, удаляем аккаунт чтобы не оставлять "осиротевший" аккаунт
+        console.error("[UserContext] Error creating profile:", profileError);
+        
+        // If profile creation fails, delete the session to avoid orphaned account
         try {
           await account.deleteSession("current");
-          console.log("[DEBUG] Session deleted after profile creation failed");
+          console.log("[UserContext] Session deleted after profile creation failed");
         } catch (deleteError) {
-          console.error(
-            "[DEBUG] Error deleting session after profile creation failed:",
-            deleteError,
-          );
+          console.error("[UserContext] Error deleting session after profile creation failed:", deleteError);
         }
 
-        throw new Error(
-          "Failed to create user profile. Please try again later.",
-        );
+        throw new Error("Failed to create user profile. Please try again later.");
       }
 
-      console.log("Checking user status...");
-      const userData = await checkUser();
-      console.log("[DEBUG] User data after checkUser:", userData);
+      // Check user and update UI
+      let userData = await checkUser();
+      console.log("[UserContext] Initial checkUser result after registration:", userData);
 
-      // Force router refresh
-      router.refresh();
+      // If no user data returned, retry once after a short delay
+      if (!userData) {
+        console.log("[UserContext] No user data after registration, retrying after 500ms");
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        userData = await checkUser();
+        console.log("[UserContext] Retry checkUser result after registration:", userData);
+      }
 
-      console.log("Registration completed successfully");
-      return userData;
+      if (userData) {
+        // Instantly update user state
+        setUser(userData);
+
+        // Immediately dispatch auth state change event
+        dispatchAuthStateChange(userData);
+        console.log(
+          "[UserContext] User state updated and event dispatched after registration:",
+          userData,
+        );
+
+        // Additional event to ensure UI update
+        setTimeout(() => {
+          dispatchAuthStateChange(userData);
+          console.log("[UserContext] Secondary auth state change event dispatched after registration");
+        }, 100);
+
+        // Force router refresh and immediate redirect to home
+        router.refresh();
+        
+        // Immediate redirect to prevent any loading state issues
+        setTimeout(() => {
+          console.log("[UserContext] Redirecting to home after successful registration");
+          // Set flag to prevent GlobalLoader from activating
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('authJustCompleted', 'true');
+          }
+          window.location.href = '/';
+        }, 300); // Reduced delay from 500ms
+
+        return userData;
+      } else {
+        throw new Error("Failed to retrieve user data after registration");
+      }
     } catch (error: any) {
-      console.error("Registration error details:", error);
-
-      // Более подробное логирование
-      if (error.response) {
-        console.error("[DEBUG] Full error response:", error.response);
-      }
-
-      console.error("[DEBUG] Error details:", {
-        code: error.code,
-        message: error.message,
-        type: error.type,
-      });
-
-      // Handle specific AppWrite error codes
-      if (
-        error.code === 429 ||
-        (error.message && error.message.toLowerCase().includes("rate limit"))
-      ) {
-        throw new Error(
-          "Too many registration attempts. Please try again later.",
-        );
-      }
-
-      if (error.code === 409) {
-        throw new Error("Email already exists. Try logging in instead.");
-      }
-
-      // Re-throw the error with a clear message
-      throw new Error(
-        error.message || "Registration failed. Please try again.",
-      );
+      console.error("[UserContext] Registration error:", error);
+      
+      // Ensure user state is cleared on error
+      setUser(null);
+      dispatchAuthStateChange(null);
+      
+      // Re-throw the error for the component to handle
+      throw error;
     }
   };
 
@@ -432,8 +385,18 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           console.log("[UserContext] Secondary auth state change event dispatched");
         }, 100);
 
-        // Force router refresh
+        // Force router refresh and redirect to home
         router.refresh();
+        
+        // Immediate redirect to prevent any loading state issues
+        setTimeout(() => {
+          console.log("[UserContext] Redirecting to home after successful login");
+          // Set flag to prevent GlobalLoader from activating
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('authJustCompleted', 'true');
+          }
+          window.location.href = '/';
+        }, 300); // Reduced delay from 500ms
 
         return userData;
       } else {

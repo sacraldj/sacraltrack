@@ -485,6 +485,30 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
       console.log(`PostUser: Play status changed for ${post.id} -> ${isPlaying}`);
     }
   });
+
+  // Improved toggle play/pause handler
+  const handleTogglePlayPause = useCallback((e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    console.log(`PostUser: Toggle play/pause for ${post.id}, current isPlaying: ${isPlaying}`);
+    
+    if (!stableM3u8Url) {
+      console.error(`PostUser: No stable M3U8 URL available for ${post.id}`);
+      return;
+    }
+    
+    // More reliable toggle logic
+    if (isPlaying) {
+      console.log(`PostUser: Pausing ${post.id}`);
+      handlePause();
+    } else {
+      console.log(`PostUser: Playing ${post.id}`);
+      handlePlay();
+    }
+  }, [isPlaying, handlePlay, handlePause, post.id, stableM3u8Url]);
   
   // Debug logging for audio URLs
   useEffect(() => {
@@ -876,14 +900,16 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
                 {/* Desktop play/pause overlay - показываем при наведении */}
                 {!isMobile && (
                   <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div
-                      onClick={handlePlay}
+                    <button
+                      onClick={handleTogglePlayPause}
                       className={`
                         w-14 h-14 rounded-full border border-white/40 backdrop-blur-[2px] flex items-center justify-center
-                        transform transition-all duration-300 cursor-pointer
+                        transform transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95
                         ${isPlaying ? "scale-90 bg-[#20DDBB]/10 border-[#20DDBB]/40" : "scale-100 bg-black/10"}
                         group-hover:bg-black/20
                       `}
+                      aria-label={isPlaying ? "Pause track" : "Play track"}
+                      type="button"
                     >
                       {isPlaying ? (
                         <FaPause
@@ -896,26 +922,26 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
                           aria-hidden="true"
                         />
                       )}
-                    </div>
+                    </button>
                   </div>
                 )}
 
-                {/* Mobile play button - более прозрачный дизайн */}
+                {/* Mobile play button - более надежная версия */}
                 {isMobile && (
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handlePlay();
-                    }}
-                    className="absolute inset-0 flex items-center justify-center"
+                    onClick={handleTogglePlayPause}
+                    className="absolute inset-0 flex items-center justify-center touch-manipulation"
                     aria-label={isPlaying ? "Pause track" : "Play track"}
                     type="button"
+                    style={{
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'manipulation'
+                    }}
                   >
                     <div
                       className={`
                       w-16 h-16 rounded-full border border-white/60 backdrop-blur-[2px] flex items-center justify-center
-                      transform transition-all duration-300
+                      transform transition-all duration-200 active:scale-95
                       ${isPlaying ? "scale-90 bg-[#20DDBB]/20 border-[#20DDBB]/40" : "scale-100 bg-black/20"}
                     `}
                     >
@@ -1132,8 +1158,14 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
             <AudioPlayer
               m3u8Url={stableM3u8Url}
               isPlaying={isPlaying}
-              onPlay={handlePlay}
-              onPause={handlePause}
+              onPlay={() => {
+                console.log(`PostUser: AudioPlayer onPlay for ${post.id}`);
+                handlePlay();
+              }}
+              onPause={() => {
+                console.log(`PostUser: AudioPlayer onPause for ${post.id}`);
+                handlePause();
+              }}
             />
 
             <motion.div

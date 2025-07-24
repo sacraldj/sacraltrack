@@ -377,9 +377,6 @@ export default function GoogleAuthSuccess() {
                             });
                         }
                         
-                        setCheckingAuth(false);
-                        errorShownRef.current = false;
-                        
                         // Clear the authentication in progress flag now that we're successful
                         clearAllAuthFlags();
                         
@@ -388,16 +385,16 @@ export default function GoogleAuthSuccess() {
                             sessionStorage.removeItem('authBrowserInfo');
                         }
                         
-                        // Redirect to homepage after successful auth - using a shorter delay with smooth transition
-                        redirectTimeoutRef.current = setTimeout(() => {
-                            // Add smooth transition effect
-                            document.body.style.transition = 'opacity 0.5s ease-out';
-                            document.body.style.opacity = '0';
-
-                            setTimeout(() => {
-                                router.push('/');
-                            }, 300);
-                        }, 1200);
+                        // Improved redirect logic - direct navigation instead of timeout
+                        setCheckingAuth(false);
+                        errorShownRef.current = false;
+                        
+                        // Force immediate UI update
+                        setTimeout(() => {
+                            // Use window.location for more reliable redirect
+                            console.log('[GoogleAuthSuccess] Redirecting to home page...');
+                            window.location.href = '/';
+                        }, 800); // Reduced delay for faster redirect
                     } else {
                         // If user data is null but session is valid, retry a few times
                         if (sessionValid && retryCount < maxRetries) {

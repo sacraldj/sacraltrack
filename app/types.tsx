@@ -3,7 +3,7 @@ import { CSSProperties } from "react";
 export interface UserContextTypes {
   id: string | null;
   user: User | null;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, confirmPassword: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkUser: () => Promise<void>;

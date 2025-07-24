@@ -479,20 +479,12 @@ export default function Register() {
       return;
     }
 
-    // Rate limiting check
-    const now = Date.now();
-    if (now - lastAttemptTime < 3000) {
-      showToast("warning", "Please wait a moment before trying again.");
-      return;
-    }
-
     let isError = validate();
     if (isError) return;
     if (!contextUser) return;
 
     try {
       setLoading(true);
-      setLastAttemptTime(now);
 
       // Show loading toast
       const loadingToastId = showToast("loading", "Creating your account...", {
@@ -502,89 +494,63 @@ export default function Register() {
       // Закрываем модальное окно МГНОВЕННО при нажатии кнопки регистрации
       setIsRegisterOpen(false);
 
-      await contextUser.register(name, email, password);
+      await contextUser.register(name, email, password, confirmPassword);
 
       toast.dismiss("register-loading");
-      showToast("success", "Account created successfully! 🎉");
-
-      setRegistrationSuccess(true);
       setLoading(false);
-
-      // Reset attempts on success
       setAttempts(0);
       localStorage.removeItem("registerAttempts");
       localStorage.removeItem("registerBlockTime");
 
-      // Send welcome email
-      setTimeout(async () => {
-        try {
-          const verifyUrl = process.env.NEXT_PUBLIC_APP_URL
-            ? `${process.env.NEXT_PUBLIC_APP_URL}/verify`
-            : `${window.location.origin}/verify`;
-          await account.createVerification(verifyUrl);
-          showToast(
-            "success",
-            "Welcome email sent! Please check your inbox to verify your account.",
-          );
-        } catch (emailError) {
-          console.log("Verification email not sent:", emailError);
-        }
-      }, 1000);
-
-      // Модальное окно уже закрыто мгновенно при нажатии кнопки
+      // If we reach here, registration was successful
       console.log("Registration completed successfully");
+      showToast("success", `Welcome to Sacral Track! 🎉`);
+      
+      // Clear form data
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setError({ type: "", message: "" });
+      
+      // No need for additional redirect here as it's handled in UserContext
+      console.log("Registration process completed, user should be redirected");
     } catch (error: any) {
-      console.error("[Register Error]:", error);
       setLoading(false);
-      toast.dismiss("register-loading");
+      console.error("Registration error:", error);
 
-      // Track failed attempts
-      const newAttempts = attempts + 1;
+      let errorMessage = "An error occurred during registration.";
+      const newAttempts = Math.min(attempts + 1, 5);
       setAttempts(newAttempts);
       localStorage.setItem("registerAttempts", newAttempts.toString());
 
-      // Block after 5 failed attempts for 15 minutes
       if (newAttempts >= 5) {
         const blockTime = Date.now() + 15 * 60 * 1000; // 15 minutes
         localStorage.setItem("registerBlockTime", blockTime.toString());
-        setIsBlocked(true);
-        setBlockTimeLeft(15 * 60);
-        showToast(
-          "error",
-          "Too many failed attempts. Registration temporarily locked for 15 minutes.",
-        );
-        return;
-      }
-
-      let errorMessage = "Registration failed. Please try again.";
-
-      if (error.code === 409 || error.message?.includes("already exists")) {
-        errorMessage =
-          "This email is already registered. Try logging in instead.";
+        errorMessage = `Too many failed attempts. Registration blocked for ${15} minutes.`;
+      } else if (error.code === 409) {
+        errorMessage = "An account with this email already exists. Please try logging in instead.";
         setTimeout(() => {
-          const switchToLogin = confirm(
-            "This email is already registered. Would you like to log in instead?",
-          );
+          const switchToLogin = confirm("An account with this email already exists. Would you like to log in instead?");
           if (switchToLogin) {
             setIsLoginOpen(true);
           }
         }, 2000);
-      } else if (error.code === 429) {
-        errorMessage =
-          "Too many registration attempts. Please try again later.";
       } else if (error.code === 400) {
         if (error.message?.includes("password")) {
-          errorMessage = "Password does not meet requirements.";
+          errorMessage = "Password must be at least 8 characters long.";
         } else if (error.message?.includes("email")) {
           errorMessage = "Please enter a valid email address.";
         } else {
           errorMessage = "Please check your information and try again.";
         }
+      } else if (error.code === 429) {
+        errorMessage = "Too many registration attempts. Please try again later.";
       } else if (
         error.message?.includes("network") ||
         error.message?.includes("fetch")
       ) {
-        errorMessage = "Network error. Please check your connection.";
+        errorMessage = "Network error. Please check your connection and try again.";
       }
 
       showToast("error", errorMessage);
@@ -593,11 +559,14 @@ export default function Register() {
       if (newAttempts >= 3 && newAttempts < 5) {
         setTimeout(() => {
           showToast(
-            "warning",
+            "error",
             `Warning: ${5 - newAttempts} attempts remaining before temporary lockout.`,
           );
-        }, 1500);
+        }, 1000);
       }
+
+      // Re-open modal if registration failed
+      setIsRegisterOpen(true);
     }
   };
 

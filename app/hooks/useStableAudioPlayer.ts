@@ -22,6 +22,7 @@ export const useStableAudioPlayer = ({
   
   const m3u8UrlRef = useRef(m3u8Url);
   const isMounted = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Update URL ref when it changes
   useEffect(() => {
@@ -45,18 +46,23 @@ export const useStableAudioPlayer = ({
     }
   }, [isPlaying, onPlayStatusChange]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (isCurrentTrack && globalIsPlaying) {
-        console.log(`useStableAudioPlayer: Cleanup - stopping ${postId}`);
-        stopAllPlayback?.();
-      }
-    };
-  }, [isCurrentTrack, globalIsPlaying, stopAllPlayback, postId]);
+  // Cleanup function
+  const cleanup = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+  }, []);
 
+  // Enhanced play handler with abort signal management
   const handlePlay = useCallback(() => {
     console.log(`useStableAudioPlayer: Play requested for ${postId}`);
+    
+    // Clean up any previous requests
+    cleanup();
+    
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
     
     // Stop other tracks if a different track is playing
     if (currentAudioId && currentAudioId !== postId) {
@@ -73,15 +79,31 @@ export const useStableAudioPlayer = ({
       console.log(`useStableAudioPlayer: Starting playback for ${postId}`);
       togglePlayPause();
     }
-  }, [currentAudioId, postId, setCurrentAudioId, togglePlayPause, stopAllPlayback, globalIsPlaying]);
+  }, [currentAudioId, postId, setCurrentAudioId, togglePlayPause, stopAllPlayback, globalIsPlaying, cleanup]);
 
+  // Enhanced pause handler
   const handlePause = useCallback(() => {
     console.log(`useStableAudioPlayer: Pause requested for ${postId}`);
+    
+    // Clean up any pending requests
+    cleanup();
+    
     if (isCurrentTrack && globalIsPlaying) {
       console.log(`useStableAudioPlayer: Pausing ${postId}`);
       togglePlayPause();
     }
-  }, [isCurrentTrack, globalIsPlaying, togglePlayPause, postId]);
+  }, [isCurrentTrack, globalIsPlaying, togglePlayPause, postId, cleanup]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (isCurrentTrack && globalIsPlaying) {
+        console.log(`useStableAudioPlayer: Cleanup - stopping ${postId}`);
+        stopAllPlayback?.();
+      }
+      cleanup();
+    };
+  }, [isCurrentTrack, globalIsPlaying, stopAllPlayback, postId, cleanup]);
 
   return {
     isPlaying,

@@ -3,6 +3,7 @@ import AllOverlays from "@/app/components/AllOverlays";
 // import disableConsoleLogs from '@/app/utils/disableConsoleLog';
 // disableConsoleLogs();
 import { EditProvider } from './context/editContext';
+import IOSOptimizer from './components/IOSOptimizer';
 
 // Disable console logs throughout the application
 if (typeof window !== 'undefined') {
@@ -54,64 +55,108 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <html lang="en">
-            <head>
-                {/* Favicon links */}
-                <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-                <link rel="icon" href="/favicon.ico" sizes="any" />
-                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" className="scroll-smooth">
+        <head>
+            {/* Enhanced viewport meta tag for iOS devices */}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+            
+            {/* iOS Safari specific meta tags */}
+            <meta name="mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            <meta name="apple-mobile-web-app-title" content="Sacral Track" />
+            
+            {/* Prevent automatic phone number detection */}
+            <meta name="format-detection" content="telephone=no" />
+            
+            {/* Optimize for touch devices */}
+            <meta name="HandheldFriendly" content="true" />
+            <meta name="MobileOptimized" content="320" />
+            
+            {/* Theme color for iOS */}
+            <meta name="theme-color" content="#2E2469" />
+            <meta name="msapplication-navbutton-color" content="#2E2469" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            
+            {/* Preconnect to external domains */}
+            <link rel="preconnect" href="https://cloud.appwrite.io" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://mc.yandex.ru" />
+            
+            {/* Critical CSS inline for fast rendering */}
+            <style dangerouslySetInnerHTML={{ __html: `
+                /* iOS Safari viewport fixes */
+                html {
+                    height: 100%;
+                    height: -webkit-fill-available;
+                }
                 
-                {/* SEO Keywords - дополнительные ключевые слова для поисковых систем */}
-                <meta name="keywords" content="music marketplace, artist platform, music streaming, music genres, pop, rock, hip hop, rap, electronic, EDM, classical, jazz, blues, country, R&B, soul, folk, indie, alternative, metal, punk, reggae, funk, disco, techno, house, ambient, lo-fi, trap, dubstep, trance, drum and bass, instrumental, vocal, beats, producers, musicians, songs, albums, singles, playlists, new music, underground, independent music, royalties, music community" />
+                body { 
+                    background: linear-gradient(60deg,#2E2469,#351E43);
+                    min-height: 100vh;
+                    min-height: -webkit-fill-available;
+                    /* Prevent bounce scrolling */
+                    overscroll-behavior: none;
+                    /* Smooth scrolling for iOS */
+                    -webkit-overflow-scrolling: touch;
+                    /* Prevent text size adjust */
+                    -webkit-text-size-adjust: 100%;
+                    text-size-adjust: 100%;
+                }
                 
-                {/* Дополнительные метаданные о музыкальных жанрах для структурированных данных */}
-                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `
-                    {
-                        "@context": "https://schema.org",
-                        "@type": "MusicDigitalPublicationSeries",
-                        "name": "Sacral Track",
-                        "description": "Music network and marketplace for artists and music lovers",
-                        "url": "https://sacraltrack.space",
-                        "genre": [
-                            "Pop", "Rock", "Hip Hop", "Rap", "Electronic", "EDM", "Classical", 
-                            "Jazz", "Blues", "Country", "R&B", "Soul", "Folk", "Indie", 
-                            "Alternative", "Metal", "Punk", "Reggae", "Funk", "Disco", 
-                            "Techno", "House", "Ambient", "Lo-Fi", "Trap", "Dubstep", 
-                            "Trance", "Drum and Bass", "Instrumental"
-                        ],
-                        "offers": {
-                            "@type": "Offer",
-                            "description": "Access to music streaming and marketplace"
-                        }
-                    }
-                `}} />
+                /* Safe area insets for devices with notch */
+                body {
+                    padding-top: env(safe-area-inset-top);
+                    padding-bottom: env(safe-area-inset-bottom);
+                    padding-left: env(safe-area-inset-left);
+                    padding-right: env(safe-area-inset-right);
+                }
                 
-                {/* Preload critical resources */}
-                <link 
-                    rel="preload" 
-                    href="/images/T-logo.svg" 
-                    as="image" 
-                    type="image/svg+xml"
-                />
+                .bg-gradient { background: linear-gradient(60deg,#2E2469,#351E43); }
+                #TopNav { 
+                    background: linear-gradient(60deg,#2E2469,#351E43);
+                    /* Account for safe area */
+                    padding-top: env(safe-area-inset-top);
+                    height: calc(60px + env(safe-area-inset-top));
+                }
                 
-                {/* Preconnect to external domains */}
-                <link rel="preconnect" href="https://mc.yandex.ru" />
+                /* Optimize for touch */
+                * {
+                    -webkit-tap-highlight-color: transparent;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
                 
-                {/* Critical CSS inline - don't hide content */}
-                <style dangerouslySetInnerHTML={{ __html: `
-                    body { background: linear-gradient(60deg,#2E2469,#351E43); }
-                    .bg-gradient { background: linear-gradient(60deg,#2E2469,#351E43); }
-                    #TopNav { background: linear-gradient(60deg,#2E2469,#351E43); }
-                ` }} />
-            </head>
+                /* Allow text selection for inputs and content */
+                input, textarea, [contenteditable] {
+                    -webkit-user-select: text;
+                    user-select: text;
+                }
+                
+                /* Improve input rendering on iOS */
+                input[type="text"],
+                input[type="email"],
+                input[type="password"],
+                textarea {
+                    -webkit-appearance: none;
+                    border-radius: 0;
+                    font-size: 16px; /* Prevent zoom on focus */
+                }
+            ` }} />
+        </head>
             <body className={clsx(inter.variable, 'bg-[#0F1122]')}>
                 <GlobalLoader />
+                <IOSOptimizer />
                 <Suspense fallback={<></>}>
                     <YandexMetrika />
                 </Suspense>
-                {/*  <Background /> */}
                 
                 {/* SVG для градиентов иконок */}
                 <svg width="0" height="0" className="absolute">
