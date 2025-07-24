@@ -52,10 +52,12 @@ import { APPWRITE_CONFIG } from "@/libs/AppWriteClient";
 // Toast styles
 const successToast = (message: string) =>
   toast.success(message, {
+    position: 'top-center',
     style: {
-      background: "rgba(46, 36, 105, 0.9)",
+      background: "#1E2136",
       color: "#fff",
-      borderLeft: "4px solid #20DDBB",
+      border: "1px solid #20DDBB",
+      borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
     },
@@ -65,10 +67,12 @@ const successToast = (message: string) =>
 
 const errorToast = (message: string) =>
   toast.error(message, {
+    position: 'top-center',
     style: {
-      background: "rgba(46, 36, 105, 0.9)",
+      background: "#1E2136",
       color: "#fff",
-      borderLeft: "4px solid #ff5e5b",
+      border: "1px solid #ff5555",
+      borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
     },

@@ -283,11 +283,30 @@ export default function PurchasedTracks() {
     format: string,
   ) => {
     try {
+      console.log(`PurchasedTracks: Starting download for ${trackName}.${format}`);
+      console.log(`PurchasedTracks: URL: ${url}`);
+      
       // Устанавливаем состояние загрузки
       setDownloadingFiles((prev) => ({ ...prev, [trackId]: format }));
 
-      const response = await fetch(useCreateBucketUrl(url));
+      // Show loading toast
+      toast.loading(`Downloading ${trackName}.${format}...`, {
+        id: `download-${trackId}-${format}`,
+        position: 'top-center'
+      });
+
+      const fullUrl = useCreateBucketUrl(url);
+      console.log(`PurchasedTracks: Full URL: ${fullUrl}`);
+      
+      const response = await fetch(fullUrl);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const blob = await response.blob();
+      console.log(`PurchasedTracks: Blob size: ${blob.size} bytes`);
+      
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;
@@ -304,9 +323,11 @@ export default function PurchasedTracks() {
         return newState;
       });
 
-      // Показываем уведомление об успешной загрузке
+      // Dismiss loading toast and show success
+      toast.dismiss(`download-${trackId}-${format}`);
       toast.success(`${trackName}.${format} successfully downloaded`, {
         duration: 3000,
+        position: 'top-center',
         style: {
           background: "#1E2136",
           color: "#fff",
@@ -324,9 +345,11 @@ export default function PurchasedTracks() {
 
       console.error(`Error downloading ${format} track:`, error);
 
-      // Показываем уведомление об ошибке
+      // Dismiss loading toast and show error
+      toast.dismiss(`download-${trackId}-${format}`);
       toast.error(`Error downloading ${format} file. Please try again.`, {
         duration: 4000,
+        position: 'top-center',
         style: {
           background: "#1E2136",
           color: "#fff",
@@ -423,7 +446,7 @@ export default function PurchasedTracks() {
               key={purchase.$id}
               className="bg-[#1E2136] rounded-xl overflow-hidden w-full shadow-lg border border-[#3f2d63]/20 hover:border-[#3f2d63]/50 transition-all"
             >
-              <div className="p-3">
+              <div className="p-[5px]">
                 <div className="flex items-center gap-2">
                   <img
                     className="w-10 h-10 rounded-full object-cover border border-[#3f2d63]/50"
@@ -462,7 +485,7 @@ export default function PurchasedTracks() {
                 ></div>
               </div>
 
-              <div className="px-3 py-2 w-full">
+              <div className="p-[5px] w-full">
                 {purchase.track?.m3u8_url && (
                   <AudioPlayer
                     m3u8Url={useCreateBucketUrl(purchase.track.m3u8_url)}
@@ -483,7 +506,7 @@ export default function PurchasedTracks() {
                 )}
               </div>
 
-              <div className="p-3">
+              <div className="p-[5px]">
                 <div className="flex gap-2 mb-2">
                   <button
                     onClick={() =>
