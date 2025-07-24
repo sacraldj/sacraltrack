@@ -78,23 +78,16 @@ const FriendCard: React.FC<{
 
   return (
     <motion.div
-      className="relative overflow-hidden rounded-2xl shadow-lg group"
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className="group relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-sm hover:border-[#20DDBB]/30 transition-all duration-300 cursor-pointer aspect-[4/5] w-full max-w-[280px]"
+      whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      {/* Card background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#24183d]/80 to-[#20113a]/90 z-0" />
-
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-2xl z-0 -mr-20 -mt-20" />
-      <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-[#20DDBB]/10 to-purple-500/10 rounded-full blur-2xl z-0 -ml-20 -mb-20" />
-
-      {/* User background image */}
-      <div className="relative w-full h-48 overflow-hidden z-10">
+      {/* Full-size user image background */}
+      <div className="absolute inset-0">
         <Image
           src={
             imageError
@@ -105,75 +98,77 @@ const FriendCard: React.FC<{
           }
           alt={user.name || "User"}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-110"
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
           onError={() => setImageError(true)}
         />
+      </div>
 
-        {/* Overlay gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1E2136]/90 via-transparent to-[#1E2136]/30 z-10" />
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
 
-        {/* Hover glass effect */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-[2px] z-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 0.7 : 0 }}
-          transition={{ duration: 0.3 }}
-        />
+      {/* Hover gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#20DDBB]/5 via-transparent to-[#5D59FF]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Status badges */}
-        <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
-          {user.username && (
-            <motion.div
-              className="bg-[#20DDBB]/20 backdrop-blur-md px-3 py-1 rounded-full border border-[#20DDBB]/30"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <p className="text-xs text-white font-medium">@{user.username}</p>
-            </motion.div>
-          )}
+      {/* Content with padding */}
+      <div className="absolute inset-[5px] flex flex-col justify-between">
+        {/* Top section - Status badges */}
+        <div className="flex justify-between items-start">
+          <div className="flex flex-col gap-2">
+            {user.username && (
+              <motion.div
+                className="bg-[#20DDBB]/20 backdrop-blur-md px-3 py-1 rounded-full border border-[#20DDBB]/30"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <p className="text-xs text-white font-medium">
+                  @{user.username}
+                </p>
+              </motion.div>
+            )}
 
-          {isPending && (
-            <motion.div
-              className="bg-amber-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/30"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <p className="text-xs text-amber-400 font-medium flex items-center gap-1">
-                <BsClock size={10} />
-                <span>Pending</span>
-              </p>
-            </motion.div>
-          )}
+            {isPending && (
+              <motion.div
+                className="bg-amber-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-amber-500/30"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <p className="text-xs text-amber-400 font-medium flex items-center gap-1">
+                  <BsClock size={10} />
+                  <span>Pending</span>
+                </p>
+              </motion.div>
+            )}
 
-          {isSent && (
-            <motion.div
-              className="bg-blue-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-blue-500/30"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <p className="text-xs text-blue-400 font-medium flex items-center gap-1">
-                <FaPaperPlane size={10} />
-                <span>Sent</span>
-              </p>
-            </motion.div>
-          )}
+            {isSent && (
+              <motion.div
+                className="bg-blue-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-blue-500/30"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <p className="text-xs text-blue-400 font-medium flex items-center gap-1">
+                  <FaPaperPlane size={10} />
+                  <span>Sent</span>
+                </p>
+              </motion.div>
+            )}
 
-          {isFriend && (
-            <motion.div
-              className="bg-green-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-green-500/30"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <p className="text-xs text-green-400 font-medium flex items-center gap-1">
-                <FaUserFriends size={10} />
-                <span>Friend</span>
-              </p>
-            </motion.div>
-          )}
+            {isFriend && (
+              <motion.div
+                className="bg-green-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-green-500/30"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <p className="text-xs text-green-400 font-medium flex items-center gap-1">
+                  <FaUserFriends size={10} />
+                  <span>Friend</span>
+                </p>
+              </motion.div>
+            )}
+          </div>
         </div>
 
         {/* Date badge */}
@@ -496,7 +491,6 @@ export default function FriendsTab({ profileId }: { profileId: string }) {
             />
           </>
         )}
-
       </motion.div>
 
       {/* Tab contents */}

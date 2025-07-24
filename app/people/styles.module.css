@@ -174,7 +174,7 @@
 }
 
 .loadingPulse {
-    @apply animate-pulse;
+    /* Removed animation for better performance */
 }
 
 .loadingCard {

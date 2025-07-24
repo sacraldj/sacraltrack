@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Models } from 'appwrite';
-import { database, ID, Query } from '@/libs/AppWriteClient';
-import { useUser } from '@/app/context/user';
-import { toast } from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { Models } from "appwrite";
+import { database, ID, Query } from "@/libs/AppWriteClient";
+import { useUser } from "@/app/context/user";
+import { toast } from "react-hot-toast";
 
 interface UserRating {
   $id: string;
@@ -48,35 +48,42 @@ export const useUserRating = () => {
       const ratings = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_USER_RATINGS!,
-        [Query.equal('userId', userId)]
+        [Query.equal("userId", userId)],
       );
 
       if (ratings.documents.length === 0) {
         return {
           averageRating: 0,
           totalRatings: 0,
-          ratings: []
+          ratings: [],
         };
       }
 
-      const totalRating = ratings.documents.reduce((sum, rating) => sum + rating.rating, 0);
+      const totalRating = ratings.documents.reduce(
+        (sum, rating) => sum + rating.rating,
+        0,
+      );
       const averageRating = totalRating / ratings.documents.length;
 
       return {
         averageRating,
         totalRatings: ratings.documents.length,
-        ratings: ratings.documents
+        ratings: ratings.documents,
       };
     } catch (error) {
-      console.error('Error getting user rating:', error);
+      console.error("Error getting user rating:", error);
       throw error;
     }
   };
 
   // Добавление рейтинга
-  const addRating = async (userId: string, rating: number, comment?: string) => {
+  const addRating = async (
+    userId: string,
+    rating: number,
+    comment?: string,
+  ) => {
     if (!user?.id) {
-      toast.error('You must be logged in to rate users');
+      // Silently return if user is not logged in
       return;
     }
 
@@ -85,10 +92,7 @@ export const useUserRating = () => {
       const existingRating = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_USER_RATINGS!,
-        [
-          Query.equal('userId', userId),
-          Query.equal('raterId', user.id)
-        ]
+        [Query.equal("userId", userId), Query.equal("raterId", user.id)],
       );
 
       if (existingRating.documents.length > 0) {
@@ -100,8 +104,8 @@ export const useUserRating = () => {
           {
             rating,
             comment,
-            updatedAt: new Date().toISOString()
-          }
+            updatedAt: new Date().toISOString(),
+          },
         );
       } else {
         // Создаем новый рейтинг
@@ -115,18 +119,18 @@ export const useUserRating = () => {
             rating,
             comment,
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
+            updatedAt: new Date().toISOString(),
+          },
         );
       }
 
       // Обновляем статистику пользователя
       await updateUserStats(userId);
 
-      toast.success('Rating added successfully');
+      toast.success("Rating added successfully");
     } catch (error) {
-      console.error('Error adding rating:', error);
-      toast.error('Failed to add rating');
+      console.error("Error adding rating:", error);
+      toast.error("Failed to add rating");
     }
   };
 
@@ -137,28 +141,30 @@ export const useUserRating = () => {
       const ratings = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_USER_RATINGS!,
-        [Query.equal('userId', userId)]
+        [Query.equal("userId", userId)],
       );
 
       // Получаем все лайки пользователя
       const likes = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_LIKES!,
-        [Query.equal('userId', userId)]
+        [Query.equal("userId", userId)],
       );
 
       // Получаем статистику пользователя
       const userStats = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_USER_STATS!,
-        [Query.equal('userId', userId)]
+        [Query.equal("userId", userId)],
       );
 
       const totalLikes = likes.documents.length;
       const totalRatings = ratings.documents.length;
-      const averageRating = totalRatings > 0
-        ? ratings.documents.reduce((sum, rating) => sum + rating.rating, 0) / totalRatings
-        : 0;
+      const averageRating =
+        totalRatings > 0
+          ? ratings.documents.reduce((sum, rating) => sum + rating.rating, 0) /
+            totalRatings
+          : 0;
 
       if (userStats.documents.length > 0) {
         // Обновляем существующую статистику
@@ -170,14 +176,14 @@ export const useUserRating = () => {
             totalLikes,
             totalRatings,
             averageRating,
-            lastUpdated: new Date().toISOString()
-          }
+            lastUpdated: new Date().toISOString(),
+          },
         );
         // Также обновляем профиль пользователя для отображения рейтинга на карточке
         const userProfiles = await database.listDocuments(
           process.env.NEXT_PUBLIC_DATABASE_ID!,
           process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE!,
-          [Query.equal('user_id', userId)]
+          [Query.equal("user_id", userId)],
         );
         if (userProfiles.documents.length > 0) {
           await database.updateDocument(
@@ -186,8 +192,8 @@ export const useUserRating = () => {
             userProfiles.documents[0].$id,
             {
               average_rating: averageRating,
-              total_ratings: totalRatings
-            }
+              total_ratings: totalRatings,
+            },
           );
         }
       } else {
@@ -203,14 +209,14 @@ export const useUserRating = () => {
             averageRating,
             totalFollowers: 0,
             totalFollowing: 0,
-            lastUpdated: new Date().toISOString()
-          }
+            lastUpdated: new Date().toISOString(),
+          },
         );
         // Также обновляем профиль пользователя для отображения рейтинга на карточке
         const userProfiles = await database.listDocuments(
           process.env.NEXT_PUBLIC_DATABASE_ID!,
           process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE!,
-          [Query.equal('user_id', userId)]
+          [Query.equal("user_id", userId)],
         );
         if (userProfiles.documents.length > 0) {
           await database.updateDocument(
@@ -219,73 +225,77 @@ export const useUserRating = () => {
             userProfiles.documents[0].$id,
             {
               average_rating: averageRating,
-              total_ratings: totalRatings
-            }
+              total_ratings: totalRatings,
+            },
           );
         }
       }
     } catch (error) {
-      console.error('Error updating user stats:', error);
+      console.error("Error updating user stats:", error);
     }
   };
 
   // Получение всех пользователей с их рейтингами
   const getAllUsers = async (page: number = 1, limit: number = 10) => {
     try {
-      console.log('🔄 Starting getAllUsers with page:', page, 'limit:', limit);
+      console.log("🔄 Starting getAllUsers with page:", page, "limit:", limit);
       setLoading(true);
       setError(null);
 
       // Получаем профили пользователей
-      console.log('📊 Fetching profiles from Appwrite...');
+      console.log("📊 Fetching profiles from Appwrite...");
       const profiles = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE!,
         [
           Query.limit(limit),
           Query.offset((page - 1) * limit),
-          Query.orderDesc('$createdAt')
-        ]
+          Query.orderDesc("$createdAt"),
+        ],
       );
 
-      console.log('✅ Found profiles:', profiles.documents.length);
+      console.log("✅ Found profiles:", profiles.documents.length);
 
       // Получаем статистику для каждого пользователя
-      console.log('📈 Fetching stats for each user...');
+      console.log("📈 Fetching stats for each user...");
       const usersWithStats = await Promise.all(
         profiles.documents.map(async (profile) => {
-          console.log('👤 Processing profile:', profile.user_id);
+          console.log("👤 Processing profile:", profile.user_id);
           const stats = await database.listDocuments(
             process.env.NEXT_PUBLIC_DATABASE_ID!,
             process.env.NEXT_PUBLIC_COLLECTION_ID_USER_STATS!,
-            [Query.equal('userId', profile.user_id)]
+            [Query.equal("userId", profile.user_id)],
           );
 
-          console.log('📊 Found stats for user:', profile.user_id, stats.documents.length > 0 ? 'yes' : 'no');
+          console.log(
+            "📊 Found stats for user:",
+            profile.user_id,
+            stats.documents.length > 0 ? "yes" : "no",
+          );
 
           // Убедимся, что у нас есть все необходимые поля
           return {
-            $id: profile.$id || '',
-            user_id: profile.user_id || '',
-            name: profile.name || 'User',
-            image: profile.image || '/images/placeholders/user-placeholder.svg',
-            bio: profile.bio || '',
+            $id: profile.$id || "",
+            user_id: profile.user_id || "",
+            name: profile.name || "User",
+            image: profile.image || "/images/placeholders/user-placeholder.svg",
+            bio: profile.bio || "",
             stats: stats.documents[0] || {
               totalLikes: 0,
               totalFollowers: 0,
               totalFollowing: 0,
               averageRating: 0,
-              totalRatings: 0
-            }
+              totalRatings: 0,
+            },
           };
-        })
+        }),
       );
 
-      console.log('✅ Final users with stats:', usersWithStats.length);
+      console.log("✅ Final users with stats:", usersWithStats.length);
       return usersWithStats;
     } catch (error) {
-      console.error('❌ Error in getAllUsers:', error);
-      setError('Failed to load users');
+      console.error("❌ Error in getAllUsers:", error);
+      setError("Failed to load users");
       return [];
     } finally {
       setLoading(false);
@@ -301,10 +311,7 @@ export const useUserRating = () => {
       const profiles = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE!,
-        [
-          Query.search('name', query),
-          Query.limit(10)
-        ]
+        [Query.search("name", query), Query.limit(10)],
       );
 
       const usersWithStats = await Promise.all(
@@ -312,31 +319,31 @@ export const useUserRating = () => {
           const stats = await database.listDocuments(
             process.env.NEXT_PUBLIC_DATABASE_ID!,
             process.env.NEXT_PUBLIC_COLLECTION_ID_USER_STATS!,
-            [Query.equal('userId', profile.user_id)]
+            [Query.equal("userId", profile.user_id)],
           );
 
           // Форматируем данные одинаково для всех функций
           return {
-            $id: profile.$id || '',
-            user_id: profile.user_id || '',
-            name: profile.name || 'User',
-            image: profile.image || '/images/placeholders/user-placeholder.svg',
-            bio: profile.bio || '',
+            $id: profile.$id || "",
+            user_id: profile.user_id || "",
+            name: profile.name || "User",
+            image: profile.image || "/images/placeholders/user-placeholder.svg",
+            bio: profile.bio || "",
             stats: stats.documents[0] || {
               totalLikes: 0,
               totalFollowers: 0,
               totalFollowing: 0,
               averageRating: 0,
-              totalRatings: 0
-            }
+              totalRatings: 0,
+            },
           };
-        })
+        }),
       );
 
       return usersWithStats;
     } catch (error) {
-      console.error('Error searching users:', error);
-      setError('Failed to search users');
+      console.error("Error searching users:", error);
+      setError("Failed to search users");
       return [];
     } finally {
       setLoading(false);
@@ -345,32 +352,44 @@ export const useUserRating = () => {
 
   const checkCollections = async () => {
     try {
-      console.log('🔍 Checking Appwrite collections...');
-      
+      console.log("🔍 Checking Appwrite collections...");
+
       // Проверяем коллекцию профилей
       const profiles = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE!
+        process.env.NEXT_PUBLIC_COLLECTION_ID_PROFILE!,
       );
-      console.log('✅ Profiles collection exists with', profiles.documents.length, 'documents');
-      
+      console.log(
+        "✅ Profiles collection exists with",
+        profiles.documents.length,
+        "documents",
+      );
+
       // Проверяем коллекцию статистики
       const stats = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_COLLECTION_ID_USER_STATS!
+        process.env.NEXT_PUBLIC_COLLECTION_ID_USER_STATS!,
       );
-      console.log('✅ User stats collection exists with', stats.documents.length, 'documents');
-      
+      console.log(
+        "✅ User stats collection exists with",
+        stats.documents.length,
+        "documents",
+      );
+
       // Проверяем коллекцию рейтингов
       const ratings = await database.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_COLLECTION_ID_USER_RATINGS!
+        process.env.NEXT_PUBLIC_COLLECTION_ID_USER_RATINGS!,
       );
-      console.log('✅ User ratings collection exists with', ratings.documents.length, 'documents');
-      
+      console.log(
+        "✅ User ratings collection exists with",
+        ratings.documents.length,
+        "documents",
+      );
+
       return true;
     } catch (error) {
-      console.error('❌ Error checking collections:', error);
+      console.error("❌ Error checking collections:", error);
       return false;
     }
   };
@@ -386,6 +405,6 @@ export const useUserRating = () => {
     addRating,
     getAllUsers,
     searchUsers,
-    updateUserStats
+    updateUserStats,
   };
-}; 
+};

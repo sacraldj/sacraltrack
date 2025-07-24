@@ -1,15 +1,18 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 interface PeopleSearchBarProps {
   onSearch: (query: string) => void;
   placeholder?: string;
 }
 
-const PeopleSearchBar = ({ onSearch, placeholder = "Search amazing people..." }: PeopleSearchBarProps) => {
+const PeopleSearchBar = ({
+  onSearch,
+  placeholder = "Search amazing people...",
+}: PeopleSearchBarProps) => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +39,7 @@ const PeopleSearchBar = ({ onSearch, placeholder = "Search amazing people..." }:
       setIsLoading(false);
       onSearch(trimmedQuery);
     }, 300),
-    [onSearch]
+    [onSearch],
   );
 
   // Handle input change
@@ -79,28 +82,33 @@ const PeopleSearchBar = ({ onSearch, placeholder = "Search amazing people..." }:
   // Handle click outside to close search
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
         setShowSearch(false);
       }
     };
 
     if (showSearch) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showSearch]);
 
   return (
-    <div className="relative flex items-center justify-end" ref={searchContainerRef}>
+    <div
+      className="relative flex items-center justify-end"
+      ref={searchContainerRef}
+    >
       <button
         id="people-search-button"
         onClick={() => setShowSearch(!showSearch)}
         className="p-3 hover:bg-[#2E2469]/80 active:bg-[#2E2469] rounded-2xl transition-all duration-200 group relative"
         aria-label="Search people"
       >
-        <MagnifyingGlassIcon
-          className="w-6 h-6 text-[#20DDBB] group-hover:text-white transition-all duration-200 group-hover:scale-110"
-        />
+        <MagnifyingGlassIcon className="w-6 h-6 text-[#20DDBB] group-hover:text-white transition-all duration-200 group-hover:scale-110" />
         {/* Enhanced glow effect */}
         <div className="absolute inset-0 rounded-2xl bg-[#20DDBB]/0 group-hover:bg-[#20DDBB]/10 transition-all duration-200"></div>
       </button>
@@ -113,11 +121,11 @@ const PeopleSearchBar = ({ onSearch, placeholder = "Search amazing people..." }:
             exit={{ width: 0, opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
             className="absolute top-1/2 -translate-y-1/2 z-50
-                      left-2.5 right-2.5 md:left-auto md:right-4
+                      left-2.5 right-2.5 md:left-auto md:right-16 lg:right-4
                       max-w-[calc(100vw-20px)]"
             style={{
-              minWidth: '300px',
-              width: 'clamp(300px, 40vw, 500px)'
+              minWidth: "300px",
+              width: "clamp(300px, 35vw, 450px)",
             }}
           >
             <form onSubmit={handleSearchSubmit} className="relative group">
@@ -135,13 +143,23 @@ const PeopleSearchBar = ({ onSearch, placeholder = "Search amazing people..." }:
                           shadow-2xl focus:shadow-[0_0_30px_rgba(32,221,187,0.3)]
                           transition-all duration-300 group-hover:border-[#20DDBB]/40
                           caret-white selection:bg-[#20DDBB]/30"
-                  style={{ color: 'white' }}
+                  style={{ color: "white" }}
                 />
 
                 {/* Search icon */}
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg className="w-5 h-5 text-[#20DDBB]/70 group-focus-within:text-[#20DDBB] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg
+                    className="w-5 h-5 text-[#20DDBB]/70 group-focus-within:text-[#20DDBB] transition-colors duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 </div>
               </div>
@@ -171,8 +189,18 @@ const PeopleSearchBar = ({ onSearch, placeholder = "Search amazing people..." }:
                   type="submit"
                   className="md:hidden p-1.5 bg-[#20DDBB]/20 hover:bg-[#20DDBB]/30 rounded-full transition-all duration-200 group/submit"
                 >
-                  <svg className="w-4 h-4 text-[#20DDBB] group-hover/submit:text-white transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg
+                    className="w-4 h-4 text-[#20DDBB] group-hover/submit:text-white transition-colors duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                 </button>
               </div>

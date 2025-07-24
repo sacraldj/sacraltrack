@@ -40,6 +40,8 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useRefreshControl } from "@/app/hooks/useRefreshControl";
 import { PeopleSearchProvider } from "@/app/context/PeopleSearchContext";
 import DefaultAvatar from "@/app/components/ui/DefaultAvatar";
+import SimpleLoadingCard from "@/app/components/ui/SimpleLoadingCard";
+import SimpleSidebarLoading from "@/app/components/ui/SimpleSidebarLoading";
 
 // Динамический импорт иконок
 const StarIconDynamic = dynamic(() =>
@@ -165,6 +167,7 @@ const UserCard: React.FC<UserCardProps> = memo(
     const [isHovered, setIsHovered] = useState(false);
     const [imageError, setImageError] = useState(false);
     const { navigateTo } = useSafeNavigation();
+    const currentUser = useUser();
 
     // Получаем доступ к глобальному состоянию поиска
     const searchContext = useContext(React.createContext<string>("")); // Можно заменить на актуальный контекст поиска
@@ -278,6 +281,11 @@ const UserCard: React.FC<UserCardProps> = memo(
       e.stopPropagation();
       e.preventDefault();
 
+      // Check if user is logged in before allowing rating
+      if (!currentUser?.user?.id) {
+        return; // Silently prevent rating, no error message
+      }
+
       // Set local state immediately for visual feedback
       setRating(value);
       setHoverRating(value);
@@ -329,7 +337,8 @@ const UserCard: React.FC<UserCardProps> = memo(
                     onClick={(e) => handleRatingClick(e, star)}
                     onMouseEnter={() => setHoverRating(star)}
                     onMouseLeave={() => setHoverRating(0)}
-                    className="p-0.5 focus:outline-none"
+                    className={`p-0.5 focus:outline-none ${!currentUser?.user?.id ? "cursor-not-allowed opacity-60" : ""}`}
+                    disabled={!currentUser?.user?.id}
                   >
                     <StarIconDynamic
                       className={`w-3 h-3 ${
@@ -428,7 +437,7 @@ const MemoizedUserCard = React.memo(UserCard, (prevProps, nextProps) => {
 
 // Добавляем компонент загрузки для иконок
 const IconLoading = () => (
-  <div className="animate-pulse w-5 h-5 bg-gray-300/20 rounded-full"></div>
+  <div className="w-5 h-5 bg-gray-300/20 rounded-full"></div>
 );
 
 // Обновляем использование иконок, добавляя Suspense
@@ -967,24 +976,8 @@ export default function People() {
                   </motion.div>
                 ))
               ) : isLoadingTopUsers ? (
-                // Loading skeleton only when actually loading
-                <div className="space-y-3">
-                  {[...Array(5)].map((_, index) => (
-                    <div
-                      key={index}
-                      className="bg-white/5 rounded-2xl p-4 border border-white/5 animate-pulse"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-white/10"></div>
-                        <div className="w-14 h-14 rounded-full bg-white/10"></div>
-                        <div className="flex-1 space-y-2">
-                          <div className="h-4 bg-white/10 rounded w-3/4"></div>
-                          <div className="h-3 bg-white/10 rounded w-1/2"></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                // Simple loading without animation
+                <SimpleSidebarLoading itemsCount={5} />
               ) : (
                 // Empty state
                 <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -1213,7 +1206,7 @@ export default function People() {
   // Рейтинг пользователя
   const handleRateUser = async (userId: string, rating: number) => {
     if (!user?.user?.id) {
-      toast.error("You need to be logged in to rate users");
+      // Silently return if user is not logged in
       return;
     }
 
@@ -1963,11 +1956,11 @@ export default function People() {
     return (
       <div className={styles.container}>
         <div className={styles.pageContent}>
-          <div className={`${styles.loadingPulse} space-y-4`}>
+          <div className="space-y-4">
             <div className="h-12 bg-white/5 rounded-lg w-full max-w-md"></div>
             <div className={styles.grid}>
               {[...Array(6)].map((_, i) => (
-                <div key={i} className={styles.loadingCard}></div>
+                <SimpleLoadingCard key={i} />
               ))}
             </div>
           </div>
@@ -1995,25 +1988,10 @@ export default function People() {
                     {/* Pull to refresh indicator */}
                     {isPullingToRefresh && (
                       <div className="flex items-center justify-center py-4 text-[#20DDBB]">
-                        <div className="animate-spin mr-2">
-                          <svg className="w-5 h-5" viewBox="0 0 24 24">
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                              fill="none"
-                            />
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            />
-                          </svg>
+                        <div className="mr-2">
+                          <div className="w-5 h-5 rounded-full border-2 border-[#20DDBB] border-t-transparent"></div>
                         </div>
-                        <span>Refreshing...</span>
+                        <span className="text-sm">Loading...</span>
                       </div>
                     )}
 
@@ -2048,7 +2026,7 @@ export default function People() {
                       <div className="flex flex-col items-center py-8">
                         <div ref={loadMoreRef} className="h-4 w-full"></div>
                         <div className="flex items-center gap-2 text-white/60">
-                          <div className="w-4 h-4 border-2 border-[#20DDBB] border-t-transparent rounded-full animate-spin"></div>
+                          <div className="w-4 h-4 border-2 border-[#20DDBB] border-t-transparent rounded-full"></div>
                           <span className="text-sm">Loading more...</span>
                         </div>
                       </div>
@@ -2207,7 +2185,7 @@ export default function People() {
                           {[...Array(5)].map((_, index) => (
                             <div
                               key={index}
-                              className="p-3 rounded-xl bg-white/5 animate-pulse"
+                              className="p-3 rounded-xl bg-white/5"
                             >
                               <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-white/10"></div>
@@ -2314,7 +2292,7 @@ export default function People() {
                         {[...Array(12)].map((_, index) => (
                           <div
                             key={index}
-                            className="p-4 rounded-xl bg-white/5 animate-pulse"
+                            className="p-4 rounded-xl bg-white/5"
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-lg bg-white/10"></div>

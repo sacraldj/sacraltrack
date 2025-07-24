@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf .next && next dev"
+    "clean": "rm -rf .next && next dev",
+    "add-track-fields": "APPWRITE_API_KEY=standard_e9106b6b74d20b8ccdadc8e4254b34b29e7a800ce7d404c47ce20741dc4214063b7b65f0d979e66ca5d3924f29562bdda36d9629b76c32e68f7162387eedf13aed10b9f12df477e605a0ff094e5101d69e82ac50dc06121904ea2a20f067256b2715c41225dcc0ba336fae997e05c3b16786b7ea81b0f277f1e25a69d0b13633 node scripts/appwrite/add-track-fields.js",
+    "update-track-defaults": "APPWRITE_API_KEY=standard_e9106b6b74d20b8ccdadc8e4254b34b29e7a800ce7d404c47ce20741dc4214063b7b65f0d979e66ca5d3924f29562bdda36d9629b76c32e68f7162387eedf13aed10b9f12df477e605a0ff094e5101d69e82ac50dc06121904ea2a20f067256b2715c41225dcc0ba336fae997e05c3b16786b7ea81b0f277f1e25a69d0b13633 node scripts/appwrite/update-track-defaults.js"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.10.0",
