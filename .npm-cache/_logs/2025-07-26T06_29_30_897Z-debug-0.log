@@ -1,0 +1,53 @@
+0 verbose cli /Users/alexandr/.nvm/versions/node/v20.18.0/bin/node /Users/alexandr/.nvm/versions/node/v20.18.0/bin/npm
+1 info using npm@11.2.0
+2 info using node@v20.18.0
+3 silly config load:file:/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npmrc
+5 warn Unknown project config "strict-peer-dependencies". This will stop working in the next major version of npm.
+6 warn Unknown project config "auto-install-peers". This will stop working in the next major version of npm.
+7 warn Unknown project config "node-linker". This will stop working in the next major version of npm.
+8 warn Unknown project config "dedupe". This will stop working in the next major version of npm.
+9 warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+10 silly config load:file:/Users/alexandr/.npmrc
+11 silly config load:file:/Users/alexandr/.nvm/versions/node/v20.18.0/etc/npmrc
+12 verbose title npm install @next/eslint-config-next
+13 verbose argv "install" "--save-dev" "@next/eslint-config-next"
+14 verbose logfile logs-max:10 dir:/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T06_29_30_897Z-
+15 verbose logfile /Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T06_29_30_897Z-debug-0.log
+16 silly logfile start cleaning logs, removing 1 files
+17 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+18 silly logfile done cleaning log files
+19 silly idealTree buildDeps
+20 silly fetch manifest @next/eslint-config-next@*
+21 silly packumentCache full:https://registry.npmjs.org/@next%2feslint-config-next cache-miss
+22 http fetch GET 404 https://registry.npmjs.org/@next%2feslint-config-next 2085ms (cache skip)
+23 silly placeDep ROOT @next/eslint-config-next@ OK for: sacraltrack@0.2.0 want: *
+24 verbose stack HttpErrorGeneral: 404 Not Found - GET https://registry.npmjs.org/@next%2feslint-config-next - Not found
+24 verbose stack     at /Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/npm-registry-fetch/lib/check-response.js:103:15
+24 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+24 verbose stack     at async RegistryFetcher.packument (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/pacote/lib/registry.js:90:19)
+24 verbose stack     at async RegistryFetcher.manifest (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/pacote/lib/registry.js:128:23)
+24 verbose stack     at async #fetchManifest (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:1202:20)
+24 verbose stack     at async #nodeFromEdge (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:1040:19)
+24 verbose stack     at async #buildDepStep (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:904:11)
+24 verbose stack     at async Arborist.buildIdealTree (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:181:7)
+24 verbose stack     at async Promise.all (index 1)
+24 verbose stack     at async Arborist.reify (/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:131:5)
+25 verbose statusCode 404
+26 verbose pkgid @next/eslint-config-next@*
+27 error code E404
+28 error 404 Not Found - GET https://registry.npmjs.org/@next%2feslint-config-next - Not found
+29 error 404
+30 error 404  '@next/eslint-config-next@*' is not in this registry.
+31 error 404
+32 error 404 Note that you can also install from a
+33 error 404 tarball, folder, http url, or git url.
+34 silly unfinished npm timer reify 1753511372214
+35 silly unfinished npm timer reify:loadTrees 1753511372241
+36 verbose cwd /Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete
+37 verbose os Darwin 22.6.0
+38 verbose node v20.18.0
+39 verbose npm  v11.2.0
+40 verbose exit 1
+41 verbose code 1
+42 error A complete log of this run can be found in: /Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T06_29_30_897Z-debug-0.log

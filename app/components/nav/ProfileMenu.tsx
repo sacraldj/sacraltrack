@@ -179,14 +179,14 @@ const ProfileMenu = () => {
       {showMenu && (
         <>
           <div
-            className="fixed inset-0 bg-black/40 z-40 animate-fadeIn"
+            className="fixed inset-0 bg-black/40 z-[9998] animate-fadeIn"
             onClick={() => setShowMenu(false)}
           />
 
           <div
             ref={menuRef}
             className="absolute right-0 mt-2 w-[280px] max-w-[90vw] bg-[#24183D] rounded-xl
-                     shadow-lg z-50 overflow-hidden border border-white/10 animate-menuEnter"
+                     shadow-lg z-[9999] overflow-hidden border border-white/10 animate-menuEnter"
             style={{ transformOrigin: "top right" }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#20DDBB]/3 to-transparent pointer-events-none opacity-30"></div>

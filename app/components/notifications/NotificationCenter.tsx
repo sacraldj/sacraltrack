@@ -142,11 +142,11 @@ const NotificationCenter = ({ isOpen, onClose }: NotificationCenterProps) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="fixed sm:absolute top-[60px] sm:top-12 right-2 sm:right-6 w-full sm:w-[400px] md:w-[430px] max-w-[95vw] min-w-[320px] h-[calc(100vh-60px)] sm:h-auto bg-[#272B43] sm:rounded-2xl shadow-2xl border border-[#3f2d63] z-50"
+        className="fixed sm:absolute top-[60px] sm:top-12 left-0 right-0 sm:right-6 sm:left-auto w-full sm:w-[400px] md:w-[430px] max-w-none sm:max-w-[95vw] min-w-full sm:min-w-[320px] h-[calc(100vh-60px)] sm:h-auto bg-[#272B43] sm:rounded-2xl shadow-2xl border-0 sm:border border-[#3f2d63] z-50"
       >
         <div className="p-3 sm:p-4 border-b border-[#3f2d63]">
           <div className="flex justify-between items-center mb-3 sm:mb-4">
-            <h2 className="text-white text-base sm:text-lg font-bold">
+            <h2 className="text-white text-sm sm:text-lg font-bold">
               Notifications
             </h2>
             <button
@@ -203,7 +203,7 @@ const NotificationCenter = ({ isOpen, onClose }: NotificationCenterProps) => {
                   <div className="flex gap-3">
                     <div className="mt-1">{getIcon(notification.type)}</div>
                     <div className="flex-1">
-                      <h3 className="text-white font-medium mb-1 text-sm sm:text-base">
+                      <h3 className="text-white font-medium mb-1 text-xs sm:text-base">
                         {notification.title}
                       </h3>
                       <p className="text-[#818BAC] text-xs sm:text-sm mb-2">

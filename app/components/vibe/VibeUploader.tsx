@@ -1550,7 +1550,19 @@ export const VibeUploader: React.FC<VibeUploaderProps> = ({ onClose, onSuccess }
   return (
     <div 
       className={`modal-overlay flex items-center justify-center overflow-y-auto ${isMobile ? 'fixed inset-0 w-full h-full bg-black/80 z-[99999] rounded-none p-0' : 'fixed inset-0 z-[99999]'}`}
-      style={{ zIndex: 99999 }}
+      style={{ 
+        zIndex: 99999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        padding: '1rem',
+        overflowY: 'auto'
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -1570,6 +1582,9 @@ export const VibeUploader: React.FC<VibeUploaderProps> = ({ onClose, onSuccess }
           backdropFilter: 'blur(36px) saturate(1.25)',
           WebkitBackdropFilter: 'blur(36px) saturate(1.25)',
           zIndex: 99999,
+          width: '100%',
+          maxWidth: isMobile ? '100%' : '500px',
+          margin: '0 auto'
         }}
         onClick={(e) => e.stopPropagation()}
       >

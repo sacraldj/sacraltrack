@@ -1505,7 +1505,7 @@ const PostMain = memo(({ post }: PostMainProps) => {
           </div>
 
           {/* Action buttons section */}
-          <div className="p-[5px] border-t border-white/5 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
+          <div className="p-[5px] bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {!isPurchased ? (
@@ -1514,7 +1514,7 @@ const PostMain = memo(({ post }: PostMainProps) => {
                     disabled={isProcessingPayment}
                     className="relative overflow-hidden bg-gradient-to-r from-[#20DDBB] to-[#5D59FF] text-white px-6 py-3 rounded-xl font-bold
                                           shadow-[0_8px_25px_rgba(32,221,187,0.25)] hover:shadow-[0_12px_35px_rgba(32,221,187,0.4)]
-                                          transition-all duration-300 flex items-center gap-2 text-sm group/btn"
+                                          transition-all duration-300 flex items-center gap-2 text-sm group/btn mr-5"
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     aria-label={`Buy track ${post.trackname} for $2`}
@@ -1536,7 +1536,7 @@ const PostMain = memo(({ post }: PostMainProps) => {
                 ) : (
                   <motion.button
                     className="bg-gradient-to-r from-[#20DDBB]/20 to-[#018CFD]/20 text-[#20DDBB] px-4 sm:px-6 py-2 sm:py-2.5
-                                          rounded-xl font-medium border border-[#20DDBB]/30 flex items-center gap-2 text-sm"
+                                          rounded-xl font-medium border border-[#20DDBB]/30 flex items-center gap-2 text-sm mr-5"
                     whileHover={{ scale: 1.01 }}
                     aria-label="Track already purchased"
                   >

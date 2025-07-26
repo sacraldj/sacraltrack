@@ -127,8 +127,8 @@ const ContentFilter = () => {
       
       {/* Mobile version - optimized for mobile display */}
       <div className="block md:hidden w-full">
-        <div className="w-full rounded-t-2xl">
-          <div className="flex justify-between items-center px-2">
+        <div className="w-full">
+          <div className="flex justify-around items-center px-2">
             <MobileTabButton 
               active={activeTab === 'all'} 
               onClick={() => handleTabChange('all')}
@@ -178,7 +178,7 @@ const MobileTabButton = ({ active, onClick, icon, label }: MobileTabButtonProps)
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center py-2 px-5 transition-all duration-300 relative ${
+      className={`flex flex-col items-center justify-center py-3 px-4 transition-all duration-300 relative ${
         active
           ? 'text-white'
           : 'text-gray-400 hover:text-white/70'
@@ -187,12 +187,12 @@ const MobileTabButton = ({ active, onClick, icon, label }: MobileTabButtonProps)
       <div className={active ? 'text-white' : 'text-gray-400'}>
         {icon}
       </div>
-      <span className="text-[9px] font-medium mt-0.5">{label}</span>
+      <span className="text-[10px] font-medium mt-1">{label}</span>
       
       {active && (
         <motion.div
           layoutId="activeTabIndicator-mobile"
-          className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-[#20DDBB] to-[#8B5CF6]"
+          className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-[#20DDBB] to-[#8B5CF6]"
           initial={false}
           transition={{ type: "spring", bounce: 0.35, duration: 0.6 }}
         />

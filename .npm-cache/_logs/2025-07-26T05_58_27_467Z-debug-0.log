@@ -1,0 +1,1152 @@
+0 verbose cli /Users/alexandr/.nvm/versions/node/v20.18.0/bin/node /Users/alexandr/.nvm/versions/node/v20.18.0/bin/npm
+1 info using npm@11.2.0
+2 info using node@v20.18.0
+3 silly config load:file:/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npmrc
+5 warn Unknown project config "strict-peer-dependencies". This will stop working in the next major version of npm.
+6 warn Unknown project config "auto-install-peers". This will stop working in the next major version of npm.
+7 warn Unknown project config "node-linker". This will stop working in the next major version of npm.
+8 warn Unknown project config "dedupe". This will stop working in the next major version of npm.
+9 warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+10 silly config load:file:/Users/alexandr/.npmrc
+11 silly config load:file:/Users/alexandr/.nvm/versions/node/v20.18.0/etc/npmrc
+12 verbose title npm uninstall ethers hardhat
+13 verbose argv "uninstall" "ethers" "hardhat"
+14 verbose logfile logs-max:10 dir:/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T05_58_27_467Z-
+15 verbose logfile /Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T05_58_27_467Z-debug-0.log
+16 silly logfile done cleaning log files
+17 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+18 silly idealTree buildDeps
+19 silly reify mark retired [
+19 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@adraffy/ens-normalize'
+19 silly reify ]
+20 silly reify mark retired [
+20 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethereumjs/rlp',
+20 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/rlp'
+20 silly reify ]
+21 silly reify mark retired [
+21 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethereumjs/util'
+21 silly reify ]
+22 silly reify mark retired [
+22 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/abi'
+22 silly reify ]
+23 silly reify mark retired [
+23 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/abstract-provider'
+23 silly reify ]
+24 silly reify mark retired [
+24 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/abstract-signer'
+24 silly reify ]
+25 silly reify mark retired [
+25 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/address'
+25 silly reify ]
+26 silly reify mark retired [
+26 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/base64'
+26 silly reify ]
+27 silly reify mark retired [
+27 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/bignumber'
+27 silly reify ]
+28 silly reify mark retired [
+28 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/bytes'
+28 silly reify ]
+29 silly reify mark retired [
+29 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/constants'
+29 silly reify ]
+30 silly reify mark retired [
+30 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/hash'
+30 silly reify ]
+31 silly reify mark retired [
+31 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/keccak256'
+31 silly reify ]
+32 silly reify mark retired [
+32 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/logger'
+32 silly reify ]
+33 silly reify mark retired [
+33 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/networks'
+33 silly reify ]
+34 silly reify mark retired [
+34 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/properties'
+34 silly reify ]
+35 silly reify mark retired [
+35 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/rlp'
+35 silly reify ]
+36 silly reify mark retired [
+36 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/signing-key'
+36 silly reify ]
+37 silly reify mark retired [
+37 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/strings'
+37 silly reify ]
+38 silly reify mark retired [
+38 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/transactions'
+38 silly reify ]
+39 silly reify mark retired [
+39 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/web'
+39 silly reify ]
+40 silly reify mark retired [
+40 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@noble/curves'
+40 silly reify ]
+41 silly reify mark retired [
+41 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@noble/secp256k1'
+41 silly reify ]
+42 silly reify mark retired [
+42 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr'
+42 silly reify ]
+43 silly reify mark retired [
+43 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-darwin-arm64'
+43 silly reify ]
+44 silly reify mark retired [
+44 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-darwin-x64'
+44 silly reify ]
+45 silly reify mark retired [
+45 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-arm64-gnu'
+45 silly reify ]
+46 silly reify mark retired [
+46 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-arm64-musl'
+46 silly reify ]
+47 silly reify mark retired [
+47 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-x64-gnu'
+47 silly reify ]
+48 silly reify mark retired [
+48 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-x64-musl'
+48 silly reify ]
+49 silly reify mark retired [
+49 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-win32-x64-msvc'
+49 silly reify ]
+50 silly reify mark retired [
+50 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/solidity-analyzer'
+50 silly reify ]
+51 silly reify mark retired [
+51 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/base'
+51 silly reify ]
+52 silly reify mark retired [
+52 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/bip32'
+52 silly reify ]
+53 silly reify mark retired [
+53 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/bip39'
+53 silly reify ]
+54 silly reify mark retired [
+54 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/core'
+54 silly reify ]
+55 silly reify mark retired [
+55 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/hub'
+55 silly reify ]
+56 silly reify mark retired [
+56 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/minimal'
+56 silly reify ]
+57 silly reify mark retired [
+57 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/node'
+57 silly reify ]
+58 silly reify mark retired [
+58 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/tracing'
+58 silly reify ]
+59 silly reify mark retired [
+59 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/types'
+59 silly reify ]
+60 silly reify mark retired [
+60 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/utils'
+60 silly reify ]
+61 silly reify mark retired [
+61 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/adm-zip'
+61 silly reify ]
+62 silly reify mark retired [
+62 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/aes-js'
+62 silly reify ]
+63 silly reify mark retired [
+63 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/aggregate-error'
+63 silly reify ]
+64 silly reify mark retired [
+64 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ansi-align'
+64 silly reify ]
+65 silly reify mark retired [
+65 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ansi-colors'
+65 silly reify ]
+66 silly reify mark retired [
+66 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ansi-escapes'
+66 silly reify ]
+67 silly reify mark retired [
+67 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/argparse'
+67 silly reify ]
+68 silly reify mark retired [
+68 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/bn.js'
+68 silly reify ]
+69 silly reify mark retired [
+69 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/boxen'
+69 silly reify ]
+70 silly reify mark retired [
+70 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/brorand'
+70 silly reify ]
+71 silly reify mark retired [
+71 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/browser-stdout'
+71 silly reify ]
+72 silly reify mark retired [
+72 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/buffer-from'
+72 silly reify ]
+73 silly reify mark retired [
+73 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/bytes'
+73 silly reify ]
+74 silly reify mark retired [
+74 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/camelcase'
+74 silly reify ]
+75 silly reify mark retired [
+75 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/chokidar'
+75 silly reify ]
+76 silly reify mark retired [
+76 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ci-info'
+76 silly reify ]
+77 silly reify mark retired [
+77 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/clean-stack'
+77 silly reify ]
+78 silly reify mark retired [
+78 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/cli-boxes'
+78 silly reify ]
+79 silly reify mark retired [
+79 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/command-exists'
+79 silly reify ]
+80 silly reify mark retired [
+80 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/commander'
+80 silly reify ]
+81 silly reify mark retired [
+81 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/cookie'
+81 silly reify ]
+82 silly reify mark retired [
+82 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/decamelize'
+82 silly reify ]
+83 silly reify mark retired [
+83 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/depd'
+83 silly reify ]
+84 silly reify mark retired [
+84 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/diff'
+84 silly reify ]
+85 silly reify mark retired [
+85 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/elliptic'
+85 silly reify ]
+86 silly reify mark retired [
+86 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/enquirer'
+86 silly reify ]
+87 silly reify mark retired [
+87 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/env-paths'
+87 silly reify ]
+88 silly reify mark retired [
+88 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/escape-string-regexp'
+88 silly reify ]
+89 silly reify mark retired [
+89 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ethereum-cryptography'
+89 silly reify ]
+90 silly reify mark retired [
+90 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ethers'
+90 silly reify ]
+91 silly reify mark retired [
+91 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fdir'
+91 silly reify ]
+92 silly reify mark retired [
+92 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/find-up'
+92 silly reify ]
+93 silly reify mark retired [
+93 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fp-ts'
+93 silly reify ]
+94 silly reify mark retired [
+94 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fs-extra'
+94 silly reify ]
+95 silly reify mark retired [
+95 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/get-caller-file'
+95 silly reify ]
+96 silly reify mark retired [
+96 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/glob'
+96 silly reify ]
+97 silly reify mark retired [
+97 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/graceful-fs'
+97 silly reify ]
+98 silly reify mark retired [
+98 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/hardhat',
+98 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/hardhat'
+98 silly reify ]
+99 silly reify mark retired [
+99 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/hash.js'
+99 silly reify ]
+100 silly reify mark retired [
+100 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/he',
+100 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/he'
+100 silly reify ]
+101 silly reify mark retired [
+101 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/hmac-drbg'
+101 silly reify ]
+102 silly reify mark retired [
+102 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/http-errors'
+102 silly reify ]
+103 silly reify mark retired [
+103 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/immutable'
+103 silly reify ]
+104 silly reify mark retired [
+104 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/indent-string'
+104 silly reify ]
+105 silly reify mark retired [
+105 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/io-ts'
+105 silly reify ]
+106 silly reify mark retired [
+106 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/is-plain-obj'
+106 silly reify ]
+107 silly reify mark retired [
+107 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/is-unicode-supported'
+107 silly reify ]
+108 silly reify mark retired [
+108 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/js-sha3'
+108 silly reify ]
+109 silly reify mark retired [
+109 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/js-yaml',
+109 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/js-yaml'
+109 silly reify ]
+110 silly reify mark retired [
+110 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/json-stream-stringify'
+110 silly reify ]
+111 silly reify mark retired [
+111 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/jsonfile'
+111 silly reify ]
+112 silly reify mark retired [
+112 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/keccak'
+112 silly reify ]
+113 silly reify mark retired [
+113 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/locate-path'
+113 silly reify ]
+114 silly reify mark retired [
+114 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/lodash'
+114 silly reify ]
+115 silly reify mark retired [
+115 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/log-symbols'
+115 silly reify ]
+116 silly reify mark retired [
+116 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/lru_map'
+116 silly reify ]
+117 silly reify mark retired [
+117 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/memorystream'
+117 silly reify ]
+118 silly reify mark retired [
+118 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/micro-eth-signer'
+118 silly reify ]
+119 silly reify mark retired [
+119 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/micro-packed'
+119 silly reify ]
+120 silly reify mark retired [
+120 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minimalistic-assert'
+120 silly reify ]
+121 silly reify mark retired [
+121 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minimalistic-crypto-utils'
+121 silly reify ]
+122 silly reify mark retired [
+122 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minimatch'
+122 silly reify ]
+123 silly reify mark retired [
+123 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/mnemonist'
+123 silly reify ]
+124 silly reify mark retired [
+124 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/mocha',
+124 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/_mocha',
+124 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/mocha'
+124 silly reify ]
+125 silly reify mark retired [
+125 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/node-addon-api'
+125 silly reify ]
+126 silly reify mark retired [
+126 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/node-gyp-build',
+126 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-gyp-build',
+126 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-gyp-build-optional',
+126 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-gyp-build-test'
+126 silly reify ]
+127 silly reify mark retired [
+127 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/obliterator'
+127 silly reify ]
+128 silly reify mark retired [
+128 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/os-tmpdir'
+128 silly reify ]
+129 silly reify mark retired [
+129 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/p-limit'
+129 silly reify ]
+130 silly reify mark retired [
+130 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/p-locate'
+130 silly reify ]
+131 silly reify mark retired [
+131 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/p-map'
+131 silly reify ]
+132 silly reify mark retired [
+132 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/path-exists'
+132 silly reify ]
+133 silly reify mark retired [
+133 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/randombytes'
+133 silly reify ]
+134 silly reify mark retired [
+134 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/raw-body'
+134 silly reify ]
+135 silly reify mark retired [
+135 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/readdirp'
+135 silly reify ]
+136 silly reify mark retired [
+136 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/require-directory'
+136 silly reify ]
+137 silly reify mark retired [
+137 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/serialize-javascript'
+137 silly reify ]
+138 silly reify mark retired [
+138 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/setprototypeof'
+138 silly reify ]
+139 silly reify mark retired [
+139 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/solc',
+139 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/solcjs'
+139 silly reify ]
+140 silly reify mark retired [
+140 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/source-map'
+140 silly reify ]
+141 silly reify mark retired [
+141 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/source-map-support'
+141 silly reify ]
+142 silly reify mark retired [
+142 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/stacktrace-parser'
+142 silly reify ]
+143 silly reify mark retired [
+143 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/statuses'
+143 silly reify ]
+144 silly reify mark retired [
+144 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/strip-json-comments'
+144 silly reify ]
+145 silly reify mark retired [
+145 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tinyglobby'
+145 silly reify ]
+146 silly reify mark retired [
+146 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tmp'
+146 silly reify ]
+147 silly reify mark retired [
+147 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/toidentifier'
+147 silly reify ]
+148 silly reify mark retired [
+148 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tsort'
+148 silly reify ]
+149 silly reify mark retired [
+149 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/type-fest'
+149 silly reify ]
+150 silly reify mark retired [
+150 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/universalify'
+150 silly reify ]
+151 silly reify mark retired [
+151 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/unpipe'
+151 silly reify ]
+152 silly reify mark retired [
+152 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/widest-line'
+152 silly reify ]
+153 silly reify mark retired [
+153 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/workerpool'
+153 silly reify ]
+154 silly reify mark retired [
+154 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/wrap-ansi'
+154 silly reify ]
+155 silly reify mark retired [
+155 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ws'
+155 silly reify ]
+156 silly reify mark retired [
+156 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/y18n'
+156 silly reify ]
+157 silly reify mark retired [
+157 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/yargs-parser'
+157 silly reify ]
+158 silly reify mark retired [
+158 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/yargs-unparser'
+158 silly reify ]
+159 silly reify mark retired [
+159 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/yocto-queue'
+159 silly reify ]
+160 silly reify moves {
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@adraffy/ens-normalize': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@adraffy/.ens-normalize-9DRov4KU',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethereumjs/rlp': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethereumjs/.rlp-N6jkiBmW',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/rlp': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.rlp-ZJe4fiuD',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethereumjs/util': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethereumjs/.util-TjHKkR64',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/abi': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.abi-fVVljEpe',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/abstract-provider': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.abstract-provider-mpymsB3k',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/abstract-signer': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.abstract-signer-J4gymlRn',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/address': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.address-7t2aw2C8',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/base64': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.base64-yPAs1iiV',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/bignumber': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.bignumber-K0Km9wj3',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/bytes': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.bytes-qkbPvR52',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/constants': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.constants-o9Oc2E7d',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/hash': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.hash-cI8X9X6r',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/keccak256': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.keccak256-xGEPEzA9',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/logger': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.logger-FRvyVrVi',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/networks': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.networks-qxpVWl6X',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/properties': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.properties-ZhdrHapJ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/rlp': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.rlp-pqOms3g8',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/signing-key': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.signing-key-iVQd0nNh',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/strings': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.strings-KiK1pXgq',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/transactions': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.transactions-CVLXsL2a',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/web': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@ethersproject/.web-pGRv42em',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@noble/curves': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@noble/.curves-Uis3rBMB',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@noble/secp256k1': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@noble/.secp256k1-wAQFdCVU',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-VToohMB8',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-darwin-arm64': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-darwin-arm64-8y5WJFKL',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-darwin-x64': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-darwin-x64-DOtj2Xac',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-arm64-gnu': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-linux-arm64-gnu-Upy9CHNz',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-arm64-musl': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-linux-arm64-musl-H3WesDXS',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-x64-gnu': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-linux-x64-gnu-pDSEKhVP',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-linux-x64-musl': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-linux-x64-musl-vqbwzsbh',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/edr-win32-x64-msvc': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.edr-win32-x64-msvc-x3sLlbDZ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/solidity-analyzer': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@nomicfoundation/.solidity-analyzer-1pDVKx8m',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/base': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/.base-kev2eiiY',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/bip32': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/.bip32-80imlQqU',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/bip39': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@scure/.bip39-iUKwQing',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/core': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.core-Y5giBcCD',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/hub': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.hub-4OCjA5Y4',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/minimal': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.minimal-7heduUHK',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/node': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.node-rbl7KxaP',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/tracing': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.tracing-YgvWQHDY',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/types': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.types-qkvupRcl',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/utils': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@sentry/.utils-LkLosvJi',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/adm-zip': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.adm-zip-A9abBK51',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/aes-js': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.aes-js-upRoVrZv',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/aggregate-error': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.aggregate-error-RK6BmGcu',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ansi-align': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ansi-align-kEjfqvp6',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ansi-colors': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ansi-colors-szUD9NNw',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ansi-escapes': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ansi-escapes-cVX8gjyM',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/argparse': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.argparse-yOnz6j03',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/bn.js': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bn.js-3dBNVPa6',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/boxen': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.boxen-Or8og7Q5',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/brorand': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.brorand-6mnNFkgV',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/browser-stdout': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.browser-stdout-wMfPhoTA',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/buffer-from': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.buffer-from-i6B5jJfd',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/bytes': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bytes-zisZpPlg',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/camelcase': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.camelcase-zxxbDTjq',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/chokidar': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.chokidar-DTHZmN2a',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ci-info': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ci-info-Edmqxbor',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/clean-stack': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.clean-stack-y5DKq4AT',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/cli-boxes': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.cli-boxes-ezPpPJl0',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/command-exists': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.command-exists-IrM9RO6Y',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/commander': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.commander-3J2a3rwY',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/cookie': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.cookie-GYEYlZ89',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/decamelize': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.decamelize-ClxJZoj2',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/depd': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.depd-GeJzDkey',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/diff': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.diff-wEbIsf0X',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/elliptic': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.elliptic-WJkfNycR',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/enquirer': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.enquirer-znbyoQy1',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/env-paths': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.env-paths-UcsEkVHv',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/escape-string-regexp': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.escape-string-regexp-dlcKChIk',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ethereum-cryptography': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ethereum-cryptography-uOSqrykq',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ethers': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ethers-oPTymehY',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fdir': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.fdir-Cm9NaxEo',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/find-up': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.find-up-7cfEqM5h',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fp-ts': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.fp-ts-AV4WYmJJ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fs-extra': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.fs-extra-0usFYLX5',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/get-caller-file': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.get-caller-file-i9KbjdM6',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/glob': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.glob-DbLEGMUe',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/graceful-fs': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.graceful-fs-H19R7xW4',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/hardhat': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.hardhat-fDtzrwDr',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/hardhat': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.hardhat-XVFIfiUC',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/hash.js': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.hash.js-zCDOAemC',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/he': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.he-g4lIPwDg',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/he': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.he-cVQF0iwy',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/hmac-drbg': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.hmac-drbg-xsN0DqMr',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/http-errors': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.http-errors-t3v0qyrw',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/immutable': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.immutable-iapJJDXJ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/indent-string': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.indent-string-vhfsfYhf',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/io-ts': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.io-ts-5bHxXpgD',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/is-plain-obj': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.is-plain-obj-LF7sDtyl',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/is-unicode-supported': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.is-unicode-supported-taBB1Z3f',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/js-sha3': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.js-sha3-hc2PYtbO',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/js-yaml': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.js-yaml-1GZxvLKr',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/js-yaml': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.js-yaml-XzJn97Px',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/json-stream-stringify': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.json-stream-stringify-0NvmLjpQ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/jsonfile': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.jsonfile-bc4HVjMV',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/keccak': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.keccak-hg2gaZnI',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/locate-path': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.locate-path-lrNyiPji',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/lodash': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.lodash-GiUmhSht',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/log-symbols': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.log-symbols-1np8x8CL',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/lru_map': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.lru_map-lYBKBSmt',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/memorystream': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.memorystream-KLwUvvhq',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/micro-eth-signer': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.micro-eth-signer-LbwyMIwr',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/micro-packed': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.micro-packed-mB8vD9OY',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minimalistic-assert': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.minimalistic-assert-Jj0Q0TYU',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minimalistic-crypto-utils': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.minimalistic-crypto-utils-p9g3TXm3',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minimatch': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.minimatch-PHksxfE7',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/mnemonist': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.mnemonist-41tIYP4f',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/mocha': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.mocha-LNniPjOD',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/_mocha': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/._mocha-kZOPK90E',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/mocha': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.mocha-PQv7nFMU',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/node-addon-api': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.node-addon-api-IgjCw5GX',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/node-gyp-build': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.node-gyp-build-dvNPQjXX',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-gyp-build': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.node-gyp-build-iWRwDyPX',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-gyp-build-optional': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.node-gyp-build-optional-j3hLtGet',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-gyp-build-test': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.node-gyp-build-test-ZfgfydpU',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/obliterator': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.obliterator-pj2AcmH4',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/os-tmpdir': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.os-tmpdir-3gIoJFJL',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/p-limit': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.p-limit-qACD7QlI',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/p-locate': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.p-locate-JvpcG9gR',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/p-map': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.p-map-hlMVXMMK',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/path-exists': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.path-exists-w1cxiJtZ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/randombytes': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.randombytes-Ot8utG5V',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/raw-body': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.raw-body-FGjKWM2l',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/readdirp': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.readdirp-DjWWIHoA',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/require-directory': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.require-directory-I91rGrhS',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/serialize-javascript': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.serialize-javascript-9jQb0CfJ',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/setprototypeof': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.setprototypeof-YphwLpuy',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/solc': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.solc-oVwPZ8Rt',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/solcjs': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/.solcjs-dQH6GkZs',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/source-map': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.source-map-zCJhDMv1',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/source-map-support': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.source-map-support-XzR1U0Go',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/stacktrace-parser': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.stacktrace-parser-Ea7uB4jT',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/statuses': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.statuses-5Q3wN92H',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/strip-json-comments': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.strip-json-comments-0H0hQuio',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tinyglobby': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.tinyglobby-LwjVaAmR',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tmp': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.tmp-P6NxygIm',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/toidentifier': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.toidentifier-Sm0gkeho',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tsort': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.tsort-EX9cKynr',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/type-fest': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.type-fest-A7rmaoAj',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/universalify': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.universalify-JWwNGamB',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/unpipe': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.unpipe-GVJlO6z1',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/widest-line': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.widest-line-hjsBU9s6',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/workerpool': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.workerpool-WnQJxrR5',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/wrap-ansi': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.wrap-ansi-xRO9qupF',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/ws': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.ws-IT3jMdy5',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/y18n': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.y18n-9hRIigvF',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/yargs-parser': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.yargs-parser-Sdxk0Cyk',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/yargs-unparser': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.yargs-unparser-MQwP31Vv',
+160 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/yocto-queue': '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.yocto-queue-XyhckbRC'
+160 silly reify }
+161 silly reify mark deleted [
+161 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@emnapi/runtime'
+161 silly reify ]
+162 silly reify mark deleted [
+162 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-darwin-arm64'
+162 silly reify ]
+163 silly reify mark deleted [
+163 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-darwin-x64'
+163 silly reify ]
+164 silly reify mark deleted [
+164 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-darwin-arm64'
+164 silly reify ]
+165 silly reify mark deleted [
+165 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-darwin-x64'
+165 silly reify ]
+166 silly reify mark deleted [
+166 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linux-arm'
+166 silly reify ]
+167 silly reify mark deleted [
+167 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linux-arm64'
+167 silly reify ]
+168 silly reify mark deleted [
+168 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linux-ppc64'
+168 silly reify ]
+169 silly reify mark deleted [
+169 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linux-s390x'
+169 silly reify ]
+170 silly reify mark deleted [
+170 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linux-x64'
+170 silly reify ]
+171 silly reify mark deleted [
+171 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+171 silly reify ]
+172 silly reify mark deleted [
+172 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-libvips-linuxmusl-x64'
+172 silly reify ]
+173 silly reify mark deleted [
+173 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linux-arm'
+173 silly reify ]
+174 silly reify mark deleted [
+174 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linux-arm64'
+174 silly reify ]
+175 silly reify mark deleted [
+175 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linux-ppc64'
+175 silly reify ]
+176 silly reify mark deleted [
+176 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linux-s390x'
+176 silly reify ]
+177 silly reify mark deleted [
+177 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linux-x64'
+177 silly reify ]
+178 silly reify mark deleted [
+178 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linuxmusl-arm64'
+178 silly reify ]
+179 silly reify mark deleted [
+179 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-linuxmusl-x64'
+179 silly reify ]
+180 silly reify mark deleted [
+180 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-wasm32'
+180 silly reify ]
+181 silly reify mark deleted [
+181 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-win32-arm64'
+181 silly reify ]
+182 silly reify mark deleted [
+182 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-win32-ia32'
+182 silly reify ]
+183 silly reify mark deleted [
+183 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@img/sharp-win32-x64'
+183 silly reify ]
+184 silly reify mark deleted [
+184 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@mapbox/node-pre-gyp',
+184 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/node-pre-gyp'
+184 silly reify ]
+185 silly reify mark deleted [
+185 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-darwin-arm64'
+185 silly reify ]
+186 silly reify mark deleted [
+186 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-darwin-x64'
+186 silly reify ]
+187 silly reify mark deleted [
+187 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-linux-arm64-gnu'
+187 silly reify ]
+188 silly reify mark deleted [
+188 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-linux-arm64-musl'
+188 silly reify ]
+189 silly reify mark deleted [
+189 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-linux-x64-gnu'
+189 silly reify ]
+190 silly reify mark deleted [
+190 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-linux-x64-musl'
+190 silly reify ]
+191 silly reify mark deleted [
+191 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-win32-arm64-msvc'
+191 silly reify ]
+192 silly reify mark deleted [
+192 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@next/swc-win32-x64-msvc'
+192 silly reify ]
+193 silly reify mark deleted [
+193 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/@pkgjs/parseargs'
+193 silly reify ]
+194 silly reify mark deleted [
+194 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/abbrev'
+194 silly reify ]
+195 silly reify mark deleted [
+195 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/aproba'
+195 silly reify ]
+196 silly reify mark deleted [
+196 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/are-we-there-yet'
+196 silly reify ]
+197 silly reify mark deleted [
+197 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/are-we-there-yet/node_modules/readable-stream'
+197 silly reify ]
+198 silly reify mark deleted [
+198 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/canvas'
+198 silly reify ]
+199 silly reify mark deleted [
+199 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/chownr'
+199 silly reify ]
+200 silly reify mark deleted [
+200 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/color-support',
+200 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/color-support'
+200 silly reify ]
+201 silly reify mark deleted [
+201 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/console-control-strings'
+201 silly reify ]
+202 silly reify mark deleted [
+202 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/decompress-response'
+202 silly reify ]
+203 silly reify mark deleted [
+203 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/delegates'
+203 silly reify ]
+204 silly reify mark deleted [
+204 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fs-minipass'
+204 silly reify ]
+205 silly reify mark deleted [
+205 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fs-minipass/node_modules/minipass'
+205 silly reify ]
+206 silly reify mark deleted [
+206 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fs.realpath'
+206 silly reify ]
+207 silly reify mark deleted [
+207 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/fsevents'
+207 silly reify ]
+208 silly reify mark deleted [
+208 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/gauge'
+208 silly reify ]
+209 silly reify mark deleted [
+209 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/has-unicode'
+209 silly reify ]
+210 silly reify mark deleted [
+210 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/inflight'
+210 silly reify ]
+211 silly reify mark deleted [
+211 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/make-dir'
+211 silly reify ]
+212 silly reify mark deleted [
+212 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/make-dir/node_modules/semver',
+212 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/make-dir/node_modules/.bin/semver'
+212 silly reify ]
+213 silly reify mark deleted [
+213 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/mimic-response'
+213 silly reify ]
+214 silly reify mark deleted [
+214 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minizlib'
+214 silly reify ]
+215 silly reify mark deleted [
+215 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/minizlib/node_modules/minipass'
+215 silly reify ]
+216 silly reify mark deleted [
+216 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/mkdirp',
+216 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/mkdirp'
+216 silly reify ]
+217 silly reify mark deleted [
+217 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/nan'
+217 silly reify ]
+218 silly reify mark deleted [
+218 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-darwin-arm64'
+218 silly reify ]
+219 silly reify mark deleted [
+219 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-darwin-x64'
+219 silly reify ]
+220 silly reify mark deleted [
+220 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-darwin-arm64'
+220 silly reify ]
+221 silly reify mark deleted [
+221 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-darwin-x64'
+221 silly reify ]
+222 silly reify mark deleted [
+222 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-linux-arm'
+222 silly reify ]
+223 silly reify mark deleted [
+223 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-linux-arm64'
+223 silly reify ]
+224 silly reify mark deleted [
+224 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-linux-s390x'
+224 silly reify ]
+225 silly reify mark deleted [
+225 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-linux-x64'
+225 silly reify ]
+226 silly reify mark deleted [
+226 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+226 silly reify ]
+227 silly reify mark deleted [
+227 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-libvips-linuxmusl-x64'
+227 silly reify ]
+228 silly reify mark deleted [
+228 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-linux-arm'
+228 silly reify ]
+229 silly reify mark deleted [
+229 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-linux-arm64'
+229 silly reify ]
+230 silly reify mark deleted [
+230 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-linux-s390x'
+230 silly reify ]
+231 silly reify mark deleted [
+231 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-linux-x64'
+231 silly reify ]
+232 silly reify mark deleted [
+232 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-linuxmusl-arm64'
+232 silly reify ]
+233 silly reify mark deleted [
+233 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-linuxmusl-x64'
+233 silly reify ]
+234 silly reify mark deleted [
+234 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-wasm32'
+234 silly reify ]
+235 silly reify mark deleted [
+235 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-win32-ia32'
+235 silly reify ]
+236 silly reify mark deleted [
+236 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/@img/sharp-win32-x64'
+236 silly reify ]
+237 silly reify mark deleted [
+237 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/next/node_modules/sharp'
+237 silly reify ]
+238 silly reify mark deleted [
+238 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/nopt',
+238 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/nopt'
+238 silly reify ]
+239 silly reify mark deleted [
+239 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/npmlog'
+239 silly reify ]
+240 silly reify mark deleted [
+240 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/path-is-absolute'
+240 silly reify ]
+241 silly reify mark deleted [
+241 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/rimraf',
+241 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/.bin/rimraf'
+241 silly reify ]
+242 silly reify mark deleted [
+242 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/rimraf/node_modules/brace-expansion'
+242 silly reify ]
+243 silly reify mark deleted [
+243 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/rimraf/node_modules/glob'
+243 silly reify ]
+244 silly reify mark deleted [
+244 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/rimraf/node_modules/minimatch'
+244 silly reify ]
+245 silly reify mark deleted [
+245 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/set-blocking'
+245 silly reify ]
+246 silly reify mark deleted [
+246 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/signal-exit'
+246 silly reify ]
+247 silly reify mark deleted [
+247 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/simple-concat'
+247 silly reify ]
+248 silly reify mark deleted [
+248 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/simple-get'
+248 silly reify ]
+249 silly reify mark deleted [
+249 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/tar'
+249 silly reify ]
+250 silly reify mark deleted [
+250 silly reify   '/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/node_modules/wide-align'
+250 silly reify ]
+251 silly ADD
+252 silly ADD
+253 silly ADD
+254 silly ADD
+255 silly ADD
+256 silly ADD
+257 silly ADD
+258 silly ADD node_modules/minimatch
+259 silly ADD node_modules/glob
+260 silly ADD node_modules/brace-expansion
+261 silly ADD
+262 silly ADD
+263 silly ADD
+264 silly ADD
+265 silly ADD
+266 silly ADD
+267 silly ADD node_modules/minipass
+268 silly ADD
+269 silly ADD
+270 silly ADD node_modules/semver
+271 silly ADD
+272 silly ADD
+273 silly ADD
+274 silly ADD
+275 silly ADD node_modules/minipass
+276 silly ADD
+277 silly ADD
+278 silly ADD
+279 silly ADD
+280 silly ADD
+281 silly ADD
+282 silly ADD
+283 silly ADD node_modules/readable-stream
+284 silly ADD
+285 silly ADD
+286 silly ADD
+287 silly ADD
+288 silly ADD
+289 silly ADD
+290 silly ADD
+291 silly ADD
+292 silly ADD
+293 silly ADD
+294 silly ADD
+295 silly ADD
+296 silly ADD
+297 silly ADD
+298 silly ADD
+299 silly ADD
+300 silly ADD
+301 silly ADD
+302 silly ADD
+303 silly ADD
+304 silly ADD
+305 silly ADD
+306 silly ADD
+307 silly ADD
+308 silly ADD
+309 silly ADD
+310 silly ADD
+311 silly ADD
+312 silly ADD
+313 silly ADD
+314 silly ADD
+315 silly ADD
+316 silly ADD
+317 silly ADD
+318 silly ADD
+319 silly REMOVE node_modules/yocto-queue
+320 silly REMOVE node_modules/yargs-unparser
+321 silly REMOVE node_modules/yargs-parser
+322 silly REMOVE node_modules/y18n
+323 silly REMOVE node_modules/ws
+324 silly REMOVE node_modules/wrap-ansi
+325 silly REMOVE node_modules/workerpool
+326 silly REMOVE node_modules/widest-line
+327 silly REMOVE node_modules/unpipe
+328 silly REMOVE node_modules/universalify
+329 silly REMOVE node_modules/type-fest
+330 silly REMOVE node_modules/tsort
+331 silly REMOVE node_modules/toidentifier
+332 silly REMOVE node_modules/tmp
+333 silly REMOVE node_modules/tinyglobby
+334 silly REMOVE node_modules/tinyglobby/node_modules/picomatch
+335 silly REMOVE node_modules/strip-json-comments
+336 silly REMOVE node_modules/statuses
+337 silly REMOVE node_modules/stacktrace-parser
+338 silly REMOVE node_modules/stacktrace-parser/node_modules/type-fest
+339 silly REMOVE node_modules/source-map-support
+340 silly REMOVE node_modules/source-map
+341 silly REMOVE node_modules/solc
+342 silly REMOVE node_modules/solc/node_modules/semver
+343 silly REMOVE node_modules/setprototypeof
+344 silly REMOVE node_modules/serialize-javascript
+345 silly REMOVE node_modules/require-directory
+346 silly REMOVE node_modules/readdirp
+347 silly REMOVE node_modules/raw-body
+348 silly REMOVE node_modules/raw-body/node_modules/iconv-lite
+349 silly REMOVE node_modules/randombytes
+350 silly REMOVE node_modules/path-exists
+351 silly REMOVE node_modules/p-map
+352 silly REMOVE node_modules/p-locate
+353 silly REMOVE node_modules/p-limit
+354 silly REMOVE node_modules/os-tmpdir
+355 silly REMOVE node_modules/obliterator
+356 silly REMOVE node_modules/node-gyp-build
+357 silly REMOVE node_modules/node-addon-api
+358 silly ADD
+359 silly ADD
+360 silly ADD
+361 silly ADD
+362 silly ADD
+363 silly ADD
+364 silly ADD
+365 silly ADD
+366 silly ADD
+367 silly ADD
+368 silly ADD
+369 silly ADD
+370 silly ADD
+371 silly ADD
+372 silly ADD
+373 silly ADD
+374 silly ADD
+375 silly ADD
+376 silly ADD
+377 silly ADD
+378 silly REMOVE node_modules/mocha
+379 silly REMOVE node_modules/mocha/node_modules/yargs
+380 silly REMOVE node_modules/mocha/node_modules/supports-color
+381 silly REMOVE node_modules/mocha/node_modules/readdirp
+382 silly REMOVE node_modules/mocha/node_modules/glob-parent
+383 silly REMOVE node_modules/mocha/node_modules/cliui
+384 silly REMOVE node_modules/mocha/node_modules/chokidar
+385 silly REMOVE node_modules/mnemonist
+386 silly REMOVE node_modules/minimatch
+387 silly REMOVE node_modules/minimalistic-crypto-utils
+388 silly REMOVE node_modules/minimalistic-assert
+389 silly REMOVE node_modules/micro-packed
+390 silly REMOVE node_modules/micro-packed/node_modules/@scure/base
+391 silly REMOVE node_modules/micro-eth-signer
+392 silly REMOVE node_modules/micro-eth-signer/node_modules/@noble/hashes
+393 silly REMOVE node_modules/micro-eth-signer/node_modules/@noble/curves
+394 silly REMOVE node_modules/memorystream
+395 silly REMOVE node_modules/lru_map
+396 silly REMOVE node_modules/log-symbols
+397 silly REMOVE node_modules/lodash
+398 silly REMOVE node_modules/locate-path
+399 silly REMOVE node_modules/keccak
+400 silly REMOVE node_modules/keccak/node_modules/readable-stream
+401 silly REMOVE node_modules/jsonfile
+402 silly REMOVE node_modules/json-stream-stringify
+403 silly REMOVE node_modules/js-yaml
+404 silly REMOVE node_modules/js-sha3
+405 silly REMOVE node_modules/is-unicode-supported
+406 silly REMOVE node_modules/is-plain-obj
+407 silly REMOVE node_modules/io-ts
+408 silly REMOVE node_modules/indent-string
+409 silly REMOVE node_modules/immutable
+410 silly REMOVE node_modules/http-errors
+411 silly REMOVE node_modules/hmac-drbg
+412 silly REMOVE node_modules/he
+413 silly REMOVE node_modules/hash.js
+414 silly REMOVE node_modules/hardhat
+415 silly REMOVE node_modules/hardhat/node_modules/ws
+416 silly REMOVE node_modules/hardhat/node_modules/uuid
+417 silly REMOVE node_modules/hardhat/node_modules/semver
+418 silly REMOVE node_modules/graceful-fs
+419 silly REMOVE node_modules/glob
+420 silly REMOVE node_modules/get-caller-file
+421 silly REMOVE node_modules/fs-extra
+422 silly REMOVE node_modules/fp-ts
+423 silly REMOVE node_modules/find-up
+424 silly REMOVE node_modules/fdir
+425 silly REMOVE node_modules/ethers
+426 silly REMOVE node_modules/ethers/node_modules/undici-types
+427 silly REMOVE node_modules/ethers/node_modules/tslib
+428 silly REMOVE node_modules/ethers/node_modules/@types/node
+429 silly REMOVE node_modules/ethereum-cryptography
+430 silly REMOVE node_modules/ethereum-cryptography/node_modules/@noble/hashes
+431 silly REMOVE node_modules/escape-string-regexp
+432 silly REMOVE node_modules/env-paths
+433 silly REMOVE node_modules/enquirer
+434 silly REMOVE node_modules/elliptic
+435 silly REMOVE node_modules/elliptic/node_modules/bn.js
+436 silly REMOVE node_modules/diff
+437 silly REMOVE node_modules/depd
+438 silly REMOVE node_modules/decamelize
+439 silly REMOVE node_modules/cookie
+440 silly REMOVE node_modules/commander
+441 silly REMOVE node_modules/command-exists
+442 silly REMOVE node_modules/cli-boxes
+443 silly REMOVE node_modules/clean-stack
+444 silly REMOVE node_modules/ci-info
+445 silly REMOVE node_modules/chokidar
+446 silly REMOVE node_modules/camelcase
+447 silly REMOVE node_modules/bytes
+448 silly REMOVE node_modules/buffer-from
+449 silly REMOVE node_modules/browser-stdout
+450 silly REMOVE node_modules/brorand
+451 silly REMOVE node_modules/boxen
+452 silly REMOVE node_modules/boxen/node_modules/type-fest
+453 silly REMOVE node_modules/bn.js
+454 silly REMOVE node_modules/argparse
+455 silly REMOVE node_modules/ansi-escapes
+456 silly REMOVE node_modules/ansi-colors
+457 silly REMOVE node_modules/ansi-align
+458 silly REMOVE node_modules/aggregate-error
+459 silly REMOVE node_modules/aes-js
+460 silly REMOVE node_modules/adm-zip
+461 silly REMOVE node_modules/@sentry/utils
+462 silly REMOVE node_modules/@sentry/utils/node_modules/tslib
+463 silly REMOVE node_modules/@sentry/types
+464 silly REMOVE node_modules/@sentry/tracing
+465 silly REMOVE node_modules/@sentry/tracing/node_modules/tslib
+466 silly REMOVE node_modules/@sentry/node
+467 silly REMOVE node_modules/@sentry/node/node_modules/tslib
+468 silly REMOVE node_modules/@sentry/minimal
+469 silly REMOVE node_modules/@sentry/minimal/node_modules/tslib
+470 silly REMOVE node_modules/@sentry/hub
+471 silly REMOVE node_modules/@sentry/hub/node_modules/tslib
+472 silly REMOVE node_modules/@sentry/core
+473 silly REMOVE node_modules/@sentry/core/node_modules/tslib
+474 silly REMOVE node_modules/@scure/bip39
+475 silly REMOVE node_modules/@scure/bip39/node_modules/@noble/hashes
+476 silly REMOVE node_modules/@scure/bip32
+477 silly REMOVE node_modules/@scure/bip32/node_modules/@noble/hashes
+478 silly REMOVE node_modules/@scure/base
+479 silly REMOVE node_modules/@nomicfoundation/solidity-analyzer
+480 silly REMOVE node_modules/@nomicfoundation/edr-win32-x64-msvc
+481 silly REMOVE node_modules/@nomicfoundation/edr-linux-x64-musl
+482 silly REMOVE node_modules/@nomicfoundation/edr-linux-x64-gnu
+483 silly REMOVE node_modules/@nomicfoundation/edr-linux-arm64-musl
+484 silly REMOVE node_modules/@nomicfoundation/edr-linux-arm64-gnu
+485 silly REMOVE node_modules/@nomicfoundation/edr-darwin-x64
+486 silly REMOVE node_modules/@nomicfoundation/edr-darwin-arm64
+487 silly REMOVE node_modules/@nomicfoundation/edr
+488 silly REMOVE node_modules/@noble/secp256k1
+489 silly REMOVE node_modules/@noble/curves
+490 silly REMOVE node_modules/@ethersproject/web
+491 silly REMOVE node_modules/@ethersproject/transactions
+492 silly REMOVE node_modules/@ethersproject/strings
+493 silly REMOVE node_modules/@ethersproject/signing-key
+494 silly REMOVE node_modules/@ethersproject/rlp
+495 silly REMOVE node_modules/@ethersproject/properties
+496 silly REMOVE node_modules/@ethersproject/networks
+497 silly REMOVE node_modules/@ethersproject/logger
+498 silly REMOVE node_modules/@ethersproject/keccak256
+499 silly REMOVE node_modules/@ethersproject/hash
+500 silly REMOVE node_modules/@ethersproject/constants
+501 silly REMOVE node_modules/@ethersproject/bytes
+502 silly REMOVE node_modules/@ethersproject/bignumber
+503 silly REMOVE node_modules/@ethersproject/base64
+504 silly REMOVE node_modules/@ethersproject/address
+505 silly REMOVE node_modules/@ethersproject/abstract-signer
+506 silly REMOVE node_modules/@ethersproject/abstract-provider
+507 silly REMOVE node_modules/@ethersproject/abi
+508 silly REMOVE node_modules/@ethereumjs/util
+509 silly REMOVE node_modules/@ethereumjs/util/node_modules/ethereum-cryptography
+510 silly REMOVE node_modules/@ethereumjs/util/node_modules/@scure/bip39
+511 silly REMOVE node_modules/@ethereumjs/util/node_modules/@scure/bip32
+512 silly REMOVE node_modules/@ethereumjs/util/node_modules/@noble/hashes
+513 silly REMOVE node_modules/@ethereumjs/util/node_modules/@noble/curves
+514 silly REMOVE node_modules/@ethereumjs/rlp
+515 silly REMOVE node_modules/@adraffy/ens-normalize
+516 verbose cwd /Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete
+517 verbose os Darwin 22.6.0
+518 verbose node v20.18.0
+519 verbose npm  v11.2.0
+520 verbose exit 0
+521 info ok

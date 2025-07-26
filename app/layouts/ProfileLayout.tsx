@@ -44,7 +44,6 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
     const { postsByUser } = usePostStore();
     const [showFriends, setShowFriends] = useState(false);
     const [showVibes, setShowVibes] = useState(false);
-    const [isProfileLoading, setProfileLoading] = useState(true);
     const { fetchVibesByUser } = useVibeStore();
     const { isEditMode } = useEditContext();
     const [isMobile, setIsMobile] = useState(false);
@@ -61,11 +60,11 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
 
         const handleScroll = () => {
             if (isMobile) {
-                const threshold = 50; // Пиксельный порог до конца страницы
+                const threshold = 10; // пикселей до самого низа
                 const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - threshold;
                 setIsBottomPanelVisible(!isAtBottom);
             } else {
-                setIsBottomPanelVisible(true); // На десктопе панель всегда видна
+                setIsBottomPanelVisible(true);
             }
         };
 
@@ -76,6 +75,17 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
             window.removeEventListener('scroll', handleScroll);
         };
     }, [isMobile]);
+
+    // Загружаем liked posts только один раз при изменении showLikedTracks
+    useEffect(() => {
+        const loadLikedPosts = async () => {
+            if (showLikedTracks && currentProfile?.user_id) {
+                await fetchLikedPosts(currentProfile.user_id);
+            }
+        };
+
+        loadLikedPosts();
+    }, [currentProfile?.user_id, showLikedTracks, fetchLikedPosts]);
 
     // Проверяем, является ли текущий пользователь владельцем профиля
     // Сравниваем ID залогиненного пользователя с ID пользователя из URL
@@ -114,7 +124,6 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
         const loadLikedPosts = async () => {
             if (showLikedTracks && currentProfile?.user_id) {
                 // Загружаем лайки пользователя, чей профиль просматривается
-                console.log(`[ProfileLayout] Loading liked posts for user: ${currentProfile.user_id}`);
                 await fetchLikedPosts(currentProfile.user_id);
             }
         };
@@ -124,17 +133,10 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
 
     // Обновляем проверку наличия релизов, используя реальные данные
     useEffect(() => {
-        setProfileLoading(true);
-        const timer = setTimeout(() => {
-            // Проверяем наличие релизов у пользователя на основе данных из postsByUser
-            const hasReleases = postsByUser && postsByUser.length > 0;
-            setHasUserReleases(hasReleases);
-            console.log(`[ProfileLayout] User ${profileId} has releases: ${hasReleases} (count: ${postsByUser?.length || 0})`);
-            setProfileLoading(false);
-        }, 600); // Сокращаем время ожидания
-        
-        return () => clearTimeout(timer);
-    }, [postsByUser, profileId, setHasUserReleases]);
+        // Проверяем наличие релизов у пользователя на основе данных из postsByUser
+        const hasReleases = postsByUser && postsByUser.length > 0;
+        setHasUserReleases(hasReleases);
+    }, [postsByUser, setHasUserReleases]);
 
     const switchToTab = (tab: 'friends' | 'purchases' | 'likes' | 'vibes' | 'main') => {
         setShowFriends(tab === 'friends');
@@ -165,7 +167,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
 		{isEditProfileOpen && <EnhancedEditProfileOverlay />}
 
 		<div className="w-full mx-auto px-[10px] md:px-8 box-border max-w-full overflow-x-hidden smooth-scroll-container content-with-top-nav profile-layout-container">
-            <div className="max-w-[1500px] mx-auto">
+            <div className="max-w-[1500px] mx-auto pb-[90px] md:pb-0">
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Left sidebar with user profile */}
                     {currentProfile && (
@@ -263,11 +265,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     transition={{ duration: 0.3 }}
                                     className="w-full"
                                 >
-                                    {isProfileLoading ? (
-                                        <div className="flex justify-center items-center min-h-[300px]">
-                                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#20DDBB]"></div>
-                                        </div>
-                                    ) : hasUserReleases || (postsByUser && postsByUser.length > 0) ? (
+                                    {hasUserReleases || (postsByUser && postsByUser.length > 0) ? (
                                         <div className="flex justify-center">
                                             <div className="max-w-full flex flex-wrap justify-center gap-8 py-4 px-[10px] md:px-0 releases-container-mobile">
                                                 {children}
@@ -310,7 +308,6 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
         </div>
 
         <motion.div 
-            initial={{ y: 100, opacity: 0 }}
             animate={{
                 y: (isEditMode && isMobile) || (!isBottomPanelVisible && isMobile) ? 120 : 0,
                 opacity: (isEditMode && isMobile) || (!isBottomPanelVisible && isMobile) ? 0 : 1,
@@ -440,7 +437,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => onFriendAction('reject')}
-                                            disabled={isProfileLoading}
+                                            disabled={isLoading}
                                             className="w-10 h-10 rounded-full flex items-center justify-center bg-pink-400/30 backdrop-blur-lg border border-pink-400/40 shadow-xl text-pink-100 hover:bg-pink-500/40 hover:text-white transition-all duration-300"
                                             aria-label="Remove Friend"
                                         >
@@ -453,7 +450,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => onFriendAction('reset')}
-                                            disabled={isProfileLoading}
+                                            disabled={isLoading}
                                             className="w-10 h-10 rounded-full flex items-center justify-center bg-cyan-400/30 backdrop-blur-lg border border-cyan-400/40 shadow-xl text-cyan-100 hover:bg-cyan-500/40 hover:text-white transition-all duration-300"
                                             aria-label="Cancel Request"
                                         >
@@ -467,7 +464,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
                                                 onClick={() => onFriendAction('accept')}
-                                                disabled={isProfileLoading}
+                                                disabled={isLoading}
                                                 className="w-10 h-10 rounded-full flex items-center justify-center bg-green-400/30 backdrop-blur-lg border border-green-400/40 shadow-xl text-green-100 hover:bg-green-500/40 hover:text-white transition-all duration-300"
                                                 aria-label="Accept Request"
                                             >
@@ -477,7 +474,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
                                                 onClick={() => onFriendAction('reject')}
-                                                disabled={isProfileLoading}
+                                                disabled={isLoading}
                                                 className="w-10 h-10 rounded-full flex items-center justify-center bg-pink-400/30 backdrop-blur-lg border border-pink-400/40 shadow-xl text-pink-100 hover:bg-pink-500/40 hover:text-white transition-all duration-300"
                                                 aria-label="Decline Request"
                                             >
@@ -491,7 +488,7 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => onFriendAction('accept')}
-                                            disabled={isProfileLoading}
+                                            disabled={isLoading}
                                             className="w-10 h-10 rounded-full flex items-center justify-center bg-green-400/30 backdrop-blur-lg border border-green-400/40 shadow-xl text-green-100 hover:bg-green-500/40 hover:text-white transition-all duration-300"
                                             aria-label="Add Friend"
                                         >

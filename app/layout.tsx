@@ -98,7 +98,8 @@ export default function RootLayout({
                 }
                 
                 body { 
-                    background: linear-gradient(60deg,#2E2469,#351E43);
+                    background: #2E2469;
+                    background-attachment: fixed;
                     min-height: 100vh;
                     min-height: -webkit-fill-available;
                     /* Prevent bounce scrolling */
@@ -110,17 +111,16 @@ export default function RootLayout({
                     text-size-adjust: 100%;
                 }
                 
-                /* Safe area insets for devices with notch */
+                /* Safe area insets for devices with notch - only vertical */
                 body {
                     padding-top: env(safe-area-inset-top);
                     padding-bottom: env(safe-area-inset-bottom);
-                    padding-left: env(safe-area-inset-left);
-                    padding-right: env(safe-area-inset-right);
+                    /* Remove horizontal padding to prevent scrolling */
                 }
                 
-                .bg-gradient { background: linear-gradient(60deg,#2E2469,#351E43); }
+                .bg-gradient { background: #2E2469; }
                 #TopNav { 
-                    background: linear-gradient(60deg,#2E2469,#351E43);
+                    background: #2E2469;
                     /* Account for safe area */
                     padding-top: env(safe-area-inset-top);
                     height: calc(60px + env(safe-area-inset-top));
@@ -184,14 +184,14 @@ export default function RootLayout({
                                         <Toaster
                                             position="top-center"
                                             containerStyle={{
-                                                zIndex: 10000000
+                                                zIndex: 999999999
                                             }}
                                             toastOptions={{
                                                 duration: 3000,
                                                 style: {
                                                     background: '#272B43',
                                                     color: '#fff',
-                                                    zIndex: 10000000
+                                                    zIndex: 999999999
                                                 },
                                                 // Custom success/error styles
                                                 success: {

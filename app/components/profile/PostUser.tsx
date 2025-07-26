@@ -811,7 +811,7 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
                                 damping: 25,
                                 stiffness: 300,
                               }}
-                              className="absolute right-0 top-full mt-2 bg-gradient-to-br from-[#2D2D44]/95 to-[#24183d]/98 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-white/10 min-w-[180px] z-20 overflow-hidden"
+                              className="absolute right-0 top-full mt-2 bg-gradient-to-br from-[#2D2D44]/95 to-[#24183d]/98 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-white/10 min-w-[180px] z-[9999] overflow-hidden"
                             >
                               <motion.button
                                 whileHover={{
@@ -993,14 +993,14 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="absolute inset-0 p-6 flex items-center justify-center"
+                  className="absolute inset-0 p-4 flex items-center justify-center max-h-full overflow-hidden"
                 >
                   {statsLoading ? (
                     <div className="flex justify-center items-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#20DDBB] border-t-transparent" />
                     </div>
                   ) : (
-                    <div className="w-full grid grid-cols-2 gap-4">
+                    <div className="w-full grid grid-cols-2 gap-2 max-h-full overflow-hidden">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

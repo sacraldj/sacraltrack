@@ -1,0 +1,17 @@
+0 verbose cli /Users/alexandr/.nvm/versions/node/v20.18.0/bin/node /Users/alexandr/.nvm/versions/node/v20.18.0/bin/npm
+1 info using npm@11.2.0
+2 info using node@v20.18.0
+3 silly config load:file:/Users/alexandr/.nvm/versions/node/v20.18.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npmrc
+5 warn Unknown project config "strict-peer-dependencies". This will stop working in the next major version of npm.
+6 warn Unknown project config "auto-install-peers". This will stop working in the next major version of npm.
+7 warn Unknown project config "node-linker". This will stop working in the next major version of npm.
+8 warn Unknown project config "dedupe". This will stop working in the next major version of npm.
+9 warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm.
+10 silly config load:file:/Users/alexandr/.npmrc
+11 silly config load:file:/Users/alexandr/.nvm/versions/node/v20.18.0/etc/npmrc
+12 verbose title npm run build:fast
+13 verbose argv "run" "build:fast"
+14 verbose logfile logs-max:10 dir:/Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T06_18_54_219Z-
+15 verbose logfile /Users/alexandr/Desktop/CODeAPPs/Te 2.9.9.6(доработки) - finalComplete/.npm-cache/_logs/2025-07-26T06_18_54_219Z-debug-0.log
+16 silly logfile done cleaning log files

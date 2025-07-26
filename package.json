@@ -79,6 +79,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "@netlify/plugin-nextjs": "^5.10.7",
     "@types/canvas-confetti": "^1.9.0",
     "@types/fluent-ffmpeg": "^2.1.27",
@@ -86,7 +87,11 @@
     "@types/node": "^22.5.4",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
     "appwrite": "^13.0.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "hardhat": "^2.22.17",
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",

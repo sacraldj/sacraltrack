@@ -164,7 +164,6 @@ export default function ProfileClientComponent() {
 
   useEffect(() => {
     // Принудительно загружаем профиль и посты для конкретного пользователя
-    console.log(`[ProfileClientComponent] Loading profile and posts for user: ${userId}`);
     setCurrentProfile(userId);
     setPostsByUser(userId);
   }, [userId, setCurrentProfile, setPostsByUser]);

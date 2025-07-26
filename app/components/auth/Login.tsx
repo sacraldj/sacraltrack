@@ -420,7 +420,9 @@ export default function Login() {
   };
 
   const login = async () => {
+    console.log('[Login] Клик по кнопке логина, email:', email);
     if (isBlocked) {
+      console.log('[Login] Аккаунт заблокирован, осталось секунд:', blockTimeLeft);
       showToast(
         "error",
         `Account locked. Try again in ${formatTimeLeft(blockTimeLeft)}`,
@@ -429,62 +431,62 @@ export default function Login() {
     }
 
     let isError = validate();
-    if (isError) return;
-    if (!contextUser) return;
+    if (isError) {
+      console.log('[Login] Валидация не пройдена:', error);
+      return;
+    }
+    if (!contextUser) {
+      console.log('[Login] Нет contextUser');
+      return;
+    }
 
     try {
       setLoading(true);
-
+      console.log('[Login] Начинаем процесс логина через contextUser.login');
       // Show loading toast
       const loadingToastId = showToast("loading", "Signing you in...", {
         id: "login-loading",
       });
-
       // Закрываем модальное окно МГНОВЕННО при нажатии кнопки логина
       setIsLoginOpen(false);
-
       await contextUser.login(email, password);
-
       toast.dismiss("login-loading");
       setLoading(false);
       setLoginAttempts(0);
       localStorage.removeItem("loginAttempts");
       localStorage.removeItem("loginBlockTime");
-
       // If we reach here, login was successful
-      console.log("Login completed successfully");
+      console.log("[Login] Login completed successfully");
       showToast("success", `Welcome back! 🎉`);
-      
       // Clear form data
       setEmail("");
       setPassword("");
       setError({ type: "", message: "" });
-      
       // No need for additional redirect here as it's handled in UserContext
-      console.log("Login process completed, user should be redirected");
+      console.log("[Login] Login process completed, user should be redirected");
     } catch (error: any) {
       setLoading(false);
-      console.error("Login error:", error);
-
+      console.error("[Login] Login error:", error);
       let errorMessage = "An error occurred during login.";
       const newAttempts = Math.min(loginAttempts + 1, 5);
       setLoginAttempts(newAttempts);
       localStorage.setItem("loginAttempts", newAttempts.toString());
-
       if (newAttempts >= 5) {
         const blockTime = Date.now() + 15 * 60 * 1000; // 15 minutes
         localStorage.setItem("loginBlockTime", blockTime.toString());
         errorMessage = `Too many failed attempts. Account locked for ${15} minutes.`;
+        console.log('[Login] Слишком много попыток, аккаунт заблокирован');
       } else if (error.code === 401) {
         if (error.message?.includes("Invalid credentials")) {
           errorMessage =
             "Invalid email or password. Please check your credentials.";
+          console.log('[Login] Неверные данные для входа');
         } else if (
           error.message?.includes("user_not_found") ||
           error.message?.includes("User not found")
         ) {
           errorMessage = `This email is not registered. Would you like to sign up instead?`;
-
+          console.log('[Login] Пользователь не найден');
           // Show option to switch to register
           setTimeout(() => {
             const switchToRegister = confirm(
@@ -496,41 +498,10 @@ export default function Login() {
           }, 2000);
         } else {
           errorMessage = "Invalid email or password.";
+          console.log('[Login] Неизвестная ошибка авторизации');
         }
-      } else if (error.code === 429) {
-        errorMessage = "Too many login attempts. Please try again later.";
-      } else if (error.code === 400) {
-        errorMessage = "Please enter valid email and password.";
-      } else if (
-        error.message?.includes("network") ||
-        error.message?.includes("fetch")
-      ) {
-        errorMessage =
-          "Network error. Please check your connection and try again.";
-      } else if (error.message?.includes("email_not_verified")) {
-        errorMessage = "Please verify your email before logging in.";
-        setTimeout(() => {
-          setError({
-            type: "general",
-            message: "Check your email for verification link",
-          });
-        }, 2000);
       }
-
       showToast("error", errorMessage);
-
-      // Show remaining attempts warning
-      if (newAttempts >= 3 && newAttempts < 5) {
-        setTimeout(() => {
-          showToast(
-            "error",
-            `Warning: ${5 - newAttempts} attempts remaining before temporary lockout.`,
-          );
-        }, 1000);
-      }
-
-      // Re-open modal if login failed
-      setIsLoginOpen(true);
     }
   };
 
@@ -675,6 +646,18 @@ export default function Login() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={handleClickOutside}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem'
+      }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -682,6 +665,13 @@ export default function Login() {
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
         className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto auth-modal-container"
+        style={{
+          width: '100%',
+          maxWidth: '420px',
+          position: 'relative',
+          maxHeight: '90vh',
+          overflowY: 'auto'
+        }}
       >
         <motion.div
           className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)] auth-modal-content"

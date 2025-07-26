@@ -492,11 +492,24 @@ const EnhancedEditProfileOverlay: React.FC = () => {
     <AnimatePresence mode="wait">
       <motion.div
         key="overlay"
-        className="fixed inset-0 z-[9999] flex items-start justify-center pt-[5vh] p-[10px] md:p-[20px] bg-black/60 backdrop-blur-sm overflow-y-auto edit-profile-overlay"
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto edit-profile-overlay"
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 9999,
+          padding: '1rem',
+          overflowY: 'auto'
+        }}
       >
         <motion.div
           className="relative w-full max-w-md flex flex-col justify-between my-0 overflow-hidden rounded-2xl edit-profile-modal"
@@ -504,7 +517,12 @@ const EnhancedEditProfileOverlay: React.FC = () => {
           initial="hidden"
           animate="visible"
           exit="exit"
-          style={{ maxHeight: '90vh' }}
+          style={{ 
+            maxHeight: '90vh',
+            width: '100%',
+            maxWidth: '420px',
+            margin: '0 auto'
+          }}
         >
           {/* Glass card with subtle gradient */}
           <div className="glass-card bg-gradient-to-br from-[#24183D]/90 to-[#1A1E36]/95 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-xl overflow-hidden h-full flex flex-col p-[5px]" style={{ boxSizing: 'border-box' }}>

@@ -25,6 +25,13 @@ export default function TextInput({ string, placeholder, inputType = "text", err
                 focus:border-[#20DDBB]
                 transition-all
                 duration-300
+                rounded-xl
+                border-2
+                border-[#2A2B3F]
+                focus:border-[#20DDBB]
+                hover:border-[#20DDBB]/50
+                px-4
+                py-3
             `}
             onChange={(e) => onUpdate(e.target.value)}
         />

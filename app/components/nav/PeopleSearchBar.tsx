@@ -137,11 +137,11 @@ const PeopleSearchBar = ({
                   value={searchQuery}
                   onChange={handleInputChange}
                   placeholder={placeholder}
-                  className="w-full pl-14 pr-12 py-4 bg-[#1A1A2E]/95 backdrop-blur-xl text-white rounded-2xl
-                          focus:outline-none focus:ring-2 focus:ring-[#20DDBB]/60 focus:bg-[#1A1A2E]
+                  className="w-full pl-14 pr-12 py-4 bg-[#1A1A2E]/80 backdrop-blur-xl text-white rounded-3xl
+                          focus:outline-none focus:ring-2 focus:ring-[#20DDBB]/60 focus:bg-[#1A1A2E]/90
                           placeholder-gray-400 text-base border border-white/20
                           shadow-2xl focus:shadow-[0_0_30px_rgba(32,221,187,0.3)]
-                          transition-all duration-300 group-hover:border-[#20DDBB]/40
+                          transition-all duration-300 group-hover:border-[#20DDBB]/40 hover:bg-[#1A1A2E]/90
                           caret-white selection:bg-[#20DDBB]/30"
                   style={{ color: "white" }}
                 />

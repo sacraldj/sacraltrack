@@ -650,7 +650,7 @@ function HomePageContent() {
   return (
     <MainLayout>
       <div className="mt-[80px] w-full ml-auto">
-        <div className="max-w-[800px] mx-auto px-2 md:px-0">
+        <div className="max-w-[800px] mx-auto px-[10px] md:px-0">
           {/* Initial loading skeleton */}
           {isLoading && !initialContentLoaded && (
             <div className="space-y-4 p-4">

@@ -120,7 +120,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 </motion.div>
 			</div>
 
-            {/* Mobile filter for smaller screens */}
+            {/* Mobile filter for smaller screens - always visible */}
             <motion.div 
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -130,7 +130,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     damping: 20,
                     duration: 0.5 
                 }}
-                className="md:hidden fixed bottom-0 left-0 right-0 z-[99998] bg-[#0F1225]/50 backdrop-blur-xl px-4 py-2 pb-2 border-t border-white/5 shadow-lg fixed-bottom-panel"
+                className="md:hidden fixed bottom-0 left-0 right-0 z-[99999] bg-[#0F1225]/90 backdrop-blur-xl px-4 py-3 pb-[calc(3rem+env(safe-area-inset-bottom))] border-t border-white/5 shadow-lg"
             >
                 <ContentFilter />
             </motion.div>

@@ -608,6 +608,18 @@ export default function Register() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={handleClickOutside}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem'
+      }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -615,6 +627,13 @@ export default function Register() {
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
         className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto auth-modal-container"
+        style={{
+          width: '100%',
+          maxWidth: '420px',
+          position: 'relative',
+          maxHeight: '90vh',
+          overflowY: 'auto'
+        }}
       >
         <motion.div
           className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)] auth-modal-content"

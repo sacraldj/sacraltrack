@@ -273,9 +273,10 @@ const SearchBar = ({ isHomePage }: SearchBarProps) => {
                   handleSearch(e.target.value);
                 }}
                 placeholder="Search artists, tracks, and vibes..."
-                className="w-full px-4 py-3 bg-[#2E2469] text-white rounded-full 
-                        focus:outline-none focus:ring-2 focus:ring-[#20DDBB] 
-                        placeholder-gray-400 text-sm"
+                className="w-full px-4 py-3 bg-[#2E2469]/80 backdrop-blur-xl text-white rounded-full border-2 border-white/10
+                        focus:outline-none focus:ring-2 focus:ring-[#20DDBB] focus:bg-[#2E2469]/90 focus:border-[#20DDBB]/50
+                        placeholder-gray-400 text-sm transition-all duration-300 hover:bg-[#2E2469]/90 hover:border-white/20
+                        shadow-lg"
               />
               
               {/* Loading indicator */}
