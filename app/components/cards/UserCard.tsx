@@ -96,7 +96,7 @@ export const UserCard: React.FC<UserCardProps> = ({
 
   return (
     <motion.div
-      className="group relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-sm hover:border-[#20DDBB]/30 transition-all duration-300 cursor-pointer aspect-[4/5]"
+      className="group relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-sm hover:border-[#20DDBB]/30 transition-all duration-300 cursor-pointer aspect-[4/5] mt-5"
       whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
       initial={false}
       onHoverStart={() => setIsHovered(true)}

@@ -486,6 +486,15 @@ const EnhancedEditProfileOverlay: React.FC = () => {
     return '/images/placeholders/user-placeholder.svg';
   };
   
+  useEffect(() => {
+    // Блокируем скролл body при открытии попапа
+    document.body.style.overflow = 'hidden';
+    return () => {
+      // Возвращаем скролл при закрытии
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   if (!isEditProfileOpen) return null;
   
   return (
@@ -506,9 +515,11 @@ const EnhancedEditProfileOverlay: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          zIndex: 9999,
+          zIndex: 999999,
           padding: '1rem',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          width: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vw' : undefined,
+          height: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vh' : undefined,
         }}
       >
         <motion.div
@@ -518,10 +529,16 @@ const EnhancedEditProfileOverlay: React.FC = () => {
           animate="visible"
           exit="exit"
           style={{ 
-            maxHeight: '90vh',
-            width: '100%',
-            maxWidth: '420px',
-            margin: '0 auto'
+            maxHeight: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vh' : '90vh',
+            width: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vw' : '100%',
+            maxWidth: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vw' : '420px',
+            margin: '0 auto',
+            position: typeof window !== 'undefined' && window.innerWidth <= 600 ? 'fixed' : undefined,
+            top: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
+            left: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
+            right: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
+            bottom: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
+            zIndex: 999999,
           }}
         >
           {/* Glass card with subtle gradient */}

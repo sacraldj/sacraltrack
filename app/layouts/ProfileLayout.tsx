@@ -47,34 +47,16 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
     const { fetchVibesByUser } = useVibeStore();
     const { isEditMode } = useEditContext();
     const [isMobile, setIsMobile] = useState(false);
-    const [isBottomPanelVisible, setIsBottomPanelVisible] = useState(true);
-
-    // Check for mobile view and scroll position
     useEffect(() => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 768);
         };
-        
         checkMobile();
         window.addEventListener('resize', checkMobile);
-
-        const handleScroll = () => {
-            if (isMobile) {
-                const threshold = 10; // пикселей до самого низа
-                const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - threshold;
-                setIsBottomPanelVisible(!isAtBottom);
-            } else {
-                setIsBottomPanelVisible(true);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        
         return () => {
             window.removeEventListener('resize', checkMobile);
-            window.removeEventListener('scroll', handleScroll);
         };
-    }, [isMobile]);
+    }, []);
 
     // Загружаем liked posts только один раз при изменении showLikedTracks
     useEffect(() => {
@@ -309,8 +291,8 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
 
         <motion.div 
             animate={{
-                y: (isEditMode && isMobile) || (!isBottomPanelVisible && isMobile) ? 120 : 0,
-                opacity: (isEditMode && isMobile) || (!isBottomPanelVisible && isMobile) ? 0 : 1,
+                y: (isEditMode && isMobile) ? 120 : 0,
+                opacity: (isEditMode && isMobile) ? 0 : 1,
                 transition: {
                     type: "spring",
                     stiffness: 260,
