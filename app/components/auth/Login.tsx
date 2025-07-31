@@ -419,6 +419,34 @@ export default function Login() {
     }
   };
 
+  // Function to check if user exists by attempting to create a session
+  const checkUserExists = async (email: string, password: string): Promise<boolean> => {
+    try {
+      // Try to create a session - this will fail if user doesn't exist
+      const session = await account.createEmailSession(email, password);
+      
+      // If we reach here, user exists and credentials are correct
+      if (session) {
+        // Delete the session immediately since this is just a check
+        await account.deleteSession('current');
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      console.log('[Login] User check error:', error);
+      // Check error codes to determine if user exists
+      if (error.code === 401) {
+        if (error.message?.includes("user_not_found") || 
+            error.message?.includes("User not found") ||
+            error.message?.includes("Invalid credentials")) {
+          return false; // User doesn't exist
+        }
+      }
+      // For other errors, assume user might exist but there's another issue
+      return true;
+    }
+  };
+
   const login = async () => {
     console.log('[Login] Клик по кнопке логина, email:', email);
     if (isBlocked) {
@@ -443,10 +471,41 @@ export default function Login() {
     try {
       setLoading(true);
       console.log('[Login] Начинаем процесс логина через contextUser.login');
+      
       // Show loading toast
-      const loadingToastId = showToast("loading", "Signing you in...", {
+      const loadingToastId = showToast("loading", "Checking credentials...", {
         id: "login-loading",
       });
+
+      // Check if user exists first
+      console.log('[Login] Проверяем существование пользователя...');
+      const userExists = await checkUserExists(email, password);
+      
+      if (!userExists) {
+        toast.dismiss("login-loading");
+        setLoading(false);
+        console.log('[Login] Пользователь не найден');
+        showToast("error", "❌ User not found. Please check your email or register a new account.", {
+          duration: 6000
+        });
+        
+        // Ask if user wants to register instead
+        setTimeout(() => {
+          const shouldRegister = confirm("This email is not registered. Would you like to create an account?");
+          if (shouldRegister) {
+            setIsRegisterOpen(true);
+            setIsLoginOpen(false);
+          }
+        }, 2000);
+        return;
+      }
+
+      // Update loading message
+      toast.dismiss("login-loading");
+      showToast("loading", "Signing you in...", {
+        id: "login-loading",
+      });
+
       // Закрываем модальное окно МГНОВЕННО при нажатии кнопки логина
       setIsLoginOpen(false);
       await contextUser.login(email, password);
@@ -640,79 +699,37 @@ export default function Login() {
   };
 
   return (
-    <motion.div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 auth-modal-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <div 
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999999999] flex items-center justify-center p-4"
       onClick={handleClickOutside}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem'
-      }}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto auth-modal-container"
-        style={{
-          width: '100%',
-          maxWidth: '420px',
-          position: 'relative',
-          maxHeight: '90vh',
-          overflowY: 'auto'
-        }}
-      >
-        <motion.div
-          className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)] auth-modal-content"
-          whileHover={{ boxShadow: "0 0 50px rgba(32,221,187,0.2)" }}
-          transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        className="w-full max-w-md mx-auto bg-[#1E1F2E] rounded-3xl shadow-2xl overflow-hidden relative"
+        onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
           <button
             onClick={() => setIsLoginOpen(false)}
             disabled={loading || googleLoading}
-            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50 auth-modal-close"
+            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50"
           >
             <FiX className="text-2xl" />
           </button>
 
-          {/* Animated Border */}
-          <div className="absolute inset-0 p-[1.5px] rounded-3xl">
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#20DDBB] via-[#8A2BE2] to-[#20DDBB] rounded-3xl"
-              style={{ backgroundSize: "200% 100%" }}
-              animate={{
-                backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </div>
-
-          <div className="relative p-8 bg-[#1E1F2E] rounded-[22px] m-[1.5px]">
+          <div className="p-4 sm:p-6 md:p-8">
             {/* Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-4 sm:mb-6 md:mb-8">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", damping: 15, stiffness: 300 }}
-                className="flex justify-center mb-6"
+                className="flex justify-center mb-4 sm:mb-6"
               >
-                <div className="relative w-20 h-20">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20">
                   <motion.div
                     className="absolute inset-0 bg-[#20DDBB]/20 rounded-full blur-xl"
                     animate={{
@@ -742,7 +759,7 @@ export default function Login() {
               </motion.div>
 
               <motion.h1
-                className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] mb-3 auth-modal-title"
+                className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] mb-2 sm:mb-3 auth-modal-title"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -750,7 +767,7 @@ export default function Login() {
                 Welcome Back!
               </motion.h1>
               <motion.p
-                className="text-[#818BAC] auth-modal-subtitle"
+                className="text-sm sm:text-base text-[#818BAC] auth-modal-subtitle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -759,7 +776,7 @@ export default function Login() {
               </motion.p>
             </div>
 
-            {/* Form */}
+                        {/* Form */}
             <motion.div
               className="space-y-6"
               initial={{ opacity: 0, y: 20 }}
@@ -768,67 +785,45 @@ export default function Login() {
             >
                   {/* Email Input */}
                   <motion.div
-                    className="relative group"
-                    whileHover={{ scale: 1.02 }}
+                    className="relative"
+                    whileHover={{ scale: 1.01 }}
                     transition={{ type: "spring", stiffness: 400 }}
                   >
                     <TextInput
                       string={email}
-                      placeholder="Email"
+                      placeholder="Email Address"
                       onUpdate={setEmail}
                       inputType="email"
                       error={showError("email")}
-                      className={`
-                                                w-full bg-[#14151F]/60 border-2
-                                                ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
-                                                rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
-                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                                                transition-all duration-300
-                                                group-hover:border-[#20DDBB]/50
-                                                auth-modal-input
-                                            `}
                     />
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                    </div>
                   </motion.div>
 
                   {/* Password Input */}
                   <motion.div
-                    className="relative group"
-                    whileHover={{ scale: 1.02 }}
+                    className="relative"
+                    whileHover={{ scale: 1.01 }}
                     transition={{ type: "spring", stiffness: 400 }}
                   >
-                    <TextInput
-                      string={password}
-                      placeholder="Password"
-                      onUpdate={setPassword}
-                      inputType={showPassword ? "text" : "password"}
-                      error={showError("password")}
-                      className={`
-                                                w-full bg-[#14151F]/60 border-2
-                                                ${error?.type === "password" ? "border-red-500" : "border-[#2A2B3F]"}
-                                                rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
-                                                focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                                                transition-all duration-300
-                                                group-hover:border-[#20DDBB]/50
-                                                auth-modal-input
-                                            `}
-                    />
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                    <div className="relative">
+                      <TextInput
+                        string={password}
+                        placeholder="Password"
+                        onUpdate={setPassword}
+                        inputType={showPassword ? "text" : "password"}
+                        error={showError("password")}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-6 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300 z-20"
+                      >
+                        {showPassword ? (
+                          <FiEyeOff className="text-xl" />
+                        ) : (
+                          <FiEye className="text-xl" />
+                        )}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
-                    >
-                      {showPassword ? (
-                        <FiEyeOff className="text-xl" />
-                      ) : (
-                        <FiEye className="text-xl" />
-                      )}
-                    </button>
                   </motion.div>
 
               {/* Error Display */}
@@ -849,10 +844,11 @@ export default function Login() {
             </motion.div>
                 )}
               </AnimatePresence>
+            </motion.div>
 
             {/* Action Buttons */}
             <motion.div
-                className="space-y-4"
+              className="space-y-4 mt-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
@@ -865,7 +861,7 @@ export default function Login() {
                     whileTap={{ scale: loading || isBlocked ? 1 : 0.98 }}
                     className="
                                             relative w-full bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
-                                            text-white py-4 rounded-xl font-semibold
+                                            text-white py-3 sm:py-4 rounded-2xl font-semibold text-sm sm:text-base
                                             overflow-hidden group
                                             disabled:opacity-50 disabled:cursor-not-allowed
                                             auth-modal-button
@@ -890,9 +886,9 @@ export default function Login() {
                   </motion.button>
 
                   {/* Divider */}
-                <div className="flex items-center gap-4 my-6">
+                <div className="flex items-center gap-4 my-4 sm:my-6">
                   <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#818BAC]/30 to-transparent"></div>
-                  <span className="text-[#818BAC] text-sm font-medium">OR</span>
+                  <span className="text-[#818BAC] text-xs sm:text-sm font-medium">OR</span>
                   <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#818BAC]/30 to-transparent"></div>
                   </div>
 
@@ -904,7 +900,7 @@ export default function Login() {
                   whileTap={{ scale: googleLoading || loading ? 1 : 0.98 }}
                     className="
                     relative w-full bg-[#14151F]/60 border-2 border-[#2A2B3F]
-                    hover:border-[#20DDBB]/50 text-white py-4 rounded-xl font-medium
+                    hover:border-[#20DDBB]/50 text-white py-3 sm:py-4 rounded-2xl font-medium text-sm sm:text-base
                     overflow-hidden group transition-all duration-300
                                             disabled:opacity-50 disabled:cursor-not-allowed
                                             auth-google-button
@@ -926,12 +922,12 @@ export default function Login() {
 
               {/* Footer */}
               <motion.div
-                className="text-center pt-6 border-t border-[#2A2B3F]"
+                className="text-center pt-6 border-t border-[#2A2B3F] mt-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                <p className="text-[#818BAC] text-sm">
+                <p className="text-[#818BAC] text-xs sm:text-sm">
                   Don't have an account?{" "}
                   <button
                     onClick={switchToRegister}
@@ -940,10 +936,8 @@ export default function Login() {
                     Sign up here
                   </button>
                 </p>
-              </motion.div>
         </motion.div>
             </div>
-          </motion.div>
           </motion.div>
 
       {/* Safari Authentication Helper */}
@@ -953,6 +947,6 @@ export default function Login() {
         onRetry={handleSafariHelperRetry}
         errorType={safariErrorType}
       />
-    </motion.div>
+    </div>
   );
 }

@@ -31,6 +31,7 @@ import { MdOutlineMusicNote } from 'react-icons/md';
 import UserVibes from "@/app/components/profile/UserVibes";
 import { useEditContext } from "@/app/context/editContext";
 import { FaUserPlus, FaUserCheck, FaUserMinus, FaClock, FaCheck, FaTimes } from 'react-icons/fa';
+import DebugPanel from "@/app/components/DebugPanel";
 
 export default function ProfileLayout({ children, params, isFriend, pendingRequest, isLoading, onFriendAction }: { children: React.ReactNode, params: { params: { id: string } }, isFriend?: boolean, pendingRequest?: any, isLoading?: boolean, onFriendAction?: (action?: 'accept' | 'reject' | 'reset') => void }) {
     const profileId = params.params.id;
@@ -47,6 +48,11 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
     const { fetchVibesByUser } = useVibeStore();
     const { isEditMode } = useEditContext();
     const [isMobile, setIsMobile] = useState(false);
+    // Удаляем состояния для скролла, так как панель должна быть всегда видна
+    // const [hasReachedEnd, setHasReachedEnd] = useState(false);
+    // const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+    // const [lastScrollTop, setLastScrollTop] = useState(0);
+
     useEffect(() => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 768);
@@ -57,6 +63,64 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
             window.removeEventListener('resize', checkMobile);
         };
     }, []);
+
+    // Отслеживание изменений DOM для переприменения стилей панели
+    useEffect(() => {
+        const forceBottomPanelStyles = () => {
+            const panel = document.querySelector('.profile-bottom-panel-override');
+            if (panel && isMobile) {
+                const element = panel as HTMLElement;
+                element.style.setProperty('z-index', '2147483647', 'important');
+                element.style.setProperty('position', 'fixed', 'important');
+                element.style.setProperty('bottom', '0', 'important');
+                element.style.setProperty('left', '0', 'important');
+                element.style.setProperty('right', '0', 'important');
+                element.style.setProperty('transform', 'translateZ(0)', 'important');
+            }
+        };
+
+        if (isMobile) {
+            // Применяем стили сразу
+            forceBottomPanelStyles();
+            
+            // Создаем MutationObserver для отслеживания изменений DOM
+            const observer = new MutationObserver((mutations) => {
+                let shouldUpdate = false;
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        // Проверяем, добавились ли новые карточки
+                        mutation.addedNodes.forEach((node) => {
+                            if (node instanceof Element && 
+                                (node.classList.contains('post-user-card') || 
+                                 node.querySelector('.post-user-card'))) {
+                                shouldUpdate = true;
+                            }
+                        });
+                    }
+                });
+                
+                if (shouldUpdate) {
+                    // Переприменяем стили панели после добавления карточек
+                    setTimeout(forceBottomPanelStyles, 10);
+                }
+            });
+
+            // Наблюдаем за изменениями в контейнере с карточками
+            const container = document.querySelector('.profile-layout-container');
+            if (container) {
+                observer.observe(container, { 
+                    childList: true, 
+                    subtree: true 
+                });
+            }
+
+            return () => {
+                observer.disconnect();
+            };
+        }
+    }, [isMobile]);
+
+    // Убираем логику скролла - панель должна быть всегда видна
 
     // Загружаем liked posts только один раз при изменении showLikedTracks
     useEffect(() => {
@@ -126,6 +190,9 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
         setShowLikedTracks(tab === 'likes');
         setShowVibes(tab === 'vibes');
         
+        // Убираем сброс состояния панели - панель всегда видна
+        // setIsScrolledToBottom(false);
+        
         // Обновляем URL с параметром tab
         const url = new URL(window.location.href);
         if (tab !== 'main') {
@@ -141,6 +208,29 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
         }
         window.history.pushState({}, '', url);
     };
+
+    // Принудительное применение стилей панели
+    useEffect(() => {
+        const forceBottomPanelStyles = () => {
+            const panel = document.querySelector('.profile-bottom-panel-override');
+            if (panel && isMobile) {
+                const element = panel as HTMLElement;
+                element.style.zIndex = '2147483647';
+                element.style.position = 'fixed';
+                element.style.bottom = '0';
+                element.style.left = '0';
+                element.style.right = '0';
+                element.style.transform = 'translateZ(0)';
+                element.style.isolation = 'isolate';
+            }
+        };
+
+        // Применяем стили сразу и через небольшой таймаут
+        forceBottomPanelStyles();
+        const timer = setTimeout(forceBottomPanelStyles, 100);
+        
+        return () => clearTimeout(timer);
+    }, [isMobile, postsByUser.length]); // Перезапускаем при изменении количества постов
 
     return (
 		<>
@@ -300,7 +390,20 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                     duration: 0.5
                 }
             }}
-            className="fixed bottom-0 left-0 right-0 bg-[#24183D]/95 backdrop-blur-xl border-t border-white/5 z-40 shadow-lg fixed-bottom-panel"
+            className="fixed bottom-0 left-0 right-0 bg-[#24183D]/95 backdrop-blur-xl border-t border-white/5 shadow-lg profile-bottom-panel-override"
+            style={{
+                transform: 'translateZ(0)', // Принудительная фиксация
+                position: 'fixed',
+                bottom: '0',
+                left: '0',
+                right: '0',
+                zIndex: 999999999, // Максимальный z-index
+                willChange: 'transform', // Оптимизация для анимаций
+                boxShadow: '0 -8px 30px rgba(0, 0, 0, 0.25)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                isolation: 'isolate', // Создает новый stacking context
+            }}
         >
             <div className="max-w-screen-xl mx-auto">
                 <div className="flex flex-col p-4">
@@ -512,11 +615,14 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={() => setIsEditProfileOpen(true)}
-                                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-[#20DDBB] hover:bg-[#20DDBB]/20 transition-all duration-300 md:hidden"
+                                        onClick={() => {
+                                            console.log('Mobile edit profile button clicked, isMobile:', isMobile);
+                                            setIsEditProfileOpen(true);
+                                        }}
+                                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-[9999] w-12 h-12 rounded-full flex items-center justify-center bg-[#20DDBB]/20 text-[#20DDBB] hover:bg-[#20DDBB]/30 transition-all duration-300 border-2 border-[#20DDBB]/50 shadow-lg md:hidden"
                                         aria-label="Edit Profile"
                                     >
-                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                                             <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                                         </svg>
@@ -550,6 +656,51 @@ export default function ProfileLayout({ children, params, isFriend, pendingReque
                 </div>
             </div>
         </motion.div>
+        
+        {/* Временный компонент для диагностики - убрать в продакшене */}
+        {process.env.NODE_ENV === 'development' && <DebugPanel />}
+        
+        {/* CSS правило для принудительного z-index панели */}
+        <style jsx global>{`
+          .profile-bottom-panel-override {
+            z-index: 999999999 !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: translateZ(0) !important;
+            isolation: isolate !important;
+          }
+          
+          /* Убеждаемся что карточки не перекрывают панель */
+          .post-user-card {
+            z-index: 1 !important;
+            position: relative !important;
+          }
+          
+          /* Мобильные устройства - дополнительные правила */
+          @media (max-width: 768px) {
+            .profile-bottom-panel-override {
+              z-index: 2147483647 !important; /* Максимальный z-index */
+              will-change: transform !important;
+              backface-visibility: hidden !important;
+            }
+            
+            /* Все карточки на мобильных должны быть ниже панели */
+            .post-user-card,
+            [class*="card"],
+            [class*="Card"] {
+              z-index: 1 !important;
+            }
+            
+            /* Убеждаемся что контент не создает новый stacking context выше панели */
+            .profile-layout-container,
+            .content-with-top-nav,
+            .smooth-scroll-container {
+              z-index: auto !important;
+            }
+          }
+        `}</style>
 	</>
     )
 }

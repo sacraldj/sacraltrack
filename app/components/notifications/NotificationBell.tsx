@@ -70,6 +70,7 @@ const NotificationBell = () => {
           />
         </motion.div>
 
+        {/* Индикатор непрочитанных уведомлений над колокольчиком */}
         <AnimatePresence>
           {isLoggedIn && unreadCount > 0 && (
             <motion.div
@@ -91,7 +92,7 @@ const NotificationBell = () => {
                   repeat: Infinity,
                 },
               }}
-              className="absolute -top-1 -right-1 min-w-[18px] md:min-w-[20px] h-4 md:h-5 bg-[#20DDBB] rounded-full flex items-center justify-center px-1"
+              className="absolute -top-1 left-1/2 transform -translate-x-1/2 min-w-[18px] md:min-w-[20px] h-4 md:h-5 bg-[#20DDBB] rounded-full flex items-center justify-center px-1"
             >
               <motion.span
                 initial={{ scale: 0 }}

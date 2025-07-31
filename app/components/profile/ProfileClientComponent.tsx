@@ -27,6 +27,7 @@ export default function ProfileClientComponent() {
   const [visiblePosts, setVisiblePosts] = useState<PostWithProfile[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
   const postsPerPage = 5;
 
   const contextUser = useUser();
@@ -176,6 +177,11 @@ export default function ProfileClientComponent() {
         profile: post.profile || { user_id: post.user_id, name: '', image: '' }
       }));
       setVisiblePosts(newPosts);
+      
+      // Обновляем состояние hasMorePosts
+      setHasMorePosts(endIndex < postsByUser.length);
+    } else {
+      setHasMorePosts(false);
     }
   }, [page, postsByUser]);
 

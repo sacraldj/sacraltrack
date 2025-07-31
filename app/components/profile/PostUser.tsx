@@ -746,15 +746,15 @@ export const PostUser = ({ params, post, userId }: PostUserCompTypes) => {
               <Link href={`/profile/${post.user_id}`}>
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 shadow-lg mr-3">
-                    <img
-                      src={
-                        useCreateBucketUrl(post?.profile?.image) ||
-                        "/images/placeholders/music-user-placeholder-static.svg"
-                      }
+                  <img
+                    src={
+                      useCreateBucketUrl(post?.profile?.image) ||
+                      "/images/placeholders/music-user-placeholder-static.svg"
+                    }
                       className="w-full h-full object-cover"
                       width={48}
                       height={48}
-                    />
+                  />
                   </div>
                   <div>
                     <div>

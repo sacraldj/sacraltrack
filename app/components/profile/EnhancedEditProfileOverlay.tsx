@@ -38,7 +38,7 @@ const modalVariants: any = {
   visible: {
     opacity: 1,
     scale: 1,
-    y: -20,
+    y: 0, // Убираем смещение для мобильных
     transition: { duration: 0.3, ease: "easeOut" }
   },
   exit: {
@@ -125,6 +125,7 @@ const EnhancedEditProfileOverlay: React.FC = () => {
   const { isEditProfileOpen, setIsEditProfileOpen } = useGeneralStore();
   const { getCurrentLocation, locationName, isLoading: isLoadingLocation } = useGeolocation();
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Form state
   const [activeTab, setActiveTab] = useState('basic');
@@ -150,6 +151,20 @@ const EnhancedEditProfileOverlay: React.FC = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Проверка мобильного устройства
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
   
   // Initialize form state from profile data
   useEffect(() => {
@@ -497,60 +512,69 @@ const EnhancedEditProfileOverlay: React.FC = () => {
 
   if (!isEditProfileOpen) return null;
   
+  console.log('EnhancedEditProfileOverlay render:', { isEditProfileOpen, isMobile });
+  
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key="overlay"
-        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto edit-profile-overlay"
+        className="fixed inset-0 z-[999999999] flex items-center justify-center bg-black/60 backdrop-blur-sm overflow-y-auto edit-profile-overlay md:p-4"
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
         style={{
           display: 'flex',
-          alignItems: 'center',
+          alignItems: isMobile ? 'flex-start' : 'center',
           justifyContent: 'center',
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          zIndex: 999999,
-          padding: '1rem',
+          zIndex: 999999999, // Максимальный z-index
+          padding: isMobile ? '0' : '1rem',
           overflowY: 'auto',
-          width: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vw' : undefined,
-          height: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vh' : undefined,
+          minHeight: '100vh',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)', // Явный фон
         }}
       >
         <motion.div
-          className="relative w-full max-w-md flex flex-col justify-between my-0 overflow-hidden rounded-2xl edit-profile-modal"
+          className={`relative w-full flex flex-col justify-between my-0 overflow-hidden edit-profile-modal ${isMobile ? '' : 'max-w-md rounded-2xl'}`}
           variants={modalVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           style={{ 
-            maxHeight: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vh' : '90vh',
-            width: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vw' : '100%',
-            maxWidth: typeof window !== 'undefined' && window.innerWidth <= 600 ? '100vw' : '420px',
-            margin: '0 auto',
-            position: typeof window !== 'undefined' && window.innerWidth <= 600 ? 'fixed' : undefined,
-            top: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
-            left: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
-            right: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
-            bottom: typeof window !== 'undefined' && window.innerWidth <= 600 ? 0 : undefined,
+            height: isMobile ? '100vh' : 'auto',
+            maxHeight: isMobile ? '100vh' : '90vh',
+            width: isMobile ? '100vw' : '100%',
+            maxWidth: isMobile ? '100vw' : '420px',
+            margin: isMobile ? '0' : '0 auto',
+            position: isMobile ? 'relative' : 'relative',
+            top: isMobile ? 0 : 'auto',
+            left: isMobile ? 0 : 'auto',
+            right: isMobile ? 0 : 'auto',
+            bottom: isMobile ? 0 : 'auto',
             zIndex: 999999,
+            borderRadius: isMobile ? '0' : '1rem',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {/* Glass card with subtle gradient */}
-          <div className="glass-card bg-gradient-to-br from-[#24183D]/90 to-[#1A1E36]/95 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-xl overflow-hidden h-full flex flex-col p-[5px]" style={{ boxSizing: 'border-box' }}>
+          <div className={`glass-card bg-gradient-to-br from-[#24183D]/90 to-[#1A1E36]/95 ${isMobile ? 'border-4 border-red-500' : 'border border-white/10'} shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-xl overflow-hidden h-full flex flex-col ${isMobile ? 'p-2' : 'p-[5px]'}`} style={{ 
+            boxSizing: 'border-box',
+            borderRadius: isMobile ? '0' : '1rem',
+          }}>
             {/* Header */}
-            <div className="relative flex items-center justify-between px-[5px] pt-[5px] pb-0" style={{ background: 'none', border: 'none', boxShadow: 'none' }}>
+                          <div className={`relative flex items-center justify-between ${isMobile ? 'px-2 pt-4' : 'px-[5px] pt-[5px]'} pb-0`} style={{ background: 'none', border: 'none', boxShadow: 'none' }}>
               <div className="flex items-center gap-2">
                 {/* Tabs as glass buttons */}
                 {['basic', 'social'].map((tab) => (
                   <motion.button
                     key={tab}
-                    className={`px-4 py-2 mx-1 rounded-xl font-semibold text-base transition-all backdrop-blur-md bg-white/10 hover:bg-white/20 border-none shadow-lg ${activeTab === tab ? 'ring-2 ring-white/60 text-white' : 'text-white/70'}`}
+                    className={`${isMobile ? 'px-6 py-3' : 'px-4 py-2'} mx-1 ${isMobile ? 'rounded-2xl' : 'rounded-xl'} font-semibold text-base transition-all backdrop-blur-md bg-white/10 hover:bg-white/20 border-none shadow-lg ${activeTab === tab ? 'ring-2 ring-white/60 text-white' : 'text-white/70'}`}
                     style={{ boxShadow: '0 2px 16px 0 rgba(255,255,255,0.08)' }}
                     onClick={() => setActiveTab(tab)}
                     whileHover={{ y: -2 }}
@@ -561,16 +585,16 @@ const EnhancedEditProfileOverlay: React.FC = () => {
                 ))}
               </div>
               <motion.button
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                className={`${isMobile ? 'p-3 rounded-2xl' : 'p-2 rounded-full'} bg-white/10 hover:bg-white/20 transition-colors`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleClose}
               >
-                <MdClose className="text-white" size={20} />
+                                  <MdClose className="text-white" size={isMobile ? 22 : 20} />
               </motion.button>
             </div>
             {/* Content area */}
-            <div className="flex-grow overflow-y-auto p-[5px]" style={{ maxHeight: 'calc(100vh - 170px)' }}>
+                          <div className={`flex-grow overflow-y-auto ${isMobile ? 'p-2' : 'p-[5px]'}`} style={{ maxHeight: 'calc(100vh - 170px)' }}>
               <AnimatePresence mode="wait">
                 {/* Basic Info Tab */}
                 {activeTab === 'basic' && (
@@ -900,9 +924,9 @@ const EnhancedEditProfileOverlay: React.FC = () => {
             </div>
             
             {/* Form actions - Fixed at bottom of modal */}
-            <div className="p-[5px] pt-2 flex justify-end bg-transparent border-none">
+                          <div className={`${isMobile ? 'p-2 pt-4' : 'p-[5px] pt-2'} flex justify-end bg-transparent border-none`}>
               <motion.button
-                className="relative overflow-hidden py-3 px-8 rounded-xl bg-gradient-to-r from-[#20DDBB] to-[#5D59FF] text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-200 flex items-center gap-2 border-none"
+                                  className={`relative overflow-hidden ${isMobile ? 'py-4 px-10 text-xl gap-3' : 'py-3 px-8 text-lg gap-2'} ${isMobile ? 'rounded-2xl' : 'rounded-xl'} bg-gradient-to-r from-[#20DDBB] to-[#5D59FF] text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-200 flex items-center border-none`}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSave}
@@ -910,13 +934,13 @@ const EnhancedEditProfileOverlay: React.FC = () => {
               >
                 {isLoading ? (
                   <>
-                    <div className="w-5 h-5 rounded-full border-2 border-t-white border-r-transparent border-b-white/30 border-l-transparent animate-spin" />
+                    <div className={`${isMobile ? 'w-6 h-6' : 'w-5 h-5'} rounded-full border-2 border-t-white border-r-transparent border-b-white/30 border-l-transparent animate-spin`} />
                     <span>Saving...</span>
                   </>
                 ) : (
                   <>
                     <span>Save Profile</span>
-                    <HiOutlineSparkles className="text-white/80" />
+                                          <HiOutlineSparkles className="text-white/80" size={isMobile ? 22 : 18} />
                   </>
                 )}
               </motion.button>

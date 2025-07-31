@@ -173,6 +173,11 @@ const GenreSelector = ({ isHomePage }: GenreSelectorProps) => {
               className="fixed inset-x-0 top-[60px] z-40 
                           bg-gradient-to-b from-[#24183D]/80 to-[#1D142F]/80 backdrop-blur-xl border-b border-white/10
                           shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              style={{
+                width: '100vw',
+                left: 0,
+                right: 'auto'
+              }}
             >
               {/* Категории (табы) - с горизонтальной прокруткой на мобильных */}
               <div className="overflow-x-auto custom-scrollbar border-b border-white/10">

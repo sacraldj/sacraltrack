@@ -72,7 +72,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 			<TopNav params={{ id: userContext?.user?.id as string }} />
             <AuthObserver />
 
-		<div className="flex mx-auto w-full px-0 smooth-scroll-container content-with-top-nav">
+		<div className="flex mx-auto w-full px-0 smooth-scroll-container content-with-top-nav pt-[60px] custom-scrollbar">
 			
 			<div className="hidden md:flex w-[350px] relative">
 			<motion.div

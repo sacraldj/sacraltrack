@@ -142,11 +142,12 @@ const NotificationCenter = ({ isOpen, onClose }: NotificationCenterProps) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="fixed sm:absolute top-[60px] sm:top-12 left-0 right-0 sm:right-6 sm:left-auto w-full sm:w-[400px] md:w-[430px] max-w-none sm:max-w-[95vw] min-w-full sm:min-w-[320px] h-[calc(100vh-60px)] sm:h-auto bg-[#272B43] sm:rounded-2xl shadow-2xl border-0 sm:border border-[#3f2d63] z-50"
+        className="fixed sm:absolute top-[60px] sm:top-12 sm:right-6 sm:left-auto w-full sm:w-[400px] md:w-[430px] max-w-none sm:max-w-[95vw] min-w-full sm:min-w-[320px] h-[calc(100vh-60px)] sm:h-auto bg-[#272B43] sm:rounded-2xl shadow-2xl border-0 sm:border border-[#3f2d63] z-50"
         style={{
-          width: '100vw',
-          left: 0,
-          right: 0
+          width: typeof window !== 'undefined' && window.innerWidth < 640 ? '100vw' : undefined,
+          left: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : undefined,
+          right: typeof window !== 'undefined' && window.innerWidth < 640 ? 'auto' : undefined,
+          maxWidth: typeof window !== 'undefined' && window.innerWidth < 640 ? '100vw' : undefined
         }}
       >
         <div className="p-3 sm:p-4 border-b border-[#3f2d63]">

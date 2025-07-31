@@ -602,79 +602,37 @@ export default function Register() {
   const passwordStrength = checkPasswordStrength(password);
 
   return (
-    <motion.div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 auth-modal-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <div 
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999999999] flex items-center justify-center p-4"
       onClick={handleClickOutside}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem'
-      }}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="w-full max-w-[420px] relative max-h-[90vh] overflow-y-auto auth-modal-container"
-        style={{
-          width: '100%',
-          maxWidth: '420px',
-          position: 'relative',
-          maxHeight: '90vh',
-          overflowY: 'auto'
-        }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        className="w-full max-w-md mx-auto bg-[#1E1F2E] rounded-3xl shadow-2xl overflow-hidden relative max-h-[90vh] overflow-y-auto modal-scroll"
+        onClick={(e) => e.stopPropagation()}
       >
-        <motion.div
-          className="relative w-full bg-[#1E1F2E] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(32,221,187,0.15)] auth-modal-content"
-          whileHover={{ boxShadow: "0 0 50px rgba(32,221,187,0.2)" }}
-          transition={{ duration: 0.3 }}
-        >
           {/* Close Button */}
           <button
             onClick={() => setIsRegisterOpen(false)}
             disabled={loading || googleLoading}
-            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50 auth-modal-close"
+            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50"
           >
             <FiX className="text-2xl" />
           </button>
 
-          {/* Animated Border */}
-          <div className="absolute inset-0 p-[1.5px] rounded-3xl">
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#20DDBB] via-[#8A2BE2] to-[#20DDBB] rounded-3xl"
-              style={{ backgroundSize: "200% 100%" }}
-              animate={{
-                backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </div>
-
-          <div className="relative p-8 bg-[#1E1F2E] rounded-[22px] m-[1.5px]">
+          <div className="p-4 sm:p-6 md:p-8">
             {/* Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-4 sm:mb-6 md:mb-8">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", damping: 15, stiffness: 300 }}
-                className="flex justify-center mb-6"
+                className="flex justify-center mb-4 sm:mb-6"
               >
-                <div className="relative w-20 h-20">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20">
                   <motion.div
                     className="absolute inset-0 bg-[#20DDBB]/20 rounded-full blur-xl"
                     animate={{
@@ -704,7 +662,7 @@ export default function Register() {
               </motion.div>
 
               <motion.h1
-                className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] mb-3 auth-modal-title"
+                className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2] mb-2 sm:mb-3 auth-modal-title"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -712,7 +670,7 @@ export default function Register() {
                 Join the Journey!
               </motion.h1>
               <motion.p
-                className="text-[#818BAC] auth-modal-subtitle"
+                className="text-sm sm:text-base text-[#818BAC] auth-modal-subtitle"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -759,15 +717,15 @@ export default function Register() {
 
             {/* Form */}
             <motion.div
-              className="space-y-4 auth-form-spacing"
+              className="space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
               {/* Name Input */}
               <motion.div
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
+                className="relative"
+                whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
                 <TextInput
@@ -776,87 +734,53 @@ export default function Register() {
                   onUpdate={setName}
                   inputType="text"
                   error={showError("name")}
-                  className={`
-                    w-full bg-[#14151F]/60 border-2
-                    ${error?.type === "name" ? "border-red-500" : "border-[#2A2B3F]"}
-                    rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
-                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                    transition-all duration-300
-                    group-hover:border-[#20DDBB]/50
-                    auth-modal-input
-                  `}
                 />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FiUser className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                </div>
               </motion.div>
 
               {/* Email Input */}
               <motion.div
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
+                className="relative"
+                whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
                 <TextInput
                   string={email}
-                  placeholder="Email"
+                  placeholder="Email Address"
                   onUpdate={setEmail}
                   inputType="email"
                   error={showError("email")}
-                  className={`
-                    w-full bg-[#14151F]/60 border-2
-                    ${error?.type === "email" ? "border-red-500" : "border-[#2A2B3F]"}
-                    rounded-xl p-4 pl-12 text-white placeholder-[#818BAC]/50
-                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                    transition-all duration-300
-                    group-hover:border-[#20DDBB]/50
-                    auth-modal-input
-                  `}
                 />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FiMail className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
-                </div>
               </motion.div>
 
               {/* Password Input */}
               <motion.div
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
+                className="relative"
+                whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
-                <TextInput
-                  string={password}
-                  placeholder="Password"
-                  onUpdate={(value) => {
-                    setPassword(value);
-                    setShowPasswordStrength(value.length > 0);
-                  }}
-                  inputType={showPassword ? "text" : "password"}
-                  error={showError("password")}
-                  className={`
-                    w-full bg-[#14151F]/60 border-2
-                    ${error?.type === "password" ? "border-red-500" : "border-[#2A2B3F]"}
-                    rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
-                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                    transition-all duration-300
-                    group-hover:border-[#20DDBB]/50
-                    auth-modal-input
-                  `}
-                />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                <div className="relative">
+                  <TextInput
+                    string={password}
+                    placeholder="Password"
+                    onUpdate={(value) => {
+                      setPassword(value);
+                      setShowPasswordStrength(value.length > 0);
+                    }}
+                    inputType={showPassword ? "text" : "password"}
+                    error={showError("password")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-6 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300 z-20"
+                  >
+                    {showPassword ? (
+                      <FiEyeOff className="text-xl" />
+                    ) : (
+                      <FiEye className="text-xl" />
+                    )}
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
-                >
-                  {showPassword ? (
-                    <FiEyeOff className="text-xl" />
-                  ) : (
-                    <FiEye className="text-xl" />
-                  )}
-                </button>
               </motion.div>
 
               {/* Password Strength Indicator */}
@@ -866,7 +790,7 @@ export default function Register() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="p-4 bg-[#14151F]/40 rounded-xl border border-[#2A2B3F]"
+                    className="p-4 bg-[#14151F]/40 rounded-xl border border-[#2A2B3F] mt-2"
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <FiShield className="text-[#20DDBB]" />
@@ -917,39 +841,30 @@ export default function Register() {
 
               {/* Confirm Password Input */}
               <motion.div
-                className="relative group"
-                whileHover={{ scale: 1.02 }}
+                className="relative"
+                whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
-                <TextInput
-                  string={confirmPassword}
-                  placeholder="Confirm Password"
-                  onUpdate={setConfirmPassword}
-                  inputType={showConfirmPassword ? "text" : "password"}
-                  error={showError("confirmPassword")}
-                  className={`
-                    w-full bg-[#14151F]/60 border-2
-                    ${error?.type === "confirmPassword" ? "border-red-500" : "border-[#2A2B3F]"}
-                    rounded-xl p-4 pl-12 pr-12 text-white placeholder-[#818BAC]/50
-                    focus:border-[#20DDBB] focus:bg-[#14151F]/80
-                    transition-all duration-300
-                    group-hover:border-[#20DDBB]/50
-                  `}
-                />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <FiLock className="text-[#818BAC] group-hover:text-[#20DDBB] transition-colors duration-300" />
+                <div className="relative">
+                  <TextInput
+                    string={confirmPassword}
+                    placeholder="Confirm Password"
+                    onUpdate={setConfirmPassword}
+                    inputType={showConfirmPassword ? "text" : "password"}
+                    error={showError("confirmPassword")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-6 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300 z-20"
+                  >
+                    {showConfirmPassword ? (
+                      <FiEyeOff className="text-xl" />
+                    ) : (
+                      <FiEye className="text-xl" />
+                    )}
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#818BAC] hover:text-[#20DDBB] transition-colors duration-300"
-                >
-                  {showConfirmPassword ? (
-                    <FiEyeOff className="text-xl" />
-                  ) : (
-                    <FiEye className="text-xl" />
-                  )}
-                </button>
               </motion.div>
 
               {/* Terms and Conditions */}
@@ -996,7 +911,7 @@ export default function Register() {
 
             {/* Action Buttons */}
             <motion.div
-              className="mt-8 space-y-4"
+              className="space-y-4 mt-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
@@ -1009,7 +924,7 @@ export default function Register() {
                 whileTap={{ scale: loading || isBlocked ? 1 : 0.98 }}
                 className="
                   relative w-full bg-gradient-to-r from-[#20DDBB] to-[#8A2BE2]
-                  text-white py-4 rounded-xl font-semibold
+                  text-white py-3 sm:py-4 rounded-2xl font-semibold text-sm sm:text-base
                   overflow-hidden group
                   disabled:opacity-50 disabled:cursor-not-allowed
                   auth-modal-button
@@ -1038,7 +953,7 @@ export default function Register() {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-[#2A2B3F]"></div>
                 </div>
-                <div className="relative flex justify-center text-sm">
+                <div className="relative flex justify-center text-xs sm:text-sm">
                   <span className="px-2 text-[#818BAC] bg-[#1E1F2E]">
                     Or continue with
                   </span>
@@ -1056,9 +971,9 @@ export default function Register() {
                   scale: loading || googleLoading || isBlocked ? 1 : 0.98,
                 }}
                 className="
-                  w-full flex items-center justify-center gap-3 px-4 py-3
+                  w-full flex items-center justify-center gap-3 px-4 py-3 sm:py-4
                   bg-[#14151F]/60 hover:bg-[#14151F]/80
-                  text-white rounded-xl font-medium
+                  text-white rounded-2xl font-medium text-sm sm:text-base
                   border-2 border-[#2A2B3F] hover:border-[#20DDBB]/50
                   transition-all duration-300
                   disabled:opacity-50 disabled:cursor-not-allowed
@@ -1082,12 +997,12 @@ export default function Register() {
 
             {/* Footer Links */}
             <motion.div
-              className="mt-6 text-center space-y-3"
+              className="text-center space-y-3 mt-6 pt-6 border-t border-[#2A2B3F]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              <p className="text-[#818BAC] text-sm">
+              <p className="text-[#818BAC] text-xs sm:text-sm">
                 Already have an account?{" "}
                 <button
                   onClick={switchToLogin}
@@ -1114,7 +1029,6 @@ export default function Register() {
               </div>
             </motion.div>
           </div>
-        </motion.div>
       </motion.div>
 
       {/* Success notification */}
@@ -1148,6 +1062,6 @@ export default function Register() {
         onRetry={handleSafariHelperRetry}
         errorType={safariErrorType}
       />
-    </motion.div>
+    </div>
   );
 }
