@@ -11,6 +11,7 @@ if (typeof window !== 'undefined') {
 }
 
 import './globals.css';
+import './styles/auth-mobile.css';
 import { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import { Suspense } from 'react';
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
         ],
         apple: { url: '/apple-touch-icon.png' }
     },
-    keywords: 'music, artist, marketplace, royalties, listen, release, tracks, streaming, pop, rock, hip hop, rap, electronic, EDM, classical, jazz, blues, country, R&B, soul, folk, indie, alternative, metal, punk, reggae, funk, disco, techno, house, ambient, lo-fi, trap, dubstep, trance, drum and bass, instrumental, vocal, beats, producers, musicians, songs, albums, singles, playlists, new music, trending',
+    keywords: 'music, artist, marketplace, royalties, listen, release, tracks, streaming, hip hop, rap, electronic, EDM, classical, jazz, blues, country, R&B, soul, folk, indie, alternative, metal, punk, reggae, funk, disco, techno, house, ambient, lo-fi, trap, dubstep, trance, drum and bass, instrumental, vocal, beats, producers, musicians, songs, albums, singles, playlists, new music, trending',
     openGraph: {
         title: 'Sacral Track',
         description: 'Sacral Track - social network with marketplace for artists and music lovers',
@@ -102,8 +103,6 @@ export default function RootLayout({
                     background-attachment: fixed;
                     min-height: 100vh;
                     min-height: -webkit-fill-available;
-                    /* Prevent bounce scrolling */
-                    overscroll-behavior: none;
                     /* Smooth scrolling for iOS */
                     -webkit-overflow-scrolling: touch;
                     /* Prevent text size adjust */

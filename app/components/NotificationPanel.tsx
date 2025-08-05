@@ -48,7 +48,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen, onClose }
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="absolute right-0 top-16 w-80 max-h-[500px] bg-[#1E2136] rounded-xl shadow-xl overflow-hidden z-50"
+          className="absolute right-0 top-16 w-80 max-h-[500px] bg-[#1E2136] rounded-xl shadow-xl overflow-hidden z-50 mobile-notification-panel"
         >
           <div className="p-4 border-b border-[#2E2469] flex justify-between items-center">
             <h3 className="text-white font-medium">Notifications</h3>

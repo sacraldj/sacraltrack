@@ -34,7 +34,9 @@ const cleanupCache = () => {
   entries.forEach(([key, value]) => {
     if (now - value.timestamp > MANIFEST_CACHE_TTL) {
       manifestCache.delete(key);
-      console.log(`AudioPlayer: Removed expired manifest from cache: ${key}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`AudioPlayer: Removed expired manifest from cache: ${key}`);
+      }
     }
   });
 
@@ -46,7 +48,9 @@ const cleanupCache = () => {
 
     sortedEntries.forEach(([key]) => {
       manifestCache.delete(key);
-      console.log(`AudioPlayer: Removed oldest manifest from cache: ${key}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`AudioPlayer: Removed oldest manifest from cache: ${key}`);
+      }
     });
   }
   
@@ -306,16 +310,22 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       }
 
       try {
-        console.log(`AudioPlayer: Fetching M3U8 from URL: ${url}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`AudioPlayer: Fetching M3U8 from URL: ${url}`);
+        }
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
-          console.warn("AudioPlayer: M3U8 fetch timeout after 8 seconds");
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("AudioPlayer: M3U8 fetch timeout after 8 seconds");
+          }
           controller.abort();
         }, 8000); // Уменьшаем таймаут до 8 секунд для более быстрой реакции
 
         if (signal) {
           signal.addEventListener("abort", () => {
-            console.log("AudioPlayer: M3U8 fetch aborted by parent signal");
+            if (process.env.NODE_ENV === 'development') {
+              console.log("AudioPlayer: M3U8 fetch aborted by parent signal");
+            }
             controller.abort();
           });
         }
@@ -338,7 +348,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          console.error(`AudioPlayer: HTTP error fetching M3U8! status: ${response.status}, statusText: ${response.statusText}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.error(`AudioPlayer: HTTP error fetching M3U8! status: ${response.status}, statusText: ${response.statusText}`);
+          }
           if (mountedRef.current) {
             if (response.status === 404) {
               setError("Audio file not found. Please try another track.");
@@ -352,14 +364,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         }
 
         const content = await response.text();
-        console.log(`AudioPlayer: M3U8 content received, length: ${content.length} bytes`);
-        
-        // Выводим первые 200 символов содержимого для отладки
-        console.log(`AudioPlayer: M3U8 content preview: ${content.substring(0, 200)}...`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`AudioPlayer: M3U8 content received, length: ${content.length} bytes`);
+          
+          // Выводим первые 200 символов содержимого для отладки
+          console.log(`AudioPlayer: M3U8 content preview: ${content.substring(0, 200)}...`);
+        }
 
         // Проверка на пустой контент
         if (!content.trim()) {
-          console.error("AudioPlayer: Empty M3U8 content received");
+          if (process.env.NODE_ENV === 'development') {
+            console.error("AudioPlayer: Empty M3U8 content received");
+          }
           if (mountedRef.current) {
             setError("Empty audio source. Please try another track.");
             toast.error("Empty audio source. Please try another track.");
@@ -369,7 +385,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
         // Более гибкая проверка формата M3U8
         if (content.trim().includes("#EXTM3U") || content.trim().includes("#EXTINF")) {
-          console.log("AudioPlayer: Valid M3U8 format detected");
+          if (process.env.NODE_ENV === 'development') {
+            console.log("AudioPlayer: Valid M3U8 format detected");
+          }
           manifestCache.set(cacheKey, { content, timestamp: Date.now() });
           return content;
         } else {
@@ -378,7 +396,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           
           // Проверяем, похоже ли содержимое на список сегментов
           if (lines.length > 1) {
-            console.warn("AudioPlayer: Attempting to recover malformed M3U8 - adding required headers");
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("AudioPlayer: Attempting to recover malformed M3U8 - adding required headers");
+            }
             
             // Проверяем, содержит ли каждая строка идентификатор сегмента
             const looksLikeSegmentList = lines.every(line => {
@@ -389,7 +409,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
             if (looksLikeSegmentList) {
               // Создаем правильный M3U8 плейлист с необходимыми заголовками
               const recoveredContent = `#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:10\n#EXT-X-MEDIA-SEQUENCE:0\n${lines.map(line => `#EXTINF:10.0,\n${line.trim()}`).join("\n")}\n#EXT-X-ENDLIST`;
-              console.log(`AudioPlayer: Recovered M3U8 content: ${recoveredContent.substring(0, 200)}...`);
+              if (process.env.NODE_ENV === 'development') {
+                console.log(`AudioPlayer: Recovered M3U8 content: ${recoveredContent.substring(0, 200)}...`);
+              }
               manifestCache.set(cacheKey, { content: recoveredContent, timestamp: Date.now() });
               
               // Предзагружаем первые сегменты для ускорения воспроизведения
@@ -407,14 +429,20 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           // Если это не похоже на список сегментов, пробуем другой формат восстановления
           // Проверяем, может быть это просто один сегмент
           if (content.trim() && !content.includes("#")) {
-            console.warn("AudioPlayer: Content appears to be a single segment - creating minimal playlist");
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("AudioPlayer: Content appears to be a single segment - creating minimal playlist");
+            }
             const recoveredContent = `#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:10\n#EXT-X-MEDIA-SEQUENCE:0\n#EXTINF:10.0,\n${content.trim()}\n#EXT-X-ENDLIST`;
-            console.log(`AudioPlayer: Created minimal playlist: ${recoveredContent}`);
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`AudioPlayer: Created minimal playlist: ${recoveredContent}`);
+            }
             manifestCache.set(cacheKey, { content: recoveredContent, timestamp: Date.now() });
             return recoveredContent;
           }
           
-          console.error("AudioPlayer: Invalid M3U8 format:", content.substring(0, 100) + "...");
+          if (process.env.NODE_ENV === 'development') {
+            console.error("AudioPlayer: Invalid M3U8 format:", content.substring(0, 100) + "...");
+          }
           if (mountedRef.current) {
             setError("Invalid audio format. Please try another track.");
             toast.error("Invalid audio format. Please try another track.");
@@ -424,17 +452,25 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       } catch (err) {
         if (err instanceof Error) {
           if (err.name === "AbortError") {
-            console.log("AudioPlayer: M3U8 fetch aborted");
+            if (process.env.NODE_ENV === 'development') {
+              console.log("AudioPlayer: M3U8 fetch aborted");
+            }
             return null;
           }
           
-          // Более подробное логирование ошибок
-          console.error(`AudioPlayer: Failed to fetch M3U8: ${err.name} - ${err.message}`);
-          if (err.stack) {
-            console.error(`AudioPlayer: Error stack: ${err.stack}`);
+          // Более подробное логирование ошибок только в development
+          if (process.env.NODE_ENV === 'development') {
+            console.error(`AudioPlayer: Failed to fetch M3U8: ${err.name} - ${err.message}`);
+            if (err.stack) {
+              console.error(`AudioPlayer: Error stack: ${err.stack}`);
+            }
+          } else {
+            console.warn(`AudioPlayer: Failed to fetch M3U8: ${err.message}`);
           }
         } else {
-          console.error("AudioPlayer: Unknown error fetching M3U8:", err);
+          if (process.env.NODE_ENV === 'development') {
+            console.error("AudioPlayer: Unknown error fetching M3U8:", err);
+          }
         }
         
         if (mountedRef.current) {
@@ -673,17 +709,23 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const safePlay = useCallback(async () => {
     const audio = audioRef.current;
     if (!audio) {
-      console.error("AudioPlayer: Audio element reference is missing in safePlay");
+      if (process.env.NODE_ENV === 'development') {
+        console.error("AudioPlayer: Audio element reference is missing in safePlay");
+      }
       return;
     }
     
     if (!isInitializedRef.current) {
-      console.warn("AudioPlayer: Attempted to play before initialization");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("AudioPlayer: Attempted to play before initialization");
+      }
       return;
     }
     
     if (!mountedRef.current) {
-      console.warn("AudioPlayer: Attempted to play after component unmounted");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("AudioPlayer: Attempted to play after component unmounted");
+      }
       return;
     }
 
@@ -694,24 +736,32 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           await playPromiseRef.current;
         } catch (e) {
           // Игнорируем ошибки отмененного промиса
-          console.log("Previous play promise was canceled", e);
+          if (process.env.NODE_ENV === 'development') {
+            console.log("Previous play promise was canceled", e);
+          }
         }
       }
       
       // Проверяем состояние аудио элемента
-      console.log(`Audio state before play: readyState=${audio.readyState}, paused=${audio.paused}, currentTime=${audio.currentTime}, duration=${audio.duration}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Audio state before play: readyState=${audio.readyState}, paused=${audio.paused}, currentTime=${audio.currentTime}, duration=${audio.duration}`);
+      }
 
       if (
         audio.paused &&
         audio.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
       ) {
-        console.log("Starting playback...");
+        if (process.env.NODE_ENV === 'development') {
+          console.log("Starting playback...");
+        }
         playPromiseRef.current = audio.play();
         try {
           await playPromiseRef.current;
           playPromiseRef.current = null;
           retryCountRef.current = 0; // Сброс счетчика retry при успехе
-          console.log("Playback started successfully");
+          if (process.env.NODE_ENV === 'development') {
+            console.log("Playback started successfully");
+          }
           
           // Сбрасываем ошибки при успешном воспроизведении
           if (error) {
@@ -722,10 +772,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           
           if (err instanceof Error) {
             if (err.name === "AbortError") {
-              console.log("Play aborted");
+              if (process.env.NODE_ENV === 'development') {
+                console.log("Play aborted");
+              }
               return;
             } else if (err.name === "NotAllowedError") {
-              console.warn("Play not allowed by browser - user must interact with the page first");
+              if (process.env.NODE_ENV === 'development') {
+                console.warn("Play not allowed by browser - user must interact with the page first");
+              }
               toast.error("Please interact with the page to enable audio playback");
               return;
             }
@@ -733,27 +787,37 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           throw err;
         }
       } else {
-        console.log(
-          `Not ready to play: readyState=${audio.readyState}, paused=${audio.paused}`,
-        );
+        if (process.env.NODE_ENV === 'development') {
+          console.log(
+            `Not ready to play: readyState=${audio.readyState}, paused=${audio.paused}`,
+          );
+        }
         
         // Если аудио не готово, но HLS инициализирован, пробуем перезагрузить
         if (hlsRef.current && isInitializedRef.current) {
-          console.log("Attempting to reload HLS stream...");
+          if (process.env.NODE_ENV === 'development') {
+            console.log("Attempting to reload HLS stream...");
+          }
           try {
             hlsRef.current.startLoad();
           } catch (err) {
-            console.error("Error reloading HLS stream:", err);
+            if (process.env.NODE_ENV === 'development') {
+              console.error("Error reloading HLS stream:", err);
+            }
           }
         }
       }
     } catch (error: any) {
-      console.error("Error playing audio:", error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error playing audio:", error);
+      }
 
       // Retry логика для временных ошибок
       if (retryCountRef.current < 3 && mountedRef.current) {
         retryCountRef.current++;
-        console.log(`Retrying play attempt ${retryCountRef.current}/3`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Retrying play attempt ${retryCountRef.current}/3`);
+        }
         setTimeout(() => {
           if (mountedRef.current && isPlaying) {
             safePlay();
@@ -773,17 +837,23 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const safePause = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) {
-      console.error("AudioPlayer: Audio element reference is missing in safePause");
+      if (process.env.NODE_ENV === 'development') {
+        console.error("AudioPlayer: Audio element reference is missing in safePause");
+      }
       return;
     }
     
     if (!isInitializedRef.current) {
-      console.warn("AudioPlayer: Attempted to pause before initialization");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("AudioPlayer: Attempted to pause before initialization");
+      }
       return;
     }
     
     if (!mountedRef.current) {
-      console.warn("AudioPlayer: Attempted to pause after component unmounted");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("AudioPlayer: Attempted to pause after component unmounted");
+      }
       return;
     }
 
@@ -794,7 +864,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       playPromiseRef.current = null;
       retryCountRef.current = 0; // Сброс счетчика retry при успешной паузе
     } catch (error) {
-      console.error("Error pausing audio:", error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error pausing audio:", error);
+      }
       if (mountedRef.current) {
         setError("Could not pause audio. Please try again.");
         toast.error("Could not pause audio. Please try again.");
@@ -806,28 +878,38 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) {
-      console.error("AudioPlayer: Audio element reference is missing");
+      if (process.env.NODE_ENV === 'development') {
+        console.error("AudioPlayer: Audio element reference is missing");
+      }
       return;
     }
     
     if (!m3u8Url) {
-      console.error("AudioPlayer: Missing m3u8Url");
+      if (process.env.NODE_ENV === 'development') {
+        console.error("AudioPlayer: Missing m3u8Url");
+      }
       setError("Missing audio source");
       return;
     }
 
     mountedRef.current = true;
-    console.log(`AudioPlayer: Initializing with URL: ${m3u8Url}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`AudioPlayer: Initializing with URL: ${m3u8Url}`);
+    }
     
     // Инициализация HLS
   // Инициализация HLS с проверкой URL
   const initializeHls = async (url: string): Promise<string | null> => {
     if (!url) {
-      console.error("AudioPlayer: No URL provided for HLS initialization");
+      if (process.env.NODE_ENV === 'development') {
+        console.error("AudioPlayer: No URL provided for HLS initialization");
+      }
       return null;
     }
 
-    console.log(`AudioPlayer: Initializing HLS with URL: ${url}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`AudioPlayer: Initializing HLS with URL: ${url}`);
+    }
     setIsLoading(true);
     setError(null);
     retryCountRef.current = 0; // Сбрасываем счетчик попыток при новой инициализации
@@ -839,11 +921,15 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         try {
           const bucketUrl = createSegmentUrl(url);
           if (bucketUrl) {
-            console.log(`AudioPlayer: Created bucket URL: ${bucketUrl} from: ${url}`);
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`AudioPlayer: Created bucket URL: ${bucketUrl} from: ${url}`);
+            }
             url = bucketUrl;
           }
         } catch (error) {
-          console.warn(`AudioPlayer: Could not create bucket URL for: ${url}`, error);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`AudioPlayer: Could not create bucket URL for: ${url}`, error);
+          }
           // Продолжаем с исходным URL
         }
       }
@@ -851,11 +937,17 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       // Здесь должен быть вызов setupHls с обработанным URL
       return url; // Возвращаем обработанный URL для использования в setupHls
     } catch (error) {
-      console.error("AudioPlayer: Error initializing HLS:", error);
-      if (error instanceof Error) {
-        console.error(`AudioPlayer: Error name: ${error.name}, message: ${error.message}`);
-        if (error.stack) {
-          console.error(`AudioPlayer: Error stack: ${error.stack}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("AudioPlayer: Error initializing HLS:", error);
+        if (error instanceof Error) {
+          console.error(`AudioPlayer: Error name: ${error.name}, message: ${error.message}`);
+          if (error.stack) {
+            console.error(`AudioPlayer: Error stack: ${error.stack}`);
+          }
+        }
+      } else {
+        if (error instanceof Error) {
+          console.warn(`AudioPlayer: HLS init error - ${error.message}`);
         }
       }
       
@@ -988,11 +1080,22 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           // Улучшенные обработчики событий HLS с расширенной обработкой ошибок
           hls.on(Hls.Events.ERROR, (_, data) => {
-            console.warn("AudioPlayer: HLS Error:", data.type, data.details, data.fatal);
+            // Игнорируем AbortError в production
+            if (data.details === Hls.ErrorDetails.FRAG_LOAD_ERROR && 
+                data.response && data.response.code === 0) {
+              if (process.env.NODE_ENV === 'development') {
+                console.warn("AudioPlayer: HLS AbortError (normal during cleanup)");
+              }
+              return;
+            }
             
-            // Добавляем более подробную информацию об ошибке
-            if (data.response) {
-              console.error(`AudioPlayer: Error details - status: ${data.response.code}, message: ${data.response.text}`);
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("AudioPlayer: HLS Error:", data.type, data.details, data.fatal);
+              
+              // Добавляем более подробную информацию об ошибке
+              if (data.response) {
+                console.error(`AudioPlayer: Error details - status: ${data.response.code}, message: ${data.response.text}`);
+              }
             }
 
             if (data.fatal) {
@@ -1000,9 +1103,11 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 case Hls.ErrorTypes.NETWORK_ERROR:
                   if (retryCountRef.current < 8) { // Увеличиваем максимальное количество попыток
                     retryCountRef.current++;
-                    console.log(
-                      `AudioPlayer: Network error, retrying... (${retryCountRef.current}/8)`,
-                    );
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log(
+                        `AudioPlayer: Network error, retrying... (${retryCountRef.current}/8)`,
+                      );
+                    }
                     
                     // Экспоненциальная задержка перед повторной попыткой с джиттером
                     const baseDelay = Math.min(1000 * Math.pow(1.5, retryCountRef.current), 15000);
@@ -1013,7 +1118,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                       if (hlsRef.current && mountedRef.current) {
                         // Перед повторной попыткой проверяем сетевое соединение
                         if (navigator.onLine) {
-                          console.log(`AudioPlayer: Restarting load after ${Math.round(backoffDelay)}ms delay`);
+                          if (process.env.NODE_ENV === 'development') {
+                            console.log(`AudioPlayer: Restarting load after ${Math.round(backoffDelay)}ms delay`);
+                          }
                           
                           // Пробуем сначала остановить и очистить загрузку перед повторной попыткой
                           try {
@@ -1021,7 +1128,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                             // Небольшая пауза перед перезапуском загрузки
                             setTimeout(() => {
                               if (mountedRef.current && hlsRef.current) {
-                                console.log('AudioPlayer: Reloading source after network error');
+                                if (process.env.NODE_ENV === 'development') {
+                                  console.log('AudioPlayer: Reloading source after network error');
+                                }
                                 // Используем текущий URL из HLS
                                 if (hlsRef.current.url) {
                                   hls.loadSource(hlsRef.current.url);
@@ -1030,16 +1139,22 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                               }
                             }, 100);
                           } catch (e) {
-                            console.warn('AudioPlayer: Error during load reset:', e);
+                            if (process.env.NODE_ENV === 'development') {
+                              console.warn('AudioPlayer: Error during load reset:', e);
+                            }
                             // Если очистка не удалась, просто перезапускаем загрузку
                             hls.startLoad();
                           }
                         } else {
-                          console.warn("AudioPlayer: Device is offline, waiting for connection");
+                          if (process.env.NODE_ENV === 'development') {
+                            console.warn("AudioPlayer: Device is offline, waiting for connection");
+                          }
                           setError("Нет подключения к интернету. Ожидание сети...");
                           // Добавляем слушатель для автоматического возобновления при появлении сети
                           const onlineHandler = () => {
-                            console.log("AudioPlayer: Network connection restored, restarting load");
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log("AudioPlayer: Network connection restored, restarting load");
+                            }
                             setError("Соединение восстановлено. Загрузка...");
                             if (hlsRef.current && mountedRef.current) {
                               // Сбрасываем счетчик попыток при восстановлении соединения
@@ -1065,7 +1180,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   }
                   break;
                 case Hls.ErrorTypes.MEDIA_ERROR:
-                  console.log("AudioPlayer: Media error, attempting recovery...");
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log("AudioPlayer: Media error, attempting recovery...");
+                  }
                   try {
                     // Улучшенная стратегия восстановления после ошибки медиа
                     const mediaErrorAttempt = mediaErrorRecoveryAttemptRef.current;
@@ -1082,17 +1199,23 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                         switch (mediaErrorAttempt) {
                           case 0:
                             // Первая попытка: сброс на начало текущего сегмента
-                            console.log('AudioPlayer: Recovery strategy 1: Reset to current segment');
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log('AudioPlayer: Recovery strategy 1: Reset to current segment');
+                            }
                             audioRef.current.currentTime = Math.floor(audioRef.current.currentTime);
                             break;
                           case 1:
                             // Вторая попытка: сброс на предыдущий сегмент
-                            console.log('AudioPlayer: Recovery strategy 2: Reset to previous segment');
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log('AudioPlayer: Recovery strategy 2: Reset to previous segment');
+                            }
                             audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 5);
                             break;
                           case 2:
                             // Третья попытка: полный сброс
-                            console.log('AudioPlayer: Recovery strategy 3: Full reset');
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log('AudioPlayer: Recovery strategy 3: Full reset');
+                            }
                             audioRef.current.currentTime = 0;
                             break;
                         }
@@ -1100,17 +1223,23 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                       
                       setTimeout(() => {
                         if (mountedRef.current && hlsRef.current) {
-                          console.log(`AudioPlayer: Retry media error recovery (${mediaErrorAttempt + 1}/3)...`);
+                          if (process.env.NODE_ENV === 'development') {
+                            console.log(`AudioPlayer: Retry media error recovery (${mediaErrorAttempt + 1}/3)...`);
+                          }
                           try {
                             hls.recoverMediaError();
                             
                             // Если восстановление успешно, пробуем воспроизвести
                             if (audioRef.current && audioRef.current.paused) {
                               audioRef.current.play().catch(e => {
-                                console.error('AudioPlayer: Error resuming playback:', e);
+                                if (process.env.NODE_ENV === 'development') {
+                                  console.error('AudioPlayer: Error resuming playback:', e);
+                                }
                                 // Если воспроизведение не удалось, пробуем перезагрузить HLS
                                 if (mountedRef.current && hlsRef.current) {
-                                  console.log('AudioPlayer: Reloading HLS after failed recovery...');
+                                  if (process.env.NODE_ENV === 'development') {
+                                    console.log('AudioPlayer: Reloading HLS after failed recovery...');
+                                  }
                                   hls.destroy();
                                   // Используем m3u8Url из пропсов для перезагрузки
                                   setupHls(m3u8Url);
@@ -1118,10 +1247,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                               });
                             }
                           } catch (e) {
-                            console.error('AudioPlayer: Error during media recovery:', e);
+                            if (process.env.NODE_ENV === 'development') {
+                              console.error('AudioPlayer: Error during media recovery:', e);
+                            }
                             // Если восстановление не удалось, пробуем перезагрузить HLS
                             if (mountedRef.current && hlsRef.current) {
-                              console.log('AudioPlayer: Reloading HLS after failed recovery...');
+                              if (process.env.NODE_ENV === 'development') {
+                                console.log('AudioPlayer: Reloading HLS after failed recovery...');
+                              }
                               hls.destroy();
                               // Используем m3u8Url из пропсов для перезагрузки
                               setupHls(m3u8Url);
@@ -1131,7 +1264,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                       }, 500 * (mediaErrorAttempt + 1)); // Увеличиваем задержку с каждой попыткой
                     } else {
                       // Если все попытки не удались, перезагружаем HLS полностью
-                      console.log('AudioPlayer: All recovery attempts failed. Reloading HLS...');
+                      if (process.env.NODE_ENV === 'development') {
+                        console.log('AudioPlayer: All recovery attempts failed. Reloading HLS...');
+                      }
                       if (mountedRef.current && hlsRef.current) {
                         mediaErrorRecoveryAttemptRef.current = 0; // Сбрасываем счетчик
                         hls.destroy();
@@ -1140,7 +1275,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                       }
                     }
                   } catch (err) {
-                    console.error("AudioPlayer: Failed to recover from media error:", err);
+                    if (process.env.NODE_ENV === 'development') {
+                      console.error("AudioPlayer: Failed to recover from media error:", err);
+                    }
                     setError("Ошибка воспроизведения медиа");
                     toast.error("Ошибка воспроизведения. Пожалуйста, попробуйте другой трек.");
                   }
@@ -1150,7 +1287,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   toast.error("Произошла ошибка воспроизведения. Пожалуйста, попробуйте еще раз.");
                   // Для других критических ошибок пробуем перезагрузить HLS
                   if (mountedRef.current && hlsRef.current) {
-                    console.log('AudioPlayer: Attempting to recover from fatal error by reloading');
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log('AudioPlayer: Attempting to recover from fatal error by reloading');
+                    }
                     setTimeout(() => {
                       if (mountedRef.current && hlsRef.current) {
                         hls.destroy();
@@ -1164,11 +1303,15 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
             } else {
               // Улучшенная обработка некритических ошибок
               if (data.details === Hls.ErrorDetails.FRAG_LOAD_ERROR) {
-                console.warn("AudioPlayer: Fragment load error - attempting recovery");
+                if (process.env.NODE_ENV === 'development') {
+                  console.warn("AudioPlayer: Fragment load error - attempting recovery");
+                }
                 
                 // Пробуем перезагрузить проблемный фрагмент
                 if (data.frag && data.frag.url) {
-                  console.log(`AudioPlayer: Attempting to reload fragment: ${data.frag.sn}`);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log(`AudioPlayer: Attempting to reload fragment: ${data.frag.sn}`);
+                  }
                   // Для некритических ошибок фрагментов можно увеличить буфер
                   if (hlsRef.current) {
                     // Временно увеличиваем размер буфера для лучшей устойчивости
@@ -1184,16 +1327,20 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   }
                 }
               } else if (data.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) {
-                console.warn("AudioPlayer: Buffer stalled - attempting recovery");
+                if (process.env.NODE_ENV === 'development') {
+                  console.warn("AudioPlayer: Buffer stalled - attempting recovery");
+                }
                 
                 // Проверяем состояние буфера
                 if (audioRef.current) {
                   const buffered = audioRef.current.buffered;
-                  let bufferInfo = 'Buffer state: ';
-                  for (let i = 0; i < buffered.length; i++) {
-                    bufferInfo += `[${buffered.start(i).toFixed(2)}-${buffered.end(i).toFixed(2)}] `;
+                  if (process.env.NODE_ENV === 'development') {
+                    let bufferInfo = 'Buffer state: ';
+                    for (let i = 0; i < buffered.length; i++) {
+                      bufferInfo += `[${buffered.start(i).toFixed(2)}-${buffered.end(i).toFixed(2)}] `;
+                    }
+                    console.log(bufferInfo);
                   }
-                  console.log(bufferInfo);
                   
                   // Если аудио воспроизводится, пробуем стратегию паузы и воспроизведения
                   if (!audioRef.current.paused) {
@@ -1207,11 +1354,17 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                         }
                         
                         audioRef.current.play().catch(e => {
-                          console.error('AudioPlayer: Error resuming after buffer stall:', e);
+                          if (process.env.NODE_ENV === 'development') {
+                            console.error('AudioPlayer: Error resuming after buffer stall:', e);
+                          }
                           // Если воспроизведение не удалось, пробуем еще раз через секунду
                           setTimeout(() => {
                             if (mountedRef.current && audioRef.current) {
-                              audioRef.current.play().catch(e2 => console.error('AudioPlayer: Repeated error resuming:', e2));
+                              audioRef.current.play().catch(e2 => {
+                                if (process.env.NODE_ENV === 'development') {
+                                  console.error('AudioPlayer: Repeated error resuming:', e2);
+                                }
+                              });
                             }
                           }, 1000);
                         });
@@ -1220,7 +1373,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   }
                 }
               } else if (data.details === Hls.ErrorDetails.BUFFER_APPEND_ERROR) {
-                console.log('AudioPlayer: Buffer append error - attempting recovery');
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('AudioPlayer: Buffer append error - attempting recovery');
+                }
                 // Для ошибок добавления в буфер можно попробовать очистить буфер и перезагрузить
                 if (hlsRef.current) {
                   // BUFFER_RESET требует два аргумента: event и data (data может быть пустым объектом)
@@ -1232,7 +1387,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             if (!mountedRef.current) return;
-            console.log(`AudioPlayer: HLS manifest parsed successfully with ${data.levels.length} quality level(s)`);
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`AudioPlayer: HLS manifest parsed successfully with ${data.levels.length} quality level(s)`);
+            }
             setIsLoading(false);
             isInitializedRef.current = true;
             hls.startLoad();
@@ -1240,29 +1397,39 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           hls.on(Hls.Events.FRAG_LOADED, (event, data) => {
             if (!mountedRef.current) return;
-            console.log(`AudioPlayer: Fragment loaded: ${data.frag.sn}/${data.frag.level}`);
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`AudioPlayer: Fragment loaded: ${data.frag.sn}/${data.frag.level}`);
+            }
             setError(null); // Очищаем ошибки при успешной загрузке фрагментов
           });
           
           // Добавляем обработчик успешной загрузки уровня
           hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
             if (!mountedRef.current) return;
-            console.log(`AudioPlayer: Level ${data.level} loaded with ${data.details.fragments.length} fragments`);
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`AudioPlayer: Level ${data.level} loaded with ${data.details.fragments.length} fragments`);
+            }
             setError(null);
           });
 
-          console.log("AudioPlayer: Loading source and attaching media");
+          if (process.env.NODE_ENV === 'development') {
+            console.log("AudioPlayer: Loading source and attaching media");
+          }
           hls.loadSource(manifestBlobRef.current);
           hls.attachMedia(audio);
         } else if (audio.canPlayType("application/vnd.apple.mpegurl")) {
           // Нативная поддержка HLS
-          console.log("AudioPlayer: Using native HLS support");
+          if (process.env.NODE_ENV === 'development') {
+            console.log("AudioPlayer: Using native HLS support");
+          }
           audio.src = manifestBlobRef.current || sourceUrl;
           audio.addEventListener("loadedmetadata", () => {
             if (mountedRef.current) {
               setIsLoading(false);
               isInitializedRef.current = true;
-              console.log("Native HLS loaded successfully");
+              if (process.env.NODE_ENV === 'development') {
+                console.log("Native HLS loaded successfully");
+              }
             }
           });
         } else {
@@ -1272,11 +1439,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setIsLoading(false);
         }
       } catch (err) {
-        console.error("Error in setupHLS:", err);
-        if (err instanceof Error) {
-          console.error(`AudioPlayer: Error name: ${err.name}, message: ${err.message}`);
-          if (err.stack) {
-            console.error(`AudioPlayer: Error stack: ${err.stack}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error in setupHLS:", err);
+          if (err instanceof Error) {
+            console.error(`AudioPlayer: Error name: ${err.name}, message: ${err.message}`);
+            if (err.stack) {
+              console.error(`AudioPlayer: Error stack: ${err.stack}`);
+            }
+          }
+        } else {
+          // В production только основная информация об ошибке
+          if (err instanceof Error) {
+            console.warn(`AudioPlayer: Setup error - ${err.message}`);
           }
         }
         if (mountedRef.current) {
@@ -1295,7 +1469,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
       // Отменяем текущие запросы
       if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+        try {
+          abortControllerRef.current.abort();
+        } catch (err) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Error aborting controller:", err);
+          }
+        }
       }
 
       // Очищаем HLS
@@ -1306,7 +1486,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           hlsRef.current.destroy();
           hlsRef.current = null;
         } catch (err) {
-          console.warn("Error cleaning up HLS:", err);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Error cleaning up HLS:", err);
+          }
         }
       }
 
@@ -1317,7 +1499,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           audio.src = "";
           audio.load();
         } catch (err) {
-          console.warn("Error cleaning up audio:", err);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Error cleaning up audio:", err);
+          }
         }
       }
 
@@ -1327,7 +1511,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           URL.revokeObjectURL(manifestBlobRef.current);
           manifestBlobRef.current = null;
         } catch (err) {
-          console.warn("Error revoking object URL:", err);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Error revoking object URL:", err);
+          }
         }
       }
     };
@@ -1369,17 +1555,23 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       const errorCode = audio.error ? audio.error.code : 'unknown';
       const errorMessage = audio.error ? audio.error.message : 'Unknown error';
       
-      console.error(`AudioPlayer: Audio error detected - code=${errorCode}, message=${errorMessage}`);
-      console.error('Error event details:', e);
-      
-      // Проверяем состояние аудио элемента
-      if (audio) {
-        console.log(`Audio state during error: readyState=${audio.readyState}, paused=${audio.paused}, currentTime=${audio.currentTime}, networkState=${audio.networkState}`);
-      }
-      
-      // Проверяем состояние HLS
-      if (hlsRef.current) {
-        console.log('HLS state during error:', hlsRef.current.levels, hlsRef.current.currentLevel);
+      // В development режиме логируем подробно, в production - минимально
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`AudioPlayer: Audio error detected - code=${errorCode}, message=${errorMessage}`);
+        console.error('Error event details:', e);
+        
+        // Проверяем состояние аудио элемента
+        if (audio) {
+          console.log(`Audio state during error: readyState=${audio.readyState}, paused=${audio.paused}, currentTime=${audio.currentTime}, networkState=${audio.networkState}`);
+        }
+        
+        // Проверяем состояние HLS
+        if (hlsRef.current) {
+          console.log('HLS state during error:', hlsRef.current.levels, hlsRef.current.currentLevel);
+        }
+      } else {
+        // В production только основная информация
+        console.warn(`AudioPlayer: Audio error - code=${errorCode}`);
       }
       
       // Формируем понятное сообщение для пользователя
@@ -1398,12 +1590,16 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
             userMessage = "Ошибка декодирования аудио";
             // Попытка восстановления для ошибок декодирования
             if (hlsRef.current) {
-              console.log("Attempting to recover from media decode error...");
+              if (process.env.NODE_ENV === 'development') {
+                console.log("Attempting to recover from media decode error...");
+              }
               try {
                 hlsRef.current.recoverMediaError();
                 recoveryAttempted = true;
               } catch (err) {
-                console.error("Failed to recover from media error:", err);
+                if (process.env.NODE_ENV === 'development') {
+                  console.error("Failed to recover from media error:", err);
+                }
               }
             }
             break;
@@ -1422,7 +1618,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       
       // Если не было попытки восстановления, пробуем перезагрузить HLS
       if (!recoveryAttempted && hlsRef.current && isInitializedRef.current) {
-        console.log("Attempting to reload HLS after error...");
+        if (process.env.NODE_ENV === 'development') {
+          console.log("Attempting to reload HLS after error...");
+        }
         try {
           setTimeout(() => {
             if (hlsRef.current && mountedRef.current) {
@@ -1430,7 +1628,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           }, 1000);
         } catch (err) {
-          console.error("Failed to reload HLS after error:", err);
+          if (process.env.NODE_ENV === 'development') {
+            console.error("Failed to reload HLS after error:", err);
+          }
         }
       }
     };

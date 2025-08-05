@@ -14,10 +14,10 @@ export default function AllOverlays() {
     
     return (
         <ClientOnly>
-            <AnimatePresence>
-                {isLoginOpen && <Login />}
-                {isRegisterOpen && <Register />}
-                {isEditProfileOpen && <EditProfileOverlay />}
+            <AnimatePresence mode="wait">
+                {isLoginOpen && <Login key="login" />}
+                {isRegisterOpen && <Register key="register" />}
+                {isEditProfileOpen && <EditProfileOverlay key="edit-profile" />}
             </AnimatePresence>
             <CookieConsentPopup />
         </ClientOnly>

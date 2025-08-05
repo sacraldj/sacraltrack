@@ -81,83 +81,81 @@
   }
 }
 
-/* Подключение фшрифта Gotham Pro */
+/* Font loading - Fixed Gotham Pro font */
 @font-face {
-    font-family: 'Gotham Pro';
-    src: url('/fonts/GothamPro.woff') format('woff');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  
+  font-family: 'Gotham Pro';
+  src: url('/fonts/GothamPro-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'Gotham Pro';
+  src: url('/fonts/GothamPro-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
-  
-  /* Применение шрифта Gotham Pro */
-  body {
-    font-family: 'Gotham Pro', sans-serif;
-  }
-  
+/* Apply Gotham Pro font */
+body {
+  font-family: 'Gotham Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
-  section {
-    display: flex;
-    overflow-x: hidden;
-  }
-  
-  div-run {
-    font-size: 70px;
-    font-family: sans-serif;
-    line-height: 1.3;
-    padding: 24px 0;
-    white-space: nowrap;
-    display: inline-block;
-  }
-  
-  .div-run1 {
-    animation: marquee1 200s infinite linear;
-    animation-delay: -200s;
-  }
-  
-  .div-run1 {
-    animation: marquee2 200s infinite linear;
-    animation-delay: -10s;
-  }
-  
-  @keyframes marquee1 {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-  
-  @keyframes marquee2 {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-200%);
-    }
-  }
-  
+/* Marquee animations - Fixed duplicates */
+.div-run {
+  font-size: 70px;
+  font-family: sans-serif;
+  line-height: 1.3;
+  padding: 24px 0;
+  white-space: nowrap;
+  display: inline-block;
+}
 
-  /*BG*/
-  .gradient-bg {
-    position: fixed; /* Сделаем позиционирование фиксированным */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: -1; /* Установите и на уровень ниже содержимого */
+.div-run1 {
+  animation: marquee1 200s infinite linear;
+  animation-delay: -200s;
+}
+
+.div-run2 {
+  animation: marquee2 200s infinite linear;
+  animation-delay: -10s;
+}
+
+@keyframes marquee1 {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+/* Background gradients */
+.gradient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
 }
 
 .gradients-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .interactive {
@@ -169,7 +167,7 @@
   filter: blur(50px);
   top: 0;
   left: 0;
-  background-color: rgba(32, 221, 187, 0.4); /* Бирюзовый с 40% непрозрачностью */
+  background-color: rgba(32, 221, 187, 0.4);
   mix-blend-mode: screen;
 }
 
@@ -183,18 +181,18 @@
 }
 
 .dynamic-bubble.pink {
-  background-color: rgba(255, 105, 180, 0.4); /* Розовый с 40% непрозрачностью */
+  background-color: rgba(255, 105, 180, 0.4);
 }
 
 .dynamic-bubble.purple {
-  background-color: rgba(46, 36, 105, 0.4); /* Темно-синий с 40% непрозрачностью */
+  background-color: rgba(46, 36, 105, 0.4);
 }
 
 .icon-hover {
   @apply transition-transform duration-200 hover:scale-110;
 }
 
-/* Стили для иконок в TopNav */
+/* TopNav icon styles */
 #TopNav img, 
 #TopNav svg {
   @apply transition-transform duration-200;
@@ -205,7 +203,7 @@
   @apply scale-110;
 }
 
-/* Стили для модального окна с высшим приоритетом */
+/* Modal styles with proper z-index */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -214,7 +212,6 @@
   backdrop-filter: blur(4px);
 }
 
-/* Специальные стили для WelcomeModal с максимальным z-index */
 .welcome-modal-wrapper {
   position: relative;
   z-index: 1000000 !important;
@@ -231,69 +228,58 @@
   position: relative;
 }
 
-/* Когда WelcomeModal активен, блокируем прокрутку body */
 body.welcome-modal-open {
   overflow: hidden !important;
 }
 
+/* Prevent body scroll when auth modals are open */
+body.auth-modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Unified animations - removed duplicates */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @keyframes progress {
-    0% {
-        width: 0%;
-    }
-    100% {
-        width: 100%;
-    }
-}
-
-.animate-fadeIn {
-    animation: fadeIn 0.3s ease-out forwards;
-}
-
-.animate-progress {
-    animation: progress 2.5s ease-in-out forwards;
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
 }
 
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-float {
-    animation: float 3s ease-in-out infinite;
-}
-
-.animate-fadeInUp {
-    animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.animation-delay-200 {
-    animation-delay: 200ms;
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes border-glow {
@@ -311,11 +297,6 @@ body.welcome-modal-open {
   }
 }
 
-.animate-border-glow {
-  animation: border-glow 3s ease-in-out infinite;
-}
-
-/* Добавляем анимацию свечения для элементов */
 @keyframes glow {
   0% {
     filter: drop-shadow(0 0 3px rgba(32, 221, 187, 0.3));
@@ -328,21 +309,6 @@ body.welcome-modal-open {
   }
 }
 
-.animate-glow {
-  animation: glow 3s ease-in-out infinite;
-}
-
-/* Анимация для hover-эффекта подъема элементов */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px -5px rgba(32, 221, 187, 0.2);
-}
-
-/* Анимация блеска градиентов */
 @keyframes shimmer {
   0% {
     background-position: -100% 0;
@@ -352,12 +318,6 @@ body.welcome-modal-open {
   }
 }
 
-.animate-shimmer {
-  animation: shimmer 3s linear infinite;
-  background-size: 200% 100%;
-}
-
-/* Анимация плавного движения вверх-вниз */
 @keyframes floatY {
   0% {
     transform: translateY(0px);
@@ -370,11 +330,6 @@ body.welcome-modal-open {
   }
 }
 
-.animate-floatY {
-  animation: floatY 4s ease-in-out infinite;
-}
-
-/* Анимация появления с масштабированием */
 @keyframes scaleIn {
   0% {
     transform: scale(0.95);
@@ -386,29 +341,47 @@ body.welcome-modal-open {
   }
 }
 
+/* Animation classes */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-progress {
+  animation: progress 2.5s ease-in-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-border-glow {
+  animation: border-glow 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+  background-size: 200% 100%;
+}
+
+.animate-floatY {
+  animation: floatY 4s ease-in-out infinite;
+}
+
 .animate-scaleIn {
   animation: scaleIn 0.6s ease-out forwards;
 }
 
-/* Анимация постепенного появления снизу */
-@keyframes fadeInUp {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-
-/* Задержки для анимаций */
+/* Animation delays */
 .animation-delay-200 {
-  animation-delay: 0.2s;
+  animation-delay: 200ms;
 }
 
 .animation-delay-400 {
@@ -419,12 +392,22 @@ body.welcome-modal-open {
   animation-delay: 0.6s;
 }
 
-/* Градиентный текст */
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(32, 221, 187, 0.2);
+}
+
+/* Gradient text */
 .gradient-text {
   @apply bg-gradient-to-r from-[#20DDBB] to-[#8B5CF6] bg-clip-text text-transparent;
 }
 
-/* Glass effect for cards and modals */
+/* Glass effect */
 .glass-effect {
   background: rgba(26, 35, 56, 0.3);
   backdrop-filter: blur(20px);
@@ -437,7 +420,6 @@ body.welcome-modal-open {
     inset 0 2px 4px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Enhanced card hover effects without problematic blue transitions */
 .glass-effect:hover {
   background: rgba(26, 35, 56, 0.4);
   border-color: rgba(255, 255, 255, 0.2);
@@ -466,8 +448,7 @@ body.welcome-modal-open {
   animation: gradient 6s ease infinite;
 }
 
-/* Custom Scrollbar */
-/* Enhanced Custom Scrollbar Styles */
+/* Unified scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
@@ -495,14 +476,15 @@ body.welcome-modal-open {
 }
 
 .custom-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
 .custom-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-/* Modal scrollbar styles */
+/* Modal scrollbar */
 .modal-scroll::-webkit-scrollbar {
   width: 4px;
 }
@@ -527,14 +509,173 @@ body.welcome-modal-open {
 }
 
 .modal-scroll {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
 .modal-scroll::-webkit-scrollbar {
   display: none;
 }
 
-/* Gradient Border */
+/* Auth modal specific styles */
+.auth-modal-container {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+}
+
+.auth-modal-container * {
+  border-radius: inherit;
+}
+
+/* Ensure proper border radius for auth modal content */
+.auth-modal-content {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+}
+
+/* Mobile specific auth modal fixes */
+@media (max-width: 768px) {
+  .auth-modal-container {
+    /* Let auth-mobile.css handle the container styling */
+  }
+  
+  .auth-modal-container * {
+    border-radius: inherit;
+  }
+  
+  /* Mobile modal overlay adjustments */
+  .auth-modal-overlay {
+    /* Let auth-mobile.css handle the overlay styling */
+  }
+  
+  /* Mobile modal content adjustments */
+  .auth-modal-content {
+    /* Let auth-mobile.css handle the content styling */
+  }
+  
+  /* Mobile form adjustments */
+  .auth-modal-content > div:first-child {
+    /* Let auth-mobile.css handle the styling */
+  }
+  
+  .auth-modal-content > div:nth-child(2) {
+    /* Let auth-mobile.css handle the styling */
+  }
+  
+  .auth-modal-content > div:last-child {
+    /* Let auth-mobile.css handle the styling */
+  }
+  
+  /* Mobile close button adjustments */
+  .auth-modal-container button[class*="absolute top-4 right-4"] {
+    top: 12px !important;
+    right: 12px !important;
+  }
+  
+  /* Mobile scroll adjustments */
+  .auth-modal-container.modal-scroll {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Mobile notification panel fixes */
+  .mobile-notification-panel {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 1000 !important;
+    display: block !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-top: calc(60px + env(safe-area-inset-top)) !important;
+    padding-left: env(safe-area-inset-left) !important;
+    padding-right: env(safe-area-inset-right) !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+    /* Force full width */
+    min-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+  
+    /* Mobile notification content adjustments */
+  .mobile-notification-panel .max-h-\[70vh\] {
+    max-height: calc(100vh - 120px) !important;
+  }
+
+  .mobile-notification-panel .p-3 {
+    padding: 16px !important;
+  }
+
+  /* Mobile notification panel content */
+  .mobile-notification-panel > div:first-child {
+    padding: 16px !important;
+    border-bottom: 1px solid #3f2d63 !important;
+  }
+
+  .mobile-notification-panel > div:last-child {
+    padding: 0 !important;
+    max-height: calc(100vh - 140px) !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Additional mobile notification panel fixes */
+  @media (max-width: 640px) {
+    .mobile-notification-panel {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      border: none !important;
+      z-index: 1000 !important;
+      display: block !important;
+      transform: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      padding-top: calc(60px + env(safe-area-inset-top)) !important;
+      padding-left: env(safe-area-inset-left) !important;
+      padding-right: env(safe-area-inset-right) !important;
+      padding-bottom: env(safe-area-inset-bottom) !important;
+      /* Force full width */
+      min-width: 100vw !important;
+      box-sizing: border-box !important;
+      /* Override any conflicting styles */
+      max-width: none !important;
+      min-width: 100vw !important;
+    }
+  }
+  
+  /* Desktop notification panel styles */
+  @media (min-width: 641px) {
+    .mobile-notification-panel {
+      position: absolute !important;
+      top: 64px !important;
+      right: 0 !important;
+      left: auto !important;
+      width: 320px !important;
+      max-width: 320px !important;
+      height: auto !important;
+      max-height: 500px !important;
+      border-radius: 12px !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      display: block !important;
+    }
+  }
+}
+
+/* Gradient border */
 .gradient-border {
   position: relative;
   background: linear-gradient(to right, #20DDBB, #018CFD);
@@ -553,7 +694,7 @@ body.welcome-modal-open {
   z-index: -1;
 }
 
-/* Terms Page Specific Styles */
+/* Terms page styles */
 .terms-section {
   scroll-margin-top: 100px;
 }
@@ -566,23 +707,7 @@ body.welcome-modal-open {
 }
 
 @layer utilities {
-  /* Existing utility classes */
-  
-  /* Add shimmer animation for status badges */
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-  
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-  }
-  
-  /* Enhanced shimmer animation for status badges */
+  /* Shimmer animation for status badges */
   .status-badge-shimmer {
     position: relative;
     overflow: hidden;
@@ -634,23 +759,18 @@ body.welcome-modal-open {
   }
 }
 
-/* Плавная прокрутка для контента */
+/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-body {
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
+/* Body styles moved to the main body definition below */
 
-/* Обеспечивает плавное взаимодействие контента с нижними панелями */
 .smooth-scroll-container {
   transition: transform 0.3s ease;
 }
 
-/* Стилизация для z-индексов */
+/* Fixed bottom panel */
 .fixed-bottom-panel {
   z-index: 50;
   box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
@@ -658,20 +778,18 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Адаптивный отступ для контента */
+/* Content spacing */
 @media (max-width: 768px) {
   .content-with-bottom-nav {
     padding-bottom: 100px;
   }
 }
 
-/* Top navigation spacing - ensures content doesn't overlap with nav */
 .content-spacing {
-  padding-top: 80px; /* Provides adequate spacing from the 60px high nav bar */
+  padding-top: 80px;
   margin-top: 0;
 }
 
-/* Adjusts the main content containers to use this spacing consistently */
 .content-with-top-nav {
   padding-top: calc(80px + env(safe-area-inset-top)) !important;
   margin-top: 0 !important;
@@ -683,22 +801,18 @@ body {
   padding-top: calc(80px + env(safe-area-inset-top)) !important;
 }
 
-/* Replace pt-[100px] with content-with-top-nav */
 .pt-\[100px\] {
   padding-top: calc(80px + env(safe-area-inset-top)) !important;
 }
 
-/* Ensure main layout elements respect the top nav */
 .smooth-scroll-container {
   padding-top: calc(60px + env(safe-area-inset-top));
 }
 
-/* For post detail pages */
 .post-detail-container {
   padding-top: calc(80px + env(safe-area-inset-top)) !important;
 }
 
-/* Fix background elements to position properly under the top nav */
 #TopNav {
   position: fixed;
   z-index: 50;
@@ -709,9 +823,7 @@ body {
   padding-top: env(safe-area-inset-top);
 }
 
-/* === iOS и iPhone ОПТИМИЗАЦИИ === */
-
-/* iOS Safari viewport fixes */
+/* iOS and iPhone optimizations */
 html {
   height: 100%;
   height: -webkit-fill-available;
@@ -720,16 +832,14 @@ html {
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  /* Prevent bounce scrolling */
-  overscroll-behavior: none;
-  /* Smooth scrolling for iOS */
   -webkit-overflow-scrolling: touch;
-  /* Prevent text size adjust */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-/* Safe area insets for devices with notch/dynamic island */
+/* Safe area insets */
 @supports (padding: max(0px)) {
   .safe-area-top {
     padding-top: max(10px, env(safe-area-inset-top));
@@ -755,52 +865,45 @@ body {
   }
 }
 
-/* iPhone 13 Pro specific optimizations (390x844) */
+/* iPhone 13 Pro optimizations */
 @media only screen and (max-width: 390px) and (max-height: 844px) {
-  /* Optimize layout for iPhone 13 Pro */
   .container {
     max-width: 100% !important;
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
   
-  /* Ensure buttons are touch-friendly */
   button, .btn, [role="button"] {
     min-height: 44px !important;
     min-width: 44px !important;
     padding: 12px 16px !important;
   }
   
-  /* Optimize text sizes */
   h1 { font-size: 1.75rem !important; }
   h2 { font-size: 1.5rem !important; }
   h3 { font-size: 1.25rem !important; }
   
-  /* Optimize form inputs */
   input, textarea, select {
-    font-size: 16px !important; /* Prevent zoom */
+    font-size: 16px !important;
     padding: 14px !important;
     border-radius: 12px !important;
   }
 }
 
-/* iPhone 13 Pro Max specific optimizations (428x926) */
+/* iPhone 13 Pro Max optimizations */
 @media only screen and (max-width: 428px) and (min-width: 391px) {
   .container {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
   
-  /* Slightly larger touch targets */
   button, .btn, [role="button"] {
     min-height: 48px !important;
-    padding: 14px 20px !important;
   }
 }
 
-/* iOS Safari specific fixes */
+/* iOS Safari fixes */
 @supports (-webkit-touch-callout: none) {
-  /* Fix for iOS Safari viewport height issues */
   .min-h-screen {
     min-height: 100vh;
     min-height: -webkit-fill-available;
@@ -811,33 +914,30 @@ body {
     height: -webkit-fill-available;
   }
   
-  /* Prevent zoom on input focus */
   input, textarea, select {
     font-size: 16px !important;
     transform: translateZ(0);
     -webkit-appearance: none;
   }
   
-  /* Fix for sticky elements */
   .sticky {
     position: -webkit-sticky;
     position: sticky;
   }
   
-  /* Smooth scrolling for iOS */
   .overflow-y-auto, .overflow-scroll {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
 }
 
-/* Touch optimization for all interactive elements */
+/* Touch optimization */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
 }
 
-/* Re-enable text selection for content */
+/* Text selection */
 p, span, div[contenteditable], input, textarea {
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -845,16 +945,14 @@ p, span, div[contenteditable], input, textarea {
   user-select: text;
 }
 
-/* Optimize performance on mobile */
+/* Mobile performance optimizations */
 @media (max-width: 768px) {
   * {
-    /* Force hardware acceleration */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: auto;
   }
   
-  /* Optimize animations */
   .animate-spin,
   .animate-pulse,
   .animate-bounce {
@@ -862,20 +960,19 @@ p, span, div[contenteditable], input, textarea {
     will-change: transform;
   }
   
-  /* Optimize images */
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 }
 
-/* Enhanced mobile navigation with safe areas */
+/* Mobile navigation */
 .mobile-nav-safe {
   padding-bottom: max(10px, env(safe-area-inset-bottom));
   height: calc(60px + env(safe-area-inset-bottom));
 }
 
-/* Modal optimizations for mobile */
+/* Modal optimizations */
 @media (max-width: 768px) {
   .modal-overlay {
     padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
@@ -888,9 +985,8 @@ p, span, div[contenteditable], input, textarea {
   }
 }
 
-/* Landscape orientation optimizations */
+/* Landscape optimizations */
 @media (max-width: 844px) and (orientation: landscape) {
-  /* Adjust for landscape mode on phones */
   .content-with-top-nav {
     padding-top: calc(50px + env(safe-area-inset-top)) !important;
   }
@@ -899,33 +995,28 @@ p, span, div[contenteditable], input, textarea {
     height: calc(50px + env(safe-area-inset-top));
   }
   
-  /* Reduce modal padding in landscape */
   .modal-overlay {
     padding: max(5px, env(safe-area-inset-top)) max(5px, env(safe-area-inset-right)) max(5px, env(safe-area-inset-bottom)) max(5px, env(safe-area-inset-left));
   }
 }
 
-/* High DPI displays (Retina) optimizations */
+/* High DPI displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  /* Sharper borders on high DPI */
   .border {
     border-width: 0.5px;
   }
   
-  /* Optimize shadows */
   .shadow-lg, .shadow-xl {
     box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 }
 
-/* Dark mode specific mobile optimizations */
+/* Dark mode mobile */
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
-  /* Ensure proper contrast on mobile */
   body {
     background: linear-gradient(135deg, #1E1A36 0%, #2A2151 100%);
   }
   
-  /* Optimize text contrast */
   .text-white {
     color: #f8fafc;
   }
@@ -935,33 +1026,29 @@ p, span, div[contenteditable], input, textarea {
   }
 }
 
-/* Accessibility improvements for mobile */
+/* Accessibility improvements */
 @media (max-width: 768px) {
-  /* Larger focus indicators */
   *:focus {
     outline: 3px solid #20DDBB;
     outline-offset: 2px;
   }
   
-  /* Better contrast for buttons */
   button:focus,
   .btn:focus {
     box-shadow: 0 0 0 3px rgba(32, 221, 187, 0.5);
   }
   
-  /* Ensure minimum text size */
   small, .text-xs {
     font-size: 14px !important;
   }
 }
 
-/* Improved scroll behavior */
+/* Scroll behavior */
 .smooth-scroll {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Hide scrollbars while maintaining functionality */
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -971,7 +1058,7 @@ p, span, div[contenteditable], input, textarea {
   display: none;
 }
 
-/* Performance optimizations for animations */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -980,7 +1067,7 @@ p, span, div[contenteditable], input, textarea {
   }
 }
 
-/* Optimize for notched devices */
+/* Notched devices */
 @supports (padding: max(0px)) and (max-width: 768px) {
   .notch-safe {
     padding-top: max(20px, env(safe-area-inset-top));

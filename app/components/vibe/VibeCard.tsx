@@ -1419,7 +1419,7 @@ const EmojiButton: React.FC<EmojiButtonProps> = ({
       }}
       whileTap={{
         scale: 0.8,
-        rotate: [0, 10, -10, 0],
+        rotate: [0, 5],
       }}
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{

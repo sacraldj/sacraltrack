@@ -30,6 +30,8 @@ import {
 } from "./googleOAuthUtils";
 import { clearAllAuthFlags } from "@/app/utils/authCleanup";
 import SafariAuthHelper from './SafariAuthHelper';
+import { useIsClient } from '@/app/hooks/useIsClient';
+import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
 
 // Password strength checker
 const checkPasswordStrength = (password: string) => {
@@ -88,6 +90,7 @@ const showToast = (
 export default function Register() {
   const { setIsLoginOpen, setIsRegisterOpen } = useGeneralStore();
   const contextUser = useUser();
+  const isClient = useIsClient();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [googleLoading, setGoogleLoading] = useState<boolean>(false);
@@ -106,6 +109,9 @@ export default function Register() {
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [blockTimeLeft, setBlockTimeLeft] = useState<number>(0);
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
+
+  // Prevent body scroll when modal is open
+  useBodyScrollLock(true);
   const [showPasswordStrength, setShowPasswordStrength] = useState(false);
 
   // Check if user is temporarily blocked
@@ -175,6 +181,23 @@ export default function Register() {
       window.removeEventListener('auth_state_change', handleAuthStateChange as EventListener);
     };
   }, [contextUser?.user, setIsRegisterOpen]);
+
+  // Сброс состояния полей при открытии модального окна
+  useEffect(() => {
+    const { isRegisterOpen } = useGeneralStore.getState();
+    if (isRegisterOpen) {
+      // Сброс полей при открытии модального окна
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setError(null);
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+      setAgreeToTerms(false);
+      setShowPasswordStrength(false);
+    }
+  }, [useGeneralStore.getState().isRegisterOpen]);
 
   // Format time remaining for block
   const formatTimeLeft = (seconds: number) => {
@@ -573,6 +596,16 @@ export default function Register() {
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget && !loading && !googleLoading) {
       setIsRegisterOpen(false);
+      // Сброс полей при закрытии модального окна
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setError(null);
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+      setAgreeToTerms(false);
+      setShowPasswordStrength(false);
     }
   };
 
@@ -603,7 +636,7 @@ export default function Register() {
 
   return (
     <div 
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999999999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999999999] flex items-center justify-center p-4 auth-modal-overlay"
       onClick={handleClickOutside}
     >
       <motion.div
@@ -611,19 +644,32 @@ export default function Register() {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="w-full max-w-md mx-auto bg-[#1E1F2E] rounded-3xl shadow-2xl overflow-hidden relative max-h-[90vh] overflow-y-auto modal-scroll"
+        className="w-full mx-auto bg-[#1E1F2E] shadow-2xl overflow-hidden relative auth-modal-container"
         onClick={(e) => e.stopPropagation()}
       >
           {/* Close Button */}
           <button
-            onClick={() => setIsRegisterOpen(false)}
+            onClick={() => {
+              setIsRegisterOpen(false);
+              // Сброс полей при закрытии модального окна
+              setName("");
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              setError(null);
+              setShowPassword(false);
+              setShowConfirmPassword(false);
+              setAgreeToTerms(false);
+              setShowPasswordStrength(false);
+            }}
             disabled={loading || googleLoading}
-            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50"
+            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50 auth-modal-close mobile-close-button"
+            aria-label="Close registration form"
           >
             <FiX className="text-2xl" />
           </button>
 
-          <div className="p-4 sm:p-6 md:p-8">
+          <div className="p-4 sm:p-6 md:p-8 auth-modal-content">
             {/* Header */}
             <div className="text-center mb-4 sm:mb-6 md:mb-8">
               <motion.div
@@ -646,17 +692,9 @@ export default function Register() {
                     }}
                   />
                   <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-[#20DDBB]/30 bg-gradient-to-br from-[#20DDBB]/10 to-[#8A2BE2]/10">
-                    <motion.div
-                      className="absolute inset-0 flex items-center justify-center"
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    >
+                    <div className="absolute inset-0 flex items-center justify-center">
                       <BsMusicNoteBeamed className="text-3xl text-[#20DDBB]" />
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               </motion.div>

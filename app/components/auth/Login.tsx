@@ -28,6 +28,7 @@ import { clearAllAuthFlags } from "@/app/utils/authCleanup";
 import SafariAuthHelper from './SafariAuthHelper';
 import { getRedirectTimeout, getAdditionalDelay } from '@/app/config/authConfig';
 import { useIsClient } from '@/app/hooks/useIsClient';
+import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
 
 // Custom toast styling function
 const showToast = (
@@ -82,6 +83,9 @@ export default function Login() {
   const [loginAttempts, setLoginAttempts] = useState<number>(0);
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [blockTimeLeft, setBlockTimeLeft] = useState<number>(0);
+
+  // Prevent body scroll when modal is open
+  useBodyScrollLock(true);
 
   // Check if user is temporarily blocked
   useEffect(() => {
@@ -700,7 +704,7 @@ export default function Login() {
 
   return (
     <div 
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999999999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999999999] flex items-center justify-center p-4 auth-modal-overlay"
       onClick={handleClickOutside}
     >
       <motion.div
@@ -708,19 +712,20 @@ export default function Login() {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="w-full max-w-md mx-auto bg-[#1E1F2E] rounded-3xl shadow-2xl overflow-hidden relative"
+        className="w-full mx-auto bg-[#1E1F2E] shadow-2xl overflow-hidden relative auth-modal-container"
         onClick={(e) => e.stopPropagation()}
         >
-          {/* Close Button */}
+          {/* Enhanced Close Button for Mobile */}
           <button
             onClick={() => setIsLoginOpen(false)}
             disabled={loading || googleLoading}
-            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50"
+            className="absolute top-4 right-4 z-10 text-[#818BAC] hover:text-white transition-colors duration-300 disabled:opacity-50 auth-modal-close mobile-close-button"
+            aria-label="Close login form"
           >
             <FiX className="text-2xl" />
           </button>
 
-          <div className="p-4 sm:p-6 md:p-8">
+          <div className="p-4 sm:p-6 md:p-8 auth-modal-content">
             {/* Header */}
             <div className="text-center mb-4 sm:mb-6 md:mb-8">
               <motion.div
@@ -743,17 +748,9 @@ export default function Login() {
                     }}
                   />
                   <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-[#20DDBB]/30 bg-gradient-to-br from-[#20DDBB]/10 to-[#8A2BE2]/10">
-                    <motion.div
-                      className="absolute inset-0 flex items-center justify-center"
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    >
+                    <div className="absolute inset-0 flex items-center justify-center">
                       <BsMusicNoteBeamed className="text-3xl text-[#20DDBB]" />
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -922,7 +919,7 @@ export default function Login() {
 
               {/* Footer */}
               <motion.div
-                className="text-center pt-6 border-t border-[#2A2B3F] mt-6"
+                className="text-center pt-6 mt-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
